@@ -1,0 +1,11 @@
+<component name="libraryTable">
+  <library name="Gradle: gdx-ai-1.5.0">
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.badlogicgames.gdx/gdx-ai/1.5.0/5f694a1d54a6e15884ac50b83b7927df771d69b0/gdx-ai-1.5.0.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.badlogicgames.gdx/gdx-ai/1.5.0/1ecf751f2ed8e80f693a018219f3aa5e74b10da4/gdx-ai-1.5.0-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>
