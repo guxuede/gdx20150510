@@ -1,4 +1,4 @@
-package com.guxuede.game.tools;
+package com.guxuede.game.animation;
 
 import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.scenes.scene2d.Action;
@@ -9,7 +9,7 @@ import com.guxuede.game.animation.ActorMoveAction;
 import com.guxuede.game.animation.ActorMoveAnimationAction;
 import com.guxuede.game.animation.ActorMoveDirectiveAction;
 
-public class ActionsUtils extends Actions{
+public class ActionsFactory extends Actions{
 //
 	static public ActorMoveDirectiveAction actorMoveDirective (int direction) {
 		return actorMoveDirective(direction, 0, null);

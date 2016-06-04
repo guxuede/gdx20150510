@@ -1,7 +1,7 @@
 package com.guxuede.game.animation;
 
 import com.badlogic.gdx.scenes.scene2d.actions.RelativeTemporalAction;
-import com.guxuede.game.actor.AnimationActor;
+import com.guxuede.game.actor.AnimationEntity;
 
 public class ActorMoveAnimationAction extends RelativeTemporalAction  {
 
@@ -15,25 +15,25 @@ public class ActorMoveAnimationAction extends RelativeTemporalAction  {
 	@Override
 	protected void begin() {
 		super.begin();
-		AnimationActor actor = ((AnimationActor)target);
+		AnimationEntity actor = ((AnimationEntity)target);
 		final int direction = this.direction!=null?this.direction:actor.direction;
-		if(direction==AnimationActor.DOWN){
-			actor.animationGen.doMoveDownAnimation();
-        }else if(direction==AnimationActor.UP){
-        	actor.animationGen.doMoveUpAnimation();
-        }else if(direction==AnimationActor.LEFT){
-        	actor.animationGen.doMoveLeftAnimation();
-        }else if(direction==AnimationActor.RIGHT){
-        	actor.animationGen.doMoveRightAnimation();
+		if(direction==AnimationEntity.DOWN){
+			actor.animationPlayer.doMoveDownAnimation();
+        }else if(direction==AnimationEntity.UP){
+        	actor.animationPlayer.doMoveUpAnimation();
+        }else if(direction==AnimationEntity.LEFT){
+        	actor.animationPlayer.doMoveLeftAnimation();
+        }else if(direction==AnimationEntity.RIGHT){
+        	actor.animationPlayer.doMoveRightAnimation();
         }else{
-        	actor.animationGen.doIdelAnimation();
+        	actor.animationPlayer.doIdelAnimation(actor.direction);
         }
 	}
 	
 	@Override
 	protected void end() {
-		AnimationActor actor = ((AnimationActor)target);
-		actor.animationGen.doIdelAnimation();
+		AnimationEntity actor = ((AnimationEntity)target);
+		actor.animationPlayer.doIdelAnimation(actor.direction);
 	}
 
 

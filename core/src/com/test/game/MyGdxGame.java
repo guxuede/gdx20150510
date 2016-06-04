@@ -32,6 +32,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.NinePatchDrawable;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Gdx;
+import com.guxuede.game.actor.ActorFactory;
 import com.guxuede.game.actor.AnimationActor;
 import com.guxuede.game.actor.DebugButton;
 import com.guxuede.game.libgdx.MovebleOrthographicCamera;
@@ -73,8 +74,8 @@ public class MyGdxGame implements ApplicationListener {
 		  world = new World(new Vector2(0, 0), true);
 		  debugRenderer = new Box2DDebugRenderer();
 		 TextureAtlas atlas=new TextureAtlas(Gdx.files.internal("pack"));
-		 d.addActor(new AnimationActor(atlas,"Dancer",world));
-		 d.addActor(new AnimationActor(atlas,"Mage",world));
+		 d.addActor(ActorFactory.createAnimationActor(atlas,"Dancer",world));
+		 d.addActor(ActorFactory.createAnimationActor(atlas,"Mage",world));
 		stage.addActor(d);
 		
 		Gdx.input.setInputProcessor(stage);

@@ -1,7 +1,8 @@
 package com.test.game;
 
 import com.badlogic.gdx.ApplicationListener; 
-import com.badlogic.gdx.Gdx; 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -30,14 +31,15 @@ import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener.ChangeEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.guxuede.game.actor.DebugButton;
+import com.guxuede.game.libgdx.ResourceManager;
 import com.guxuede.game.libgdx.Skin;
 public class MyMapLayerGame implements ApplicationListener {
 	
     private Stage stage; 
     TextButton button;
     @Override 
-    public void create() { 
-    	
+    public void create() {
+
         stage = new Stage(new ScreenViewport(new OrthographicCamera(Gdx.graphics.getWidth(), Gdx.graphics.getHeight()))); 
         Gdx.input.setInputProcessor(stage); 
         //一些资源初始化
@@ -49,7 +51,7 @@ public class MyMapLayerGame implements ApplicationListener {
 		 NinePatchDrawable down= new NinePatchDrawable(new NinePatch(region_down,5,5,5,5));
 
 		 //自定义的maplayer
-		 final MapLayer mapLayer=new MapLayer();
+		 final MapLayerGroup mapLayer=new MapLayerGroup();
 		 stage.addActor(mapLayer);
 		 
 
@@ -97,7 +99,9 @@ public class MyMapLayerGame implements ApplicationListener {
 		 
 		 //addADialog(bs);
     }
-    
+
+
+
     @Override 
     public void render() { 
     	//System.out.println(button.isOver()+","+button.isPressed());

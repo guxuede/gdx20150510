@@ -31,10 +31,11 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ScissorStack;
+import com.guxuede.game.actor.ActorFactory;
 import com.guxuede.game.actor.AnimationActor;
 import com.guxuede.game.libgdx.MovebleOrthographicCamera;
 
-public class MapLayer extends Group{
+public class MapLayerGroup extends Group{
 	
 
 	private OrthographicCamera orthographicCamera;
@@ -49,7 +50,7 @@ public class MapLayer extends Group{
 	public AnimationActor actor;
 	
 	
-	public MapLayer(){
+	public MapLayerGroup(){
 		this.setDebug(true);
 		orthographicCamera=new MovebleOrthographicCamera(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 		float screenWidth = Gdx.graphics.getWidth();
@@ -70,7 +71,7 @@ public class MapLayer extends Group{
 		initMap();
 		
     	TextureAtlas atlas=new TextureAtlas(Gdx.files.internal("pack"));
-    	actor=new AnimationActor(atlas,"Animal",world);
+    	actor= ActorFactory.createAnimationActor(atlas, "Animal", world);
     	actor.addListener(new InputListener() {
 
 			@Override
@@ -82,8 +83,8 @@ public class MapLayer extends Group{
 		});
     	actor.setColor(0, 0, 1, 1);
 		addActor(actor);
-		addActor(new AnimationActor(atlas,"Dancer",world));
-		addActor(new AnimationActor(atlas,"Mage",world));
+		addActor(ActorFactory.createAnimationActor(atlas,"Dancer",world));
+		addActor(ActorFactory.createAnimationActor(atlas,"Mage",world));
 	}
 
 	@Override
@@ -191,7 +192,7 @@ public class MapLayer extends Group{
 //        	for(int h=0;h<tt.getHeight();h++){
 //        		for(int w=0;w<tt.getWidth();w++){
 //            		//System.out.println(map.getTileProperty(tt.tiles[h][w], "gid"));;
-//        			if(atlas.getRegion((tt.tiles[h][w]))!=null){
+//        			if(TEXTURE_ATLAS_PACK.getRegion((tt.tiles[h][w]))!=null){
 //        						
 //        				System.out.println();
 //        		        BodyDef bd = new BodyDef();bd.type=BodyType.StaticBody; bd.position.set(w*32+16, (tt.getHeight()-h)*32-16); 

@@ -1,7 +1,15 @@
 package com.guxuede.game.tools;
 
 public class MathUtils {
-	
+
+    /**
+     * return p1 and p2 angle
+     * @param startX
+     * @param startY
+     * @param endX
+     * @param endY
+     * @return
+     */
 	public static float getAngle(float startX, float startY,float endX,float endY){
 		double d=Math.atan((endY-startY) / (endX-startX))/ 3.14 * 180;
 		if(endY > startY && d < 0){
@@ -51,7 +59,8 @@ public class MathUtils {
         y1 -= y2;
         return Math.sqrt(x1 * x1 + y1 * y1);
     }
-    
+
+
     
     public static void main(String[] args) {
 //		System.err.println(distance(0, 0, -1, -1));

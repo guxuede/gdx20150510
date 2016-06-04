@@ -90,20 +90,20 @@ precision mediump float;
 #include "u_uniforms.glsl:u_diffuseColor"
 
 #if defined(diffuseTextureFlag) && defined(diffuseColorFlag)
-#define fetchColorDiffuseTD(texCoord, defaultValue) texture2D(u_diffuseTexture, texCoord) * u_diffuseColor
+#define fetchColorDiffuseTD(texCoord, parseContext) texture2D(u_diffuseTexture, texCoord) * u_diffuseColor
 #elif defined(diffuseTextureFlag)
-#define fetchColorDiffuseTD(texCoord, defaultValue) texture2D(u_diffuseTexture, texCoord)
+#define fetchColorDiffuseTD(texCoord, parseContext) texture2D(u_diffuseTexture, texCoord)
 #elif defined(diffuseColorFlag)
-#define fetchColorDiffuseTD(texCoord, defaultValue) u_diffuseColor
+#define fetchColorDiffuseTD(texCoord, parseContext) u_diffuseColor
 #else
-#define fetchColorDiffuseTD(texCoord, defaultValue) (defaultValue)
+#define fetchColorDiffuseTD(texCoord, parseContext) (parseContext)
 #endif
 
 [colorDiffuseFS]
 #include ":colorDiffuse"
 #include "g_attributes.glsl:g_texCoord0FS" 
 
-#define fetchColorDiffuseD(defaultValue) fetchColorDiffuseTD(g_texCoord0, defaultValue)
+#define fetchColorDiffuseD(parseContext) fetchColorDiffuseTD(g_texCoord0, parseContext)
 #define fetchColorDiffuse() fetchColorDiffuseD(vec4(1.0))
 
 #if defined(diffuseTextureFlag) || defined(diffuseColorFlag)
@@ -117,20 +117,20 @@ precision mediump float;
 #include "u_uniforms.glsl:u_specularColor"
 
 #if defined(specularTextureFlag) && defined(specularColorFlag)
-#define fetchColorSpecularTD(texCoord, defaultValue) (texture2D(u_specularTexture, texCoord).rgb * u_specularColor.rgb)
+#define fetchColorSpecularTD(texCoord, parseContext) (texture2D(u_specularTexture, texCoord).rgb * u_specularColor.rgb)
 #elif defined(specularTextureFlag)
-#define fetchColorSpecularTD(texCoord, defaultValue) texture2D(u_specularTexture, texCoord).rgb
+#define fetchColorSpecularTD(texCoord, parseContext) texture2D(u_specularTexture, texCoord).rgb
 #elif defined(specularColorFlag)
-#define fetchColorSpecularTD(texCoord, defaultValue) u_specularColor.rgb
+#define fetchColorSpecularTD(texCoord, parseContext) u_specularColor.rgb
 #else
-#define fetchColorSpecularTD(texCoord, defaultValue) (defaultValue)
+#define fetchColorSpecularTD(texCoord, parseContext) (parseContext)
 #endif
 	
 [colorSpecularFS]
 #include ":colorSpecular"
 #include "g_attributes.glsl:g_texCoord0FS" 
 
-#define fetchColorSpecularD(defaultValue) fetchColorSpecularTD(g_texCoord0, defaultValue)
+#define fetchColorSpecularD(parseContext) fetchColorSpecularTD(g_texCoord0, parseContext)
 #define fetchColorSpecular() fetchColorSpecularD(vec3(0.0))
 
 #if defined(specularTextureFlag) || defined(specularColorFlag)

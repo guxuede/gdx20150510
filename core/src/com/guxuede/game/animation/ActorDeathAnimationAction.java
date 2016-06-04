@@ -1,7 +1,7 @@
 package com.guxuede.game.animation;
 
 import com.badlogic.gdx.scenes.scene2d.actions.RelativeTemporalAction;
-import com.guxuede.game.actor.AnimationActor;
+import com.guxuede.game.actor.AnimationEntity;
 
 public class ActorDeathAnimationAction extends RelativeTemporalAction  {
 
@@ -15,14 +15,14 @@ public class ActorDeathAnimationAction extends RelativeTemporalAction  {
 	@Override
 	protected void begin() {
 		super.begin();
-		AnimationActor actor = ((AnimationActor)target);
+		AnimationEntity actor = ((AnimationEntity)target);
 		final int direction = this.direction!=null?this.direction:actor.direction;
-		actor.animationGen.doDeathAnimation();
+		actor.animationPlayer.doDeathAnimation();
 	}
 	
 	@Override
 	protected void end() {
-		((AnimationActor)target).dispose();
+		((AnimationEntity)target).dispose();
 	}
 
 

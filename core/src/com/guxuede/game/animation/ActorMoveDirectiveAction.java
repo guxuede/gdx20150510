@@ -17,11 +17,11 @@
 package com.guxuede.game.animation;
 
 import com.badlogic.gdx.scenes.scene2d.actions.RelativeTemporalAction;
-import com.guxuede.game.actor.AnimationActor;
+import com.guxuede.game.actor.AnimationEntity;
 
 public class ActorMoveDirectiveAction  extends RelativeTemporalAction  {
 	public int direction;
-	private static final int DOWN=1,LEFT=2,RIGHT=3,UP=4;
+	public static final int DOWN=1,LEFT=2,RIGHT=3,UP=4;
 
 	@Override
 	protected void updateRelative(float percentDelta) {
@@ -31,21 +31,23 @@ public class ActorMoveDirectiveAction  extends RelativeTemporalAction  {
 	@Override
 	protected void begin() {
 		super.begin();
-		AnimationActor actor = ((AnimationActor)target);
+		AnimationEntity actor = ((AnimationEntity)target);
+		actor.isMoving = true;
 		if(direction==DOWN){
 			actor.direction = direction;
-			actor.body.setLinearVelocity(0, -actor.speed);
+			//actor.body.setLinearVelocity(0, -actor.speed);
         }else if(direction==UP){
         	actor.direction = direction;
-        	actor.body.setLinearVelocity(0, actor.speed);
+        	//actor.body.setLinearVelocity(0, actor.speed);
         }else if(direction==LEFT){
         	actor.direction = direction;
-        	actor.body.setLinearVelocity(-actor.speed, 0);
+        	//actor.body.setLinearVelocity(-actor.speed, 0);
         }else if(direction==RIGHT){
         	actor.direction = direction;
-        	actor.body.setLinearVelocity(actor.speed, 0);
+        	//actor.body.setLinearVelocity(actor.speed, 0);
         }else{
-        	actor.body.setLinearVelocity(0, 0);
+        	actor.isMoving = false;
+        	//actor.body.setLinearVelocity(0, 0);
         }
 	}
 	

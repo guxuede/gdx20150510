@@ -29,7 +29,7 @@
     <orderEntry type="library" exported="" name="Gradle: org.jsoup:jsoup:1.8.2" level="project" />
     <orderEntry type="library" exported="" name="Gradle: com.esotericsoftware:reflectasm:1.10.0" level="project" />
     <orderEntry type="library" exported="" name="Gradle: org.ow2.asm:asm:4.2" level="project" />
-    <orderEntry type="module-library" exported="">
+    <orderEntry type="module-library">
       <library>
         <CLASSES>
           <root url="jar://$MAVEN_REPOSITORY$/org/jsoup/jsoup/1.8.2/jsoup-1.8.2.jar!/" />
@@ -38,7 +38,7 @@
         <SOURCES />
       </library>
     </orderEntry>
-    <orderEntry type="module-library" exported="">
+    <orderEntry type="module-library">
       <library>
         <CLASSES>
           <root url="jar://$MODULE_DIR$/../../../workspace-temp/MavenTestProject/lib/js.jar!/" />

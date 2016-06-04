@@ -3,7 +3,7 @@ package com.guxuede.game.animation;
 
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.actions.TemporalAction;
-import com.guxuede.game.actor.AnimationActor;
+import com.guxuede.game.actor.AnimationEntity;
 import com.guxuede.game.tools.MathUtils;
 
 
@@ -13,7 +13,7 @@ public class ActorMoveAction extends TemporalAction {
 	float degrees;
 
 	protected void begin () {
-		AnimationActor actor = ((AnimationActor)target);
+		AnimationEntity actor = ((AnimationEntity)target);
 		startX = actor.body.getPosition().x;
 		startY = actor.body.getPosition().y;
 		float duration = (float) (MathUtils.distance(startX,startY,endX,endY)/actor.speed);
@@ -29,8 +29,7 @@ public class ActorMoveAction extends TemporalAction {
 	}
 
 	protected void update (float percent) {
-		System.err.println(percent);
-		AnimationActor actor = ((AnimationActor)target);
+		AnimationEntity actor = ((AnimationEntity)target);
 		//actor.body.setTransform(startX + (endX - startX) * percent,startY + (endY - startY) * percent, 99);
 		//target.setPosition(startX + (endX - startX) * percent, startY + (endY - startY) * percent);
 		Vector2 v = new Vector2(100, 100);
@@ -38,24 +37,24 @@ public class ActorMoveAction extends TemporalAction {
 		actor.body.setLinearVelocity(v);
 		
 		final int direction = actor.direction;
-		if(direction==AnimationActor.DOWN){
-			actor.animationGen.doMoveDownAnimation();
-        }else if(direction==AnimationActor.UP){
-        	actor.animationGen.doMoveUpAnimation();
-        }else if(direction==AnimationActor.LEFT){
-        	actor.animationGen.doMoveLeftAnimation();
-        }else if(direction==AnimationActor.RIGHT){
-        	actor.animationGen.doMoveRightAnimation();
+		if(direction==AnimationEntity.DOWN){
+			actor.animationPlayer.doMoveDownAnimation();
+        }else if(direction==AnimationEntity.UP){
+        	actor.animationPlayer.doMoveUpAnimation();
+        }else if(direction==AnimationEntity.LEFT){
+        	actor.animationPlayer.doMoveLeftAnimation();
+        }else if(direction==AnimationEntity.RIGHT){
+        	actor.animationPlayer.doMoveRightAnimation();
         }else{
-        	actor.animationGen.doIdelAnimation();
+        	actor.animationPlayer.doIdelAnimation(actor.direction);
         }
 	}
 	
 	@Override
 	protected void end() {
 		super.end();
-		AnimationActor actor = ((AnimationActor)target);
-		actor.animationGen.doIdelAnimation();
+		AnimationEntity actor = ((AnimationEntity)target);
+		actor.animationPlayer.doIdelAnimation(actor.direction);
 	}
 
 	public void reset () {

@@ -1,6 +1,5 @@
 package com.test.game;
 
-import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.Iterator;
@@ -15,24 +14,11 @@ import org.jsoup.nodes.TextNode;
 
 import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.InputMultiplexer;
-import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.PerspectiveCamera;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.ParticleEffect;
-import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g2d.TextureAtlas;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.maps.tiled.TiledMap;
-import com.badlogic.gdx.maps.tiled.TmxMapLoader;
-import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
-import com.badlogic.gdx.math.Matrix4;
-import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
-import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
@@ -49,20 +35,16 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton.TextButtonStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.Touchpad.TouchpadStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.VerticalGroup;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
-import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener.ChangeEvent;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Scaling;
 import com.badlogic.gdx.utils.viewport.ScalingViewport;
-import com.badlogic.gdx.utils.viewport.ScreenViewport;
+import com.guxuede.game.actor.AnimationEntity;
 import com.guxuede.game.actor.DebugButton;
 import com.guxuede.game.libgdx.InputProcessorLine;
 import com.guxuede.game.libgdx.MovebleOrthographicCamera;
 import com.guxuede.game.libgdx.ResourceManager;
-import com.guxuede.game.tools.ActionsUtils;
 
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
 import org.mozilla.javascript.Context;
 import org.mozilla.javascript.Scriptable;
@@ -77,12 +59,9 @@ public class TitleMapGame implements ApplicationListener{
     
     private SpriteBatch batch;
     ParticleEffect effect;
-    
-    Sprite sprite = null;
-    
+
 	@Override
 	public void create() {
-		sprite=new Sprite( new TextureRegion(new Texture(Gdx.files.internal("Image 160.png"))));
         cx = Context.enter();
         scope = cx.initStandardObjects();
 		camera=new MovebleOrthographicCamera(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
@@ -98,14 +77,15 @@ public class TitleMapGame implements ApplicationListener{
 		 mapStage.addActor(button);
 		 
 		 uiStage = new Stage();
-			
-		 
-		 TouchpadStyle touchpadStyle=new TouchpadStyle(ResourceManager.down,ResourceManager.up );
-		 final Touchpad touchpad=new Touchpad(12, touchpadStyle);touchpad.setPosition(24, 24);
+
+
+        TouchpadStyle touchpadStyle=new TouchpadStyle(ResourceManager.down,ResourceManager.BTNImmolationOn1 );
+		 final Touchpad touchpad=new Touchpad(12, touchpadStyle);
+		 touchpad.setPosition(24, 24);
 		 touchpad.addListener(new ChangeListener() {
 			@Override
 			public void changed(ChangeEvent event, Actor actor1) {
-				System.out.println(touchpad.getKnobPercentX()+","+touchpad.getKnobPercentY());
+				//System.out.println(touchpad.getKnobPercentX()+","+touchpad.getKnobPercentY());
 				if(touchpad.getKnobPercentX()==0 && touchpad.getKnobPercentY()==0){
 					mapStage.actor.stop();
 				}else if(Math.abs(touchpad.getKnobPercentX()) > Math.abs(touchpad.getKnobPercentY())){
@@ -133,30 +113,49 @@ public class TitleMapGame implements ApplicationListener{
 		 imageButton.setSize(20f, 20f);;
 		 imageButton.setPosition(100f, 10f);
 		 uiStage.addActor(imageButton);
-		 Gdx.input.setInputProcessor(new InputProcessorLine(mapStage,uiStage)); //InputMultiplexer
+		 Gdx.input.setInputProcessor(new InputProcessorLine(uiStage,mapStage)); //InputMultiplexer
 		 mapStage.addListener(new ClickListener(){
 
 			@Override
 			public void touchUp(InputEvent event, float x, float y,
 					int pointer, int button) {
 				//System.err.println(x+","+y);
-				mapStage.actor.addAction(ActionsUtils.jumpAction(x, y));
+				//mapStage.actor.addAction(ActionsFactory.jumpAction(x, y));
 				//amapStage.actor.throwProjection(x, y);
 				super.touchUp(event, x, y, pointer, button);
 			}
-			int a;
 			 @Override
 			public boolean keyDown(InputEvent event, int keycode) {
-				// mapStage.actor.throwProjection();
-				 System.err.println(a++);
-				mapStage.throwProjection(mapStage.actor);
+				if(Keys.SPACE == keycode){
+					mapStage.actor.throwProjection();
+				}else if(Keys.UP == keycode){
+					mapStage.actor.moveUp();
+				}else if(Keys.DOWN == keycode){
+					mapStage.actor.moveDown();
+				}else if(Keys.LEFT == keycode){
+					mapStage.actor.moveLeft();
+				}else if(Keys.RIGHT == keycode){
+					mapStage.actor.moveRight();
+				}
+				return super.keyDown(event, keycode);
+			}
+			 @Override
+			public boolean keyUp(InputEvent event, int keycode) {
+				 AnimationEntity entity=mapStage.actor;
+				if(entity.isMoving){
+					if( Keys.UP == keycode && entity.direction == AnimationEntity.UP
+					 || Keys.DOWN == keycode && entity.direction == AnimationEntity.DOWN
+					 || Keys.LEFT == keycode && entity.direction == AnimationEntity.LEFT
+					 || Keys.RIGHT == keycode && entity.direction == AnimationEntity.RIGHT){
+						mapStage.actor.stop();
+					}
+				}
 				return super.keyDown(event, keycode);
 			}
 		 });
-		// openDialog("script.html",null);
+		 //openDialog("script.html",null);
 		 
-		 
-		 batch = new SpriteBatch();
+		batch = new SpriteBatch();
 		effect = new ParticleEffect();
         effect.load(Gdx.files.internal("particle.p"), Gdx.files.internal(""));
         effect.setPosition(Gdx.graphics.getWidth() / 2, Gdx.graphics.getHeight() / 2);
@@ -187,7 +186,7 @@ public class TitleMapGame implements ApplicationListener{
 		
         batch.begin();
 		effect.draw(batch, Gdx.app.getGraphics().getDeltaTime());
-		sprite.draw(batch);
+        //System.out.println(Gdx.graphics.getFramesPerSecond());
 		batch.end();
 	}
 

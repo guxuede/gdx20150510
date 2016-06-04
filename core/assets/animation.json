@@ -1,0 +1,40 @@
+{
+  "index":0,
+  "frameElements":[
+    {
+      "frame":[0,384,192,192]
+    }
+  ]
+},
+{
+"index":0,
+"frameElements":[
+{
+"frame":[192,384,192,192]
+}
+]
+},
+{
+"index":0,
+"frameElements":[
+{
+"frame":[384,384,192,192]
+}
+]
+},
+{
+"index":0,
+"frameElements":[
+{
+"frame":[576,384,192,192]
+}
+]
+},
+{
+"index":0,
+"frameElements":[
+{
+"frame":[768,384,192,192]
+}
+]
+}

@@ -11,7 +11,7 @@ public interface ActorEventListener {
 	public void onMoveRight();
 	
 	
-	public void onStop();
+	public void onStop(int direction);
 	
 	
 }
