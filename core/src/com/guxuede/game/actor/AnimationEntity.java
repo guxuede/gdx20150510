@@ -12,6 +12,7 @@ import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Touchable;
+import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Pool.Poolable;
 import com.guxuede.game.animation.ActorAlwayMoveAction;
 import com.guxuede.game.libgdx.GdxSprite;
@@ -47,12 +48,14 @@ public abstract class AnimationEntity extends LevelDrawActor implements Poolable
 		int actorWidth= animationPlayer.width;
 		int actorHeight= animationPlayer.height;
         this.setSize(actorWidth, actorHeight);
+        this.setOrigin(Align.center);
         this.setVisible(false);
         this.lifeStatus = LIFE_STATUS_CREATE;
         this.addAction(new ActorAlwayMoveAction());
 	}
-	
 
+
+    /**************************************box2d control**************************************************/
 	//call by stage
 	public void createBody(World world){
 		if(lifeStatus == LIFE_STATUS_CREATE){
@@ -63,7 +66,7 @@ public abstract class AnimationEntity extends LevelDrawActor implements Poolable
             //http://www.firedragonpzy.com.cn/index.php/archives/2524
 			BodyDef  bd = new  BodyDef ();
 			bd.type=BodyType.DynamicBody;
-			bd.position.set(getX(),getY());
+			bd.position.set(getEntityX(),getEntityY());
 
 			CircleShape c=new CircleShape();
 			c.setRadius(actorWidth/3);
@@ -99,9 +102,6 @@ public abstract class AnimationEntity extends LevelDrawActor implements Poolable
 		}
 	}
 
-
-
-
 	//call by stage
 	public void destroyBody(World world){
 		if(lifeStatus == LIFE_STATUS_DEAD){
@@ -133,7 +133,7 @@ public abstract class AnimationEntity extends LevelDrawActor implements Poolable
         if(canAct()){
             animationPlayer.act();
 			Vector2 v=body.getPosition();
-			this.setPosition(v.x, v.y);
+			this.setPosition(v.x - getWidth()/2, v.y - getHeight()/2);
 		}
 	}
 	
@@ -141,28 +141,17 @@ public abstract class AnimationEntity extends LevelDrawActor implements Poolable
 		return lifeStatus == LIFE_STATUS_LIVE || lifeStatus == LIFE_STATUS_DEAD;
 	}
 
-    @Override
-    public Actor hit(float x, float y, boolean touchable) {
-        System.out.println(x+"-"+y);
-        if (touchable && this.getTouchable() != Touchable.enabled) return null;
-        return x >= 0 && x < getWidth() && y >= 0 && y < getHeight() ? this : null;
-    }
+    /**************************************draw control**************************************************/
 
-    public float getEntityX() {
-        return super.getX()+getWidth()/2;
-    }
-    public float getEntityY() {
-        return super.getY()+getHeight()/2;
-    }
     public float drawOffSetX,drawOffSetY;
 
     public void drawFoot(Batch batch, float parentAlpha){
-        batch.draw(ResourceManager.humanShadow,this.getX() - ResourceManager.humanShadow.getRegionWidth()/2,this.getY()-ResourceManager.humanShadow.getRegionHeight()/2);
+        batch.draw(ResourceManager.humanShadow,this.getEntityX() - ResourceManager.humanShadow.getRegionWidth()/2,this.getEntityY()-ResourceManager.humanShadow.getRegionHeight()/2);
     }
     public void drawBody(Batch batch, float parentAlpha) {
         GdxSprite sprite = (GdxSprite) animationPlayer.getKeyFrame();
         if (sprite != null) {
-            sprite.setPosition(this.getX() + drawOffSetX, this.getY() + drawOffSetY);
+            sprite.setPosition(this.getEntityX() + drawOffSetX, this.getEntityY() + drawOffSetY);
             sprite.draw(batch, parentAlpha, getRotation(), getScaleX(), getScaleY(), getColor());
         }
     }
@@ -172,6 +161,8 @@ public abstract class AnimationEntity extends LevelDrawActor implements Poolable
         super.drawHead(batch, parentAlpha);
     }
 
+
+    /**************************************position control**************************************************/
     public void moveLeft(){
 		addAction(ActionsFactory.actorMoveDirective(LEFT));
 		animationPlayer.onMoveLeft();
@@ -202,13 +193,13 @@ public abstract class AnimationEntity extends LevelDrawActor implements Poolable
 			stop();
 		}
 	}
-	
+
 	public void stop(){
 		addAction(ActionsFactory.actorMoveDirective(STOP));
 		animationPlayer.onStop(this.direction);
 	}
-	
-	public void turnDirection(float degrees){
+
+    public void turnDirection(float degrees){
 		this.degrees = degrees;
 		if(degrees > 45 && degrees < 135){
 			direction = AnimationEntity.UP;
@@ -220,10 +211,10 @@ public abstract class AnimationEntity extends LevelDrawActor implements Poolable
 			direction = AnimationEntity.RIGHT;
 		}
 	}
-	
-	public void throwProjection(){
+
+    /**************************************Projection control**************************************************/
+    public void throwProjection(){
 		for(float d=0f;d < 360f;d=d+30){
-			System.err.println(d);
 			throwProjection(d);
 		}
 		//throwProjection(this.degrees);
@@ -231,13 +222,12 @@ public abstract class AnimationEntity extends LevelDrawActor implements Poolable
 	public void throwProjection(float degrees){
 		float l = 400;
 		double radians = (float) (2*Math.PI * degrees / 360);
-		float dx=(float) (this.getX()+l*Math.cos(radians));
-		float dy=(float) (this.getY()+l*Math.sin(radians));
+		float dx=(float) (this.getEntityX()+l*Math.cos(radians));
+		float dy=(float) (this.getEntityY()+l*Math.sin(radians));
 		throwProjection(dx,dy);
 	}
 	public void throwProjection(float dx,float dy){
-		Vector2 v = this.body.getPosition();
-		throwProjection(v.x, v.y,dx,dy);
+		throwProjection(getEntityX(), getEntityY(),dx,dy);
 	}
 	public void throwProjection(float fx,float fy,float dx,float dy){
 		AnimationProjection projection = ActorFactory.createProjection(ResourceManager.bult, body.getWorld(), null);

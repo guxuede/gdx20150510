@@ -67,7 +67,7 @@ public class GdxSprite extends Sprite {
         float oldScaleY = getScaleY();
 
         setColor(color);
-        setRotation(rotation*oldRotation);
+        setRotation(rotation+oldRotation);
         setScale(oldScaleX * scaleX, oldScaleY * scaleY);
 
         draw(batch,alphaModulation);

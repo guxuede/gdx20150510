@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.Action;
 import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Array;
 import com.guxuede.game.libgdx.GdxEffect;
 import com.guxuede.game.libgdx.GdxSprite;
@@ -26,6 +27,13 @@ public class LevelDrawActor extends Actor {
     public int drawLevel;
     public float stateTime;
 
+    public float getEntityX() {
+        return super.getX(Align.center);
+    }
+    public float getEntityY() {
+        return super.getY(Align.center);
+    }
+
     /**
      * 判断角色是否在屏幕中可见
      * @return
@@ -34,8 +42,8 @@ public class LevelDrawActor extends Actor {
         Vector3 center = getStage().getViewport().getCamera().position;
         float screenW = getStage().getViewport().getScreenWidth()/2;
         float screenH = getStage().getViewport().getScreenHeight()/2;
-        if(getX() > center.x-screenW && getX() < center.x+screenW-100 &&
-                getY() > center.y-screenH && getY() < center.y+screenH-100 ){
+        if(getEntityX() > center.x-screenW && getEntityX() < center.x+screenW-100 &&
+                getEntityY() > center.y-screenH && getEntityY() < center.y+screenH-100 ){
             return true;
         }
         return false;

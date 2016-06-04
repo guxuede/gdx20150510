@@ -10,7 +10,7 @@ public class ActorJumpAction extends TemporalAction {
 	private float startX, startY;
 	private float endX,endY;
 
-	private static final float duration = 0.5f;
+	private static final float duration = 5f;
 
 	protected void begin () {
 		AnimationEntity actor = ((AnimationEntity)target);
@@ -27,7 +27,6 @@ public class ActorJumpAction extends TemporalAction {
 	protected void update (float percent) {
 		AnimationEntity actor = ((AnimationEntity)target);
 		actor.body.setTransform(startX + (endX - startX) * percent,startY + (endY - startY) * percent, 99);
-		//target.setPosition(startX + (endX - startX) * percent, startY + (endY - startY) * percent, alignment);
 		final int direction = actor.direction;
 		if(direction==AnimationEntity.DOWN){
 			actor.animationPlayer.doMoveDownAnimation();

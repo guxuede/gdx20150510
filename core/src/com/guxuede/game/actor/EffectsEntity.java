@@ -27,7 +27,7 @@ public class EffectsEntity extends AnimationEntity {
             /**********************************box2d************************************************/
             BodyDef  bd = new  BodyDef ();
             bd.type= BodyDef.BodyType.DynamicBody;
-            bd.position.set(getX(),getY());
+            bd.position.set(getEntityX(),getEntityY());
 
             CircleShape c=new CircleShape();
             c.setRadius(actorWidth/3);

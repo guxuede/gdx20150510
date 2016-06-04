@@ -179,36 +179,32 @@ public class TitleMapStage extends Stage{
 			}
 		} ;
         AnimationActor actor = ActorFactory.createActor("Undead",world,focusListener);
-		actor.setPosition(100, 100);
+		actor.setPosition(200, 100);
         DoubleImageEffect doubleImageEffect = new DoubleImageEffect();
         doubleImageEffect.setDuration(5);
         actor.addAction(doubleImageEffect);
-
         addActor(actor);
 
-//        AnimationActor actor1 = ActorFactory.createActor("Undead", world, focusListener);
-//        actor1.setPosition(100, 150);
-//        ActorChangeAppearanceAction actorChangeAppearanceAction = new ActorChangeAppearanceAction();
-//        actorChangeAppearanceAction.setDuration(5f);
-//        actor1.addAction(actorChangeAppearanceAction);
-//        ActorFormulaTracksAction actorFormulaTracksAction = new ActorFormulaTracksAction();
-//        actorFormulaTracksAction.setDuration(10f);
-//        actor1.addAction(ActionsFactory.sequence(ActionsFactory.parallel(actorFormulaTracksAction, ActionsFactory.scaleBy(0.5f, 0.5f, 10f)), ActionsFactory.scaleBy(-0.5f, -0.5f)));
-//        actor1.setColor(Color.BLUE);
-//        AnimationEffect effect = new AnimationEffect();
-//        effect.setDuration(10);
-//        effect.setEffectAnimation(ResourceManager.getAnimationHolder("wind2").getStopDownAnimation());
-//        actor1.addAction(effect);
-//        addActor(actor1);
-
-        //AnimationProjection actor2 =ActorFactory.createProjection("Image 164.png",world,focusListener);
-		//addActor(actor2);
+        AnimationActor actor1 = ActorFactory.createActor("Undead", world, focusListener);
+        actor1.setPosition(100, 150);
+        ActorChangeAppearanceAction actorChangeAppearanceAction = new ActorChangeAppearanceAction();
+        actorChangeAppearanceAction.setDuration(5f);
+        actor1.addAction(actorChangeAppearanceAction);
+        ActorFormulaTracksAction actorFormulaTracksAction = new ActorFormulaTracksAction();
+        actorFormulaTracksAction.setDuration(10f);
+        actor1.addAction(ActionsFactory.sequence(ActionsFactory.parallel(actorFormulaTracksAction, ActionsFactory.scaleBy(0.5f, 0.5f, 10f)), ActionsFactory.scaleBy(-0.5f, -0.5f)));
+        actor1.setColor(Color.BLUE);
+        AnimationEffect effect = new AnimationEffect();
+        effect.setDuration(10);
+        effect.setEffectAnimation(ResourceManager.getAnimationHolder("wind2").getStopDownAnimation());
+        actor1.addAction(effect);
+        addActor(actor1);
 
 		addActor(new ParticelActor());
 		addActor(new BarrageTip("hello",100,100));
         //addActor(ActorFactory.createActor("light4", world, focusListener));
         addActor(ActorFactory.createActor("thunder1", world, focusListener));
-        addActor(ActorFactory.createEffectsActor("special10", world, focusListener));
+        //addActor(ActorFactory.createEffectsActor("special10", world, focusListener));
         addActor(ActorFactory.createEffectsActor("yaoshou1",world,focusListener));
 
 		//actor.body.setTransform(100, 100, 0);
@@ -243,8 +239,8 @@ int positionIterations = 2;//位置计算层级
 		tileMapRenderer.renderLayer3();
 		debugRenderer.render(world, getCamera().combined);
 		if(actor!=null){
-			getCamera().position.x=actor.getX();
-			getCamera().position.y=actor.getY();
+			getCamera().position.x=actor.getEntityX();
+			getCamera().position.y=actor.getEntityY();
 		}
 	}
 	
