@@ -2,22 +2,22 @@
 <html>
 <head>
 	<script type="text/javascript">
-	var MyImport = JavaImporter(com.test.game);
+	var MyImport = JavaImporter(com.guxuede.game.animation);
 		function sayHello(){
 			out.println(123);
 			effect.start();
 			//camera.rotate(99);
 			with(MyImport){
-				mapStage.actor.addAction(ActionsUtils.jumpAction(200));
+				mapStage.actor.addAction(ActionsFactory.actorJumpAction(0,0));
 			}
 		}
 		function sayHello1(){
 			out.println(123111);
 			//camera.rotate(99);
 			with(MyImport){
-				mapStage.actor.addAction(ActionsUtils.actorMoveAnimation(3, 0.5));
-				mapStage.actor.addAction(ActionsUtils.moveBy(100, 0,0.5));
-				mapStage.actor.addAction(ActionsUtils.sequence(ActionsUtils.scaleBy(0.2, 0.2, 0.25),ActionsUtils.scaleBy(-0.2, -0.2, 0.25)));
+				mapStage.actor.addAction(ActionsFactory.actorMoveAnimation(3, 0.5));
+				mapStage.actor.addAction(ActionsFactory.moveBy(100, 0,0.5));
+				mapStage.actor.addAction(ActionsFactory.sequence(ActionsFactory.scaleBy(0.2, 0.2, 0.25),ActionsFactory.scaleBy(-0.2, -0.2, 0.25)));
 			}
 		}
 	</script>

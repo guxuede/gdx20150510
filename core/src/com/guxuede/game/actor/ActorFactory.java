@@ -31,6 +31,13 @@ public class ActorFactory {
         EffectsEntity animationActor = new EffectsEntity(actorAnimationPlayer,world,l);
         return animationActor;
     }
+    public static AnimationProjection createProjectionActor(String name,World world,InputListener l) {
+        AnimationHolder animationHolder = ResourceManager.getAnimationHolder(name);
+        ActorAnimationPlayer actorAnimationPlayer = new ActorAnimationPlayer(animationHolder);
+        AnimationProjection animationActor = new AnimationProjection(actorAnimationPlayer,world,l);
+        return animationActor;
+    }
+
 
     public static AnimationActor createAnimationActor(String name,World world,InputListener l) {
         return createAnimationActor(ResourceManager.getTextureRegion(name), world,l);

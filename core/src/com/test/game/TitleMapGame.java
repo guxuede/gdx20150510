@@ -5,6 +5,8 @@ import java.io.IOException;
 import java.util.Iterator;
 import java.util.List;
 
+import com.badlogic.gdx.scenes.scene2d.*;
+import com.guxuede.game.animation.ActorThrowProjectionAction;
 import org.jsoup.Jsoup;
 import org.jsoup.helper.StringUtil;
 import org.jsoup.nodes.Document;
@@ -19,10 +21,6 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.ParticleEffect;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.scenes.scene2d.Actor;
-import com.badlogic.gdx.scenes.scene2d.Group;
-import com.badlogic.gdx.scenes.scene2d.InputEvent;
-import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
@@ -93,7 +91,7 @@ public class TitleMapGame implements ApplicationListener{
 						System.out.println("left");
 						mapStage.actor.moveLeft();
 					}else{
-						System.out.println("right");
+                        System.out.println("right");
 						mapStage.actor.moveRight();
 					}
 				}else{
@@ -110,50 +108,25 @@ public class TitleMapGame implements ApplicationListener{
 		 uiStage.addActor(touchpad);
 		 
 		 ImageButton imageButton = new ImageButton(ResourceManager.BTNImmolationOn, ResourceManager.BTNImmolationOn1);
-		 imageButton.setSize(20f, 20f);;
+		 //imageButton.setSize(20f, 20f);;
 		 imageButton.setPosition(100f, 10f);
 		 uiStage.addActor(imageButton);
-		 Gdx.input.setInputProcessor(new InputProcessorLine(uiStage,mapStage)); //InputMultiplexer
-		 mapStage.addListener(new ClickListener(){
+		 Gdx.input.setInputProcessor(new InputProcessorLine(uiStage, mapStage)); //InputMultiplexer
+		 mapStage.addListener(new ClickListener() {
+             @Override
+             public boolean handle(Event e) {
+                 System.out.println(e);
 
-			@Override
-			public void touchUp(InputEvent event, float x, float y,
-					int pointer, int button) {
-				//System.err.println(x+","+y);
-				//mapStage.actor.addAction(ActionsFactory.jumpAction(x, y));
-				//amapStage.actor.throwProjection(x, y);
-				super.touchUp(event, x, y, pointer, button);
-			}
-			 @Override
-			public boolean keyDown(InputEvent event, int keycode) {
-				if(Keys.SPACE == keycode){
-					mapStage.actor.throwProjection();
-				}else if(Keys.UP == keycode){
-					mapStage.actor.moveUp();
-				}else if(Keys.DOWN == keycode){
-					mapStage.actor.moveDown();
-				}else if(Keys.LEFT == keycode){
-					mapStage.actor.moveLeft();
-				}else if(Keys.RIGHT == keycode){
-					mapStage.actor.moveRight();
-				}
-				return super.keyDown(event, keycode);
-			}
-			 @Override
-			public boolean keyUp(InputEvent event, int keycode) {
-				 AnimationEntity entity=mapStage.actor;
-				if(entity.isMoving){
-					if( Keys.UP == keycode && entity.direction == AnimationEntity.UP
-					 || Keys.DOWN == keycode && entity.direction == AnimationEntity.DOWN
-					 || Keys.LEFT == keycode && entity.direction == AnimationEntity.LEFT
-					 || Keys.RIGHT == keycode && entity.direction == AnimationEntity.RIGHT){
-						mapStage.actor.stop();
-					}
-				}
-				return super.keyDown(event, keycode);
-			}
-		 });
-		 //openDialog("script.html",null);
+                 if (!(e instanceof InputEvent)) return false;
+                 InputEvent event = (InputEvent) e;
+                 if (mapStage.actor != null) {
+                     mapStage.actor.handleInput(event);
+                     return true;
+                 }
+                 return super.handle(e);
+             }
+         });
+		//openDialog("script.html",null);
 		 
 		batch = new SpriteBatch();
 		effect = new ParticleEffect();
@@ -237,15 +210,15 @@ public class TitleMapGame implements ApplicationListener{
 			throw new RuntimeException(e);
 		}
 	}
-	
+
 	public void parseBody(Dialog d,Element eBody){
 		VerticalGroup body=new VerticalGroup().align(Align.left).pad(10f);
 		body.setFillParent(true);
 		parseBody(d,body,eBody);
 		d.getContentTable().addActor(body);
-		 
+
 	}
-	
+
 	public void parseBody(final Dialog d,Group body,Element eBody){
 		List<Node> nodes=eBody.childNodes();
 		for(Node n:nodes){

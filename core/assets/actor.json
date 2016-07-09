@@ -87,7 +87,12 @@
            [0,192,80,96],
            [0,256,80,96]
          ]
-       }
+       },
+      {
+        "name":"attackAnimation",
+        "frameDuration":0.3,
+        "frames":[0,4,8,12,4,5,6]
+      }
     ]
   },
 
@@ -529,10 +534,10 @@
     "width":192,
     "height":192,
     "texture":"Wind2",
-    "scale":2,
+    "scale":0.5,
     "animations":[
       {
-        "name":"walkDownAnimation,walkLeftAnimation,walkRightAnimation,walkUpAnimation,stopDownAnimation,stopLeftAnimation,stopRightAnimation,stopUpAnimation,deathAnimation",
+        "name":"walkDownAnimation,walkLeftAnimation,walkRightAnimation,walkUpAnimation,stopDownAnimation,stopLeftAnimation,stopRightAnimation,stopUpAnimation",
         "frameDuration":0.2,
         "frames":[
           {
@@ -576,6 +581,11 @@
             ]
           }
         ]
+      },
+      {
+        "name":"deathAnimation",
+        "frameDuration":0.1,
+        "frames":[0,1,2,3,4]
       }
     ]
   },
@@ -663,7 +673,7 @@
       {
         "name":"walkDownAnimation,walkLeftAnimation,walkRightAnimation,walkUpAnimation,stopDownAnimation,stopLeftAnimation,stopRightAnimation,stopUpAnimation,deathAnimation",
         "frameDuration":0.1,
-        "frames":[0,1,2,3,4,5,6,7,8,9,10]
+        "frames":[10,11,12,13,14,15,16,17,18,19,20]
       }
     ]
   },
@@ -699,5 +709,28 @@
         "frames":[0,1,2,3,4,5,6]
       }
     ]
+  },
+  {
+    "name" : "kulou1",
+    "width":64,
+    "height":84,
+    "texture":"Image 111",
+    "textureOffSetX":4,
+    "frameDuration":0.4,
+    "animations":[
+      {
+        "name":"walkDownAnimation,walkLeftAnimation,walkRightAnimation,walkUpAnimation,stopDownAnimation,stopLeftAnimation,stopRightAnimation,stopUpAnimation",
+        "frames":[0,1,2,3]
+      },
+      {
+        "name":"deathAnimation",
+        "frames":[0,1,2,3,4,5,6]
+      },
+      {
+        "name":"attackAnimation",
+        "frames":[4,5,6,7,8,9]
+      }
+    ]
   }
+
 ]

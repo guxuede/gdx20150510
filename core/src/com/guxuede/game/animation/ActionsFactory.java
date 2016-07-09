@@ -45,18 +45,16 @@ public class ActionsFactory extends Actions{
 	}
 
 	//
-	static public ActorDeathAnimationAction actorDeathAnimation (Integer direction) {
-		return actorDeathAnimation(direction, 0, null);
+	static public ActorDeathAnimationAction actorDeathAnimation () {
+		return actorDeathAnimation(0, null);
 	}
 
-	static public ActorDeathAnimationAction actorDeathAnimation (Integer direction, float duration) {
-		return actorDeathAnimation(direction, duration, null);
+	static public ActorDeathAnimationAction actorDeathAnimation (float duration) {
+		return actorDeathAnimation(duration, null);
 	}
 
-	static public ActorDeathAnimationAction actorDeathAnimation (Integer direction, float duration, Interpolation interpolation) {
+	static public ActorDeathAnimationAction actorDeathAnimation (float duration, Interpolation interpolation) {
 		ActorDeathAnimationAction action = action(ActorDeathAnimationAction.class);
-		action.direction = direction;
-		action.setDuration(duration);
 		action.setInterpolation(interpolation);
 		return action;
 	}

@@ -9,3 +9,12 @@ sourceSets.main.java.srcDirs = [ "src/" ]
 eclipse.project {
     name = appName + "-core"
 }
+
+repositories {
+    mavenCentral()
+}
+
+
+dependencies {
+    compile group: 'org.mozilla', name: 'rhino', version: '1.7.7.1'
+}

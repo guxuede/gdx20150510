@@ -23,8 +23,7 @@ public class ActorAnimationPlayer implements ActorEventListener{
     //********************************************************
     //
     //********************************************************
-    public int lastPlayerMethod;
-    public int lastPlayerDirection;
+    public String lastAnimationName;
 
 	public ActorAnimationPlayer(AnimationHolder animationHolder) {
         this.animationHolder = animationHolder;
@@ -45,14 +44,7 @@ public class ActorAnimationPlayer implements ActorEventListener{
     public void setAnimationHolder(AnimationHolder animationHolder){
         this.animationHolder = animationHolder;
         //animation changed,consider to restore player status
-        switch (lastPlayerMethod){
-            case 1: doMoveUpAnimation();break;
-            case 2: doMoveDownAnimation();break;
-            case 3: doMoveLeftAnimation();break;
-            case 4: doMoveRightAnimation();break;
-            case 5: doIdelAnimation(lastPlayerDirection);break;
-            case 6: doDeathAnimation();break;
-        }
+        doAnimation(lastAnimationName);
     }
 	
 	public TextureRegion getKeyFrame(){
@@ -86,50 +78,52 @@ public class ActorAnimationPlayer implements ActorEventListener{
 	}
 	
 	public void doMoveUpAnimation() {
-		currentAnimation = animationHolder.getWalkUpAnimation();
-        lastPlayerMethod = 1;
+        doAnimation(AnimationHolder.WALK_UP_ANIMATION);
 	}
 
 	public void doMoveDownAnimation() {
-		currentAnimation = animationHolder.getWalkDownAnimation();
-        lastPlayerMethod = 2;
+        doAnimation(AnimationHolder.WALK_DOWN_ANIMATION);
 	}
 
 	public void doMoveLeftAnimation() {
-		currentAnimation = animationHolder.getWalkLeftAnimation();
-        lastPlayerMethod=3;
+        doAnimation(AnimationHolder.WALK_LEFT_ANIMATION);
 	}
 
 	public void doMoveRightAnimation() {
-		currentAnimation = animationHolder.getWalkRightAnimation();
-        lastPlayerMethod=4;
+        doAnimation(AnimationHolder.WALK_RIGHT_ANIMATION);
 	}
 	
 	public void doIdelAnimation(int direction) {
-        lastPlayerMethod = 5;
-        lastPlayerDirection = direction;
 		switch (direction) {
 		case AnimationActor.UP:
-			currentAnimation = animationHolder.getStopUpAnimation();
+            doAnimation(AnimationHolder.STOP_UP_ANIMATION);
 			break;
 		case AnimationActor.DOWN:
-			currentAnimation = animationHolder.getStopDownAnimation();
+            doAnimation(AnimationHolder.STOP_DOWN_ANIMATION);
 			break;
 		case AnimationActor.RIGHT:
-			currentAnimation = animationHolder.getStopRightAnimation();
+            doAnimation(AnimationHolder.STOP_RIGHT_ANIMATION);
 			break;
 		case AnimationActor.LEFT:
-			currentAnimation = animationHolder.getStopLeftAnimation();
+            doAnimation(AnimationHolder.STOP_LEFT_ANIMATION);
 			break;
 		default:
-			currentAnimation = animationHolder.getStopDownAnimation();
+            doAnimation(AnimationHolder.STOP_DOWN_ANIMATION);
 			break;
 		}
 	}
 	
 	public void doDeathAnimation() {
-		currentAnimation = animationHolder.getDeathAnimation();
-        lastPlayerMethod=6;
+        doAnimation(AnimationHolder.DEATH_ANIMATION);
 	}
-	
+
+    public void doAttackAnimation(){
+        doAnimation(AnimationHolder.ATTACK_ANIMATION);
+    }
+
+
+	public void doAnimation(String animationName){
+        currentAnimation = animationHolder.getAnimation(animationName);
+        lastAnimationName = animationName;
+    }
 }

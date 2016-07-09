@@ -30,8 +30,13 @@ public class LevelDrawActor extends Actor {
     public float getEntityX() {
         return super.getX(Align.center);
     }
+
     public float getEntityY() {
         return super.getY(Align.center);
+    }
+
+    public void setEntityPosition(float x, float y) {
+        this.setPosition(x, y, Align.center);
     }
 
     /**
@@ -68,7 +73,7 @@ public class LevelDrawActor extends Actor {
     @Override
     public void act(float delta) {
         super.act(delta);
-        stateTime += Gdx.graphics.getDeltaTime();
+        stateTime += delta;
     }
 
     /**

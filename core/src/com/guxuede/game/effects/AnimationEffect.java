@@ -6,6 +6,7 @@ import com.guxuede.game.actor.AnimationActor;
 import com.guxuede.game.actor.AnimationEntity;
 import com.guxuede.game.libgdx.GdxEffect;
 import com.guxuede.game.libgdx.GdxSprite;
+import com.guxuede.game.libgdx.ResourceManager;
 
 /**
  * Created by guxuede on 2016/6/2 .
@@ -13,6 +14,15 @@ import com.guxuede.game.libgdx.GdxSprite;
 public class AnimationEffect extends GdxEffect {
 
     public Animation effectAnimation;
+
+    public AnimationEffect(){
+
+    }
+
+    public AnimationEffect(String animationName){
+        Animation effectAnimation = ResourceManager.getAnimationHolder(animationName).getStopDownAnimation();
+        setEffectAnimation(effectAnimation);
+    }
 
     @Override
     public void drawBodyEffect(Batch batch, float parentAlpha){

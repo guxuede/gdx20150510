@@ -10,11 +10,15 @@ import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Pool.Poolable;
+import com.guxuede.game.actor.state.ActorState;
+import com.guxuede.game.actor.state.StandState;
 import com.guxuede.game.animation.ActorAlwayMoveAction;
+import com.guxuede.game.animation.ActorPathMoveAction;
 import com.guxuede.game.libgdx.GdxSprite;
 import com.guxuede.game.resource.ActorAnimationPlayer;
 import com.guxuede.game.libgdx.ResourceManager;
@@ -66,7 +70,7 @@ public abstract class AnimationEntity extends LevelDrawActor implements Poolable
             //http://www.firedragonpzy.com.cn/index.php/archives/2524
 			BodyDef  bd = new  BodyDef ();
 			bd.type=BodyType.DynamicBody;
-			bd.position.set(getEntityX(),getEntityY());
+			bd.position.set(getEntityX(), getEntityY());
 
 			CircleShape c=new CircleShape();
 			c.setRadius(actorWidth/3);
@@ -75,8 +79,8 @@ public abstract class AnimationEntity extends LevelDrawActor implements Poolable
 			ballShapeDef.friction = 1f;////摩擦粗糙程度
 			ballShapeDef.restitution = 0.0f;//碰撞后，恢复原状后的力量,力度返回程度（弹性）
 			ballShapeDef.shape = c;//形状
-            ballShapeDef.isSensor= false;//当isSensor为false时(这也是默认值)，在发生碰撞后，由Box2D模拟物理碰撞后的反弹或变向运动。当isSensor是true时，刚体只进行碰撞检测，而不模拟碰撞后的物理运动。此时，我们就可以自定义刚体处理方式了，如示例中的绕小圆运动。
-			body = world.createBody(bd);
+            ballShapeDef.isSensor= true;//当isSensor为false时(这也是默认值)，在发生碰撞后，由Box2D模拟物理碰撞后的反弹或变向运动。当isSensor是true时，刚体只进行碰撞检测，而不模拟碰撞后的物理运动。此时，我们就可以自定义刚体处理方式了，如示例中的绕小圆运动。
+            body = world.createBody(bd);
 			body.createFixture(ballShapeDef);
 			body.setFixedRotation(true);//固定旋转标记把转动惯量逐渐设置成零。
 			body.setLinearDamping(100);//阻尼，阻尼用来降低世界中物体的速度。阻尼和摩擦不同，因为摩擦仅仅和接触同时发生。阻尼不是摩擦的一个替代者，并且这两个效果可以被同时使用。
@@ -134,6 +138,10 @@ public abstract class AnimationEntity extends LevelDrawActor implements Poolable
             animationPlayer.act();
 			Vector2 v=body.getPosition();
 			this.setPosition(v.x - getWidth()/2, v.y - getHeight()/2);
+            if(actorState!=null){
+                ActorState newState =  actorState.update(this, delta);
+                processNewState(newState,null);
+            }
 		}
 	}
 	
@@ -163,6 +171,7 @@ public abstract class AnimationEntity extends LevelDrawActor implements Poolable
 
 
     /**************************************position control**************************************************/
+    private ActorPathMoveAction actorPathMoveAction;
     public void moveLeft(){
 		addAction(ActionsFactory.actorMoveDirective(LEFT));
 		animationPlayer.onMoveLeft();
@@ -181,6 +190,7 @@ public abstract class AnimationEntity extends LevelDrawActor implements Poolable
 	} 
 	
 	public void move(int direction){
+        setDirection(direction);
 		if(direction == LEFT){
 			moveLeft();
 		}else if(direction == RIGHT){
@@ -195,9 +205,18 @@ public abstract class AnimationEntity extends LevelDrawActor implements Poolable
 	}
 
 	public void stop(){
+        if(actorPathMoveAction!=null){
+            removeAction(actorPathMoveAction);
+        }
 		addAction(ActionsFactory.actorMoveDirective(STOP));
 		animationPlayer.onStop(this.direction);
 	}
+
+    public void moveToPoint(float x, float y){
+        stop();
+        actorPathMoveAction = new ActorPathMoveAction(x,y);
+        addAction(actorPathMoveAction);
+    }
 
     public void turnDirection(float degrees){
 		this.degrees = degrees;
@@ -212,40 +231,41 @@ public abstract class AnimationEntity extends LevelDrawActor implements Poolable
 		}
 	}
 
-    /**************************************Projection control**************************************************/
-    public void throwProjection(){
-		for(float d=0f;d < 360f;d=d+30){
-			throwProjection(d);
-		}
-		//throwProjection(this.degrees);
-	}
-	public void throwProjection(float degrees){
-		float l = 400;
-		double radians = (float) (2*Math.PI * degrees / 360);
-		float dx=(float) (this.getEntityX()+l*Math.cos(radians));
-		float dy=(float) (this.getEntityY()+l*Math.sin(radians));
-		throwProjection(dx,dy);
-	}
-	public void throwProjection(float dx,float dy){
-		throwProjection(getEntityX(), getEntityY(),dx,dy);
-	}
-	public void throwProjection(float fx,float fy,float dx,float dy){
-		AnimationProjection projection = ActorFactory.createProjection(ResourceManager.bult, body.getWorld(), null);
-		projection.sourceActor = this;
-		//projection.body.setTransform(this.body.getPosition(),0);
-		projection.setPosition(fx, fy);
-		projection.turnDirection(degrees);
-		projection.addAction(
-				ActionsFactory.sequence(ActionsFactory.scaleBy(5, 5, 0.1f),
-                        ActionsFactory.scaleBy(-5, -5, 0.1f),
-                        ActionsFactory.jumpAction(dx, dy)
-                        , ActionsFactory.actorDeathAnimation(0, 0.2f)
-                ));
-		getStage().addActor(projection);
-	}
-	
+    public void setDirection(int direction) {
+        this.direction = direction;
+        if(direction == LEFT){
+            degrees = 180;
+        }else if(direction == RIGHT){
+            degrees = 0;
+        }else if(direction == DOWN){
+            degrees = 270;
+        }else if(direction == UP){
+            degrees = 90;
+        }else{
+            degrees = 0;
+        }
+    }
 
-	@Override
+
+    /**************************************state control**************************************************/
+    ActorState actorState = new StandState(0);
+    public void handleInput(InputEvent event){
+        if(actorState!=null){
+            ActorState newState = actorState.handleInput(this,event);
+            processNewState(newState,event);
+        }
+    }
+
+    private void processNewState(ActorState newState,InputEvent event){
+        if(newState!=null){
+            actorState.exit(this);
+            actorState = newState;
+            actorState.enter(this,event);
+        }
+    }
+
+
+    @Override
 	public void reset() {
 		// TODO Auto-generated method stub
 		
@@ -256,4 +276,20 @@ public abstract class AnimationEntity extends LevelDrawActor implements Poolable
 		lifeStatus = LIFE_STATUS_DEAD;
 	}
 
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        AnimationEntity that = (AnimationEntity) o;
+
+        return id == that.id;
+
+    }
+
+    @Override
+    public int hashCode() {
+        return (int) (id ^ (id >>> 32));
+    }
 }

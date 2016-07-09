@@ -1,6 +1,7 @@
 package com.guxuede.game.libgdx;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.*;
@@ -21,6 +22,7 @@ public class ResourceManager {
     public static final TextureAtlas TEXTURE_ATLAS_PACK =new TextureAtlas(Gdx.files.internal("pack"));
     public static final List<AnimationHolder> ANIMATION_HOLDER_LIST = ActorJsonParse.parse("actor.json");
 
+    public static Sound sound = Gdx.audio.newSound(Gdx.files.internal("164-Skill08.ogg"));;
 
     //一些资源初始化
 	public static Skin skin=new Skin(Gdx.files.internal("uiskin.json"));
@@ -35,8 +37,8 @@ public class ResourceManager {
     public static TextButtonStyle bs=new TextButtonStyle(up,down,null,font);
 
     
-    public static TextureRegionDrawable BTNImmolationOn=new TextureRegionDrawable(getTextureRegion("BTNImmolationOn"));
-    public static MiniatureTextureRegionDrawable BTNImmolationOn1=new MiniatureTextureRegionDrawable(getTextureRegion("BTNImmolationOn"));
+    public static TextureRegionDrawable BTNImmolationOn=new TextureRegionDrawable(getTextureRegion("limiui_psd",456,316,34,25/*742,296,156,47*/));
+    public static MiniatureTextureRegionDrawable BTNImmolationOn1=new MiniatureTextureRegionDrawable(getTextureRegion("limiui_psd",456,341,34,25/*742,346,156,47*/));
     
     public static TextureRegion bult= getTextureRegion("Image 166");
     public static TextureRegion fireBar= getTextureRegion("184-Light01");

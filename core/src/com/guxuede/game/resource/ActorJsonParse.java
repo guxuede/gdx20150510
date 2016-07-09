@@ -39,6 +39,9 @@ public class ActorJsonParse {
         protected float scaleY;
         //精灵展示位置
         protected float x,y;
+
+        protected float textureOffSetX = 0;
+        protected float textureOffSetY = 0;
     }
 
     public static List<AnimationHolder> parse(String jsonFile){
@@ -260,11 +263,11 @@ public class ActorJsonParse {
         int numOfLine = textureRegion.getRegionWidth() / (int) parseContext.width;//每行有几个图片
         int y = number / numOfLine;//第几行
         int x = number % numOfLine;//第几列
-        return getTextureRegionByXYWH(parseContext,new int[]{(int) (x* parseContext.width),(int) (y* parseContext.height),(int) (parseContext.width),(int) (parseContext.width)});
+        return getTextureRegionByXYWH(parseContext,new int[]{(int) (x* parseContext.width + parseContext.textureOffSetX),(int) (y* parseContext.height + parseContext.textureOffSetY),(int) (parseContext.width),(int) (parseContext.height)});
     }
 
     private static TextureRegion getTextureRegionByXYWH(ParseContext parseContext,int[] xywh){
-        return ResourceManager.getTextureRegion(parseContext.textureName, xywh[0], xywh[1], xywh[2], xywh[3]);
+        return ResourceManager.getTextureRegion(parseContext.textureName, xywh[0]+(int) parseContext.textureOffSetX, xywh[1]+(int) parseContext.textureOffSetY, xywh[2], xywh[3]);
     }
 
     private static ParseContext extendParentParseContext(ParseContext parseContext, JsonValue animJ){
@@ -287,6 +290,9 @@ public class ActorJsonParse {
         float scale = animJ.getFloat("scale", parseContext.scale);
         float scaleX = animJ.getFloat("scaleX", scale);
         float scaleY = animJ.getFloat("scaleY", scale);
+        float textureOffSetX = animJ.getFloat("textureOffSetX",parseContext.textureOffSetX);
+        float textureOffSetY = animJ.getFloat("textureOffSetY",parseContext.textureOffSetY);
+
 
         ParseContext localParseContext = new ParseContext();
         localParseContext.textureName = textureName;
@@ -300,6 +306,8 @@ public class ActorJsonParse {
         localParseContext.x =x;
         localParseContext.y =y;
         localParseContext.frameDuration = frameDuration;
+        localParseContext.textureOffSetX = textureOffSetX;
+        localParseContext.textureOffSetY = textureOffSetY;
         return localParseContext;
     }
 

@@ -37,15 +37,16 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 import com.guxuede.game.actor.*;
 import com.guxuede.game.animation.ActorChangeAppearanceAction;
 import com.guxuede.game.animation.ActorFormulaTracksAction;
+import com.guxuede.game.animation.ActorPathMoveAction;
 import com.guxuede.game.effects.AnimationEffect;
 import com.guxuede.game.effects.DoubleImageEffect;
-import com.guxuede.game.libgdx.GdxEffect;
 import com.guxuede.game.libgdx.ResourceManager;
 import com.guxuede.game.libgdx.maps.titled.MyOrthogonalTiledMapRenderer;
 import com.guxuede.game.animation.ActionsFactory;
 
 public class TitleMapStage extends Stage{
-	
+
+    private boolean isDebug = true;
 	
 	private MyOrthogonalTiledMapRenderer tileMapRenderer;
 	protected Box2DDebugRenderer debugRenderer;
@@ -53,7 +54,7 @@ public class TitleMapStage extends Stage{
 
 	
 	public AnimationEntity actor;
-    Sound sound;
+
 
 
 	public TitleMapStage() {
@@ -69,8 +70,7 @@ public class TitleMapStage extends Stage{
 	}
 
 	public void init(){
-        this.setDebugAll(true);
-        sound = Gdx.audio.newSound(Gdx.files.internal("164-Skill08.ogg"));
+        this.setDebugAll(isDebug);
 		world = new World(new Vector2(0, 0), true);
 		world.setContactFilter(new ContactFilter() {
             @Override
@@ -94,22 +94,38 @@ public class TitleMapStage extends Stage{
                     return true;
                 }
                 return false;
+
+//                if (actorA != null && actorB == null) {
+//                    if (actorA instanceof AnimationProjection) {
+//                        return ((AnimationProjection) actorA).isHit(actorB);
+//                    }
+//                    return true;
+//                } else if (actorB != null && actorA == null) {
+//                    if (actorB instanceof AnimationProjection) {
+//                        return ((AnimationProjection) actorB).isHit(actorA);
+//                    }
+//                    return true;
+//                } else if (actorA instanceof AnimationProjection && actorB instanceof AnimationActor && actorA.sourceActor != actorB) {
+//                    return ((AnimationProjection) actorA).isHit(actorB);
+//                } else if (actorB instanceof AnimationProjection && actorA instanceof AnimationActor && actorB.sourceActor != actorA) {
+//                    return ((AnimationProjection) actorB).isHit(actorA);
+//                }
             }
         });
 		world.setContactListener(new ContactListener() {
             @Override
             public void preSolve(Contact contact, Manifold oldManifold) {
-
+                System.err.println("preSolve");
             }
 
             @Override
             public void postSolve(Contact contact, ContactImpulse impulse) {
-
+                System.err.println("postSolve");
             }
 
             @Override
             public void endContact(Contact contact) {
-                System.err.println("end");
+                System.err.println("endContact");
             }
 
             //Contact.getFixtureA获得创建时间比较早的对象,Contact.getFixtureB获得创建时间晚的对象
@@ -123,42 +139,16 @@ public class TitleMapStage extends Stage{
 
                 if (actorA != null && actorB == null) {
                     if (actorA instanceof AnimationProjection) {
-                        doShowDamageEffect(vector2, null);
-                        actorA.dispose();
+                        ((AnimationProjection) actorA).hit(actorB, vector2);
                     }
                 } else if (actorB != null && actorA == null) {
                     if (actorB instanceof AnimationProjection) {
-                        doShowDamageEffect(vector2, null);
-                        actorB.dispose();
+                        ((AnimationProjection) actorB).hit(actorA, vector2);
                     }
                 } else if (actorA instanceof AnimationProjection && actorB instanceof AnimationActor && actorA.sourceActor != actorB) {
-                    doShowDamageEffect(vector2, actorB);
-                    actorA.dispose();
-
+                    ((AnimationProjection) actorA).hit(actorB, vector2);
                 } else if (actorB instanceof AnimationProjection && actorA instanceof AnimationActor && actorB.sourceActor != actorA) {
-                    doShowDamageEffect(vector2, actorA);
-                    actorB.dispose();
-                    sound.play();
-                }
-
-            }
-
-            public void doShowDamageEffect(Vector2 vector2, Actor actor) {
-                BarrageTip tip = new BarrageTip("-1", vector2.x, vector2.y);
-                tip.setZIndex(Integer.MAX_VALUE);
-                addActor(tip);
-
-                if (actor != null) {
-                    actor.addAction(
-                            ActionsFactory.sequence(
-                                    ActionsFactory.color(Color.RED, 0.1f),
-                                    ActionsFactory.color(Color.PINK, 0.1f),
-                                    ActionsFactory.color(new Color(1, 1, 1, 1), 0.1f)
-                            )
-                    );
-                    AnimationEffect effect = new AnimationEffect();
-                    effect.setEffectAnimation(ResourceManager.getAnimationHolder("special10").getStopDownAnimation());
-                    actor.addAction(effect);
+                    ((AnimationProjection) actorB).hit(actorA,vector2);
                 }
             }
         });
@@ -181,7 +171,7 @@ public class TitleMapStage extends Stage{
         AnimationActor actor = ActorFactory.createActor("Undead",world,focusListener);
 		actor.setPosition(200, 100);
         DoubleImageEffect doubleImageEffect = new DoubleImageEffect();
-        doubleImageEffect.setDuration(5);
+        doubleImageEffect.setDuration(50);
         actor.addAction(doubleImageEffect);
         addActor(actor);
 
@@ -205,10 +195,11 @@ public class TitleMapStage extends Stage{
         //addActor(ActorFactory.createActor("light4", world, focusListener));
         addActor(ActorFactory.createActor("thunder1", world, focusListener));
         //addActor(ActorFactory.createEffectsActor("special10", world, focusListener));
-        addActor(ActorFactory.createEffectsActor("yaoshou1",world,focusListener));
-
+        addActor(ActorFactory.createActor("kulou1", world,focusListener));
+        AnimationProjection projection = ActorFactory.createProjectionActor("kulou1", world, focusListener);
+        addActor(projection);
 		//actor.body.setTransform(100, 100, 0);
-		//createABoack(map);
+		createABoack(map);
 	}
 	
 /**
@@ -216,8 +207,12 @@ public class TitleMapStage extends Stage{
 int velocityIterations = 6;//速度计算层级
 int positionIterations = 2;//位置计算层级
  */
+boolean pause = false;
 	@Override
 	public void act(float delta) {
+        if(pause){
+            return;
+        }
 		world.step(Gdx.app.getGraphics().getDeltaTime(), 6, 2); 
 		for(Actor actor:getActors()){
 			if(actor instanceof AnimationEntity){
@@ -237,7 +232,10 @@ int positionIterations = 2;//位置计算层级
 		tileMapRenderer.renderLayer2();
         drawActors();
 		tileMapRenderer.renderLayer3();
-		debugRenderer.render(world, getCamera().combined);
+        if(isDebug){
+            debugRenderer.render(world, getCamera().combined);
+        }
+
 		if(actor!=null){
 			getCamera().position.x=actor.getEntityX();
 			getCamera().position.y=actor.getEntityY();

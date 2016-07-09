@@ -5,8 +5,6 @@ import com.guxuede.game.actor.AnimationEntity;
 
 public class ActorDeathAnimationAction extends RelativeTemporalAction  {
 
-	public Integer direction;
-	
 	@Override
 	protected void updateRelative(float percentDelta) {
 		
@@ -16,8 +14,8 @@ public class ActorDeathAnimationAction extends RelativeTemporalAction  {
 	protected void begin() {
 		super.begin();
 		AnimationEntity actor = ((AnimationEntity)target);
-		final int direction = this.direction!=null?this.direction:actor.direction;
 		actor.animationPlayer.doDeathAnimation();
+        this.setDuration(actor.animationPlayer.currentAnimation.getAnimationDuration());
 	}
 	
 	@Override

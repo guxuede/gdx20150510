@@ -18,7 +18,7 @@ public class AnimationHolder {
     public static final String STOP_RIGHT_ANIMATION = "stopRightAnimation";
     public static final String STOP_UP_ANIMATION = "stopUpAnimation";
     public static final String DEATH_ANIMATION = "deathAnimation";
-
+    public static final String ATTACK_ANIMATION = "attackAnimation";
 
     public Map<String,Animation> animationMap = new HashMap<String, Animation>();
     public int width,height;
@@ -71,42 +71,45 @@ public class AnimationHolder {
 
 
     public Animation getWalkDownAnimation() {
-        return animationMap.get(WALK_DOWN_ANIMATION);
+        return getAnimation(WALK_DOWN_ANIMATION);
     }
 
     public Animation getWalkLeftAnimation() {
-        return animationMap.get(WALK_LEFT_ANIMATION);
+        return getAnimation(WALK_LEFT_ANIMATION);
     }
 
     public Animation getWalkRightAnimation() {
-        return animationMap.get(WALK_RIGHT_ANIMATION);
+        return getAnimation(WALK_RIGHT_ANIMATION);
     }
 
     public Animation getWalkUpAnimation() {
-        return animationMap.get(WALK_UP_ANIMATION);
+        return getAnimation(WALK_UP_ANIMATION);
     }
 
     public Animation getStopDownAnimation() {
-        return animationMap.get(STOP_DOWN_ANIMATION);
+        return getAnimation(STOP_DOWN_ANIMATION);
     }
 
 
     public Animation getStopLeftAnimation() {
-        return animationMap.get(STOP_LEFT_ANIMATION);
+        return getAnimation(STOP_LEFT_ANIMATION);
     }
 
     public Animation getStopRightAnimation() {
-        return animationMap.get(STOP_RIGHT_ANIMATION);
+        return getAnimation(STOP_RIGHT_ANIMATION);
     }
 
 
     public Animation getStopUpAnimation() {
-        return animationMap.get(STOP_UP_ANIMATION);
+        return getAnimation(STOP_UP_ANIMATION);
     }
 
     public Animation getDeathAnimation() {
-        return animationMap.get(DEATH_ANIMATION);
+        return getAnimation(DEATH_ANIMATION);
     }
 
 
+    public Animation getAnimation(String name){
+        return animationMap.get(name);
+    }
 }

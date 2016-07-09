@@ -44,3 +44,15 @@ task afterEclipseImport(description: "Post processing after project generation",
     printer.print(classpath)
   }
 }
+
+repositories {
+    mavenCentral()
+    maven {
+        url "http://mvnrepository.com/"
+    }
+}
+
+
+dependencies {
+    compile group: 'org.mozilla', name: 'rhino', version: '1.7.7.1'
+}
