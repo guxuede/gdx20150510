@@ -50,12 +50,16 @@ public class ActorThrowProjectionAction extends Action {
         projection.sourceActor = animationEntity;
         projection.setEntityPosition(fx, fy);
         //projection.turnDirection(animationEntity.degrees);
+        ActorPathMoveAction actorPathMoveAction = new ActorPathMoveAction(animationEntity.findClosestEntry());
         projection.addAction(
                 ActionsFactory.sequence(ActionsFactory.scaleBy(5, 5, 0.1f),
                         ActionsFactory.scaleBy(-5, -5, 0.1f),
-                        ActionsFactory.jumpAction(dx, dy)
+                        actorPathMoveAction
                         , ActionsFactory.actorDeathAnimation()
                 ));
+        //projection.moveToPoint(dx,dy);
+
+    //projection.moveToTarget();
         animationEntity.getStage().addActor(projection);
     }
 

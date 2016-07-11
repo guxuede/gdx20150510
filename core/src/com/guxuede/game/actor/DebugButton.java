@@ -18,18 +18,18 @@ public class DebugButton extends TextButton{
 		super(text, bs);
 		addListener( new ClickListener() {
 			public void enter (InputEvent event, float x, float y, int pointer, Actor fromActor) {
-				System.err.println("enter");
+				System.err.println("DebugButton enter");
 			}
 
 			public void exit (InputEvent event, float x, float y, int pointer, Actor toActor) {
-				System.err.println("exit");
+				System.err.println("DebugButton exit");
 			}
 			
 			@Override
 			public void touchDragged(InputEvent event, float x, float y,
 					int pointer) {
 				Actor hit = event.getListenerActor().hit(x, y, true);
-				System.err.println(hit+":"+x+":"+y);
+				System.err.println("DebugButton:"+hit+":"+x+":"+y);
 				super.touchDragged(event, x, y, pointer);
 				//System.err.println(isPressed());
 			}

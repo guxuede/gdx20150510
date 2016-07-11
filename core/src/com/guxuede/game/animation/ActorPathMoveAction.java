@@ -13,7 +13,10 @@ import java.util.List;
  */
 public class ActorPathMoveAction extends Action {
 
+    public static final int IS_ARRIVE_RADIO = 10;
     private List<Vector2> paths = Arrays.asList(new Vector2(400,400),new Vector2(100,200));
+
+    public AnimationEntity target;
 
     private Vector2 currentPath;
     private int currentPathIndex=-1;
@@ -29,6 +32,9 @@ public class ActorPathMoveAction extends Action {
         currentPath = paths.get(currentPathIndex);
     }
 
+    public ActorPathMoveAction(AnimationEntity entity){
+        target = entity;
+    }
 
     @Override
     public boolean act(float delta) {
@@ -36,7 +42,7 @@ public class ActorPathMoveAction extends Action {
         if(!isArrive()){
             //if(!entity.isMoving){
             entity.isMoving = true;
-            entity.turnDirection(MathUtils.getAngle(entity.getEntityX(),entity.getEntityY(),currentPath.x,currentPath.y));
+            entity.turnDirection(MathUtils.getAngle(entity.getEntityX(),entity.getEntityY(),getTargetX(),getTargetY()));
             int direction = entity.direction;
             if(direction == AnimationEntity.LEFT){
                 entity.animationPlayer.doMoveLeftAnimation();
@@ -59,11 +65,24 @@ public class ActorPathMoveAction extends Action {
         return false;
     }
 
+    public float getTargetX(){
+        if(target!=null){
+            return target.getEntityX();
+        }
+        return currentPath.x;
+    }
+
+    public float getTargetY(){
+        if(target!=null){
+            return target.getEntityY();
+        }
+        return currentPath.y;
+    }
+
     protected boolean isArrive(){
         AnimationEntity entity = (AnimationEntity) getTarget();
-        float dist = currentPath.dst(entity.getEntityX(),entity.getEntityY());
-        //System.out.println(entity.getEntityX()+","+entity.getEntityY()+",,,,"+dist);
-        return dist < 10;
+        float dist = Vector2.dst(getTargetX(),getTargetY(),entity.getEntityX(),entity.getEntityY());
+        return dist < IS_ARRIVE_RADIO;
     }
 
     protected boolean gotoNextPath(){
@@ -75,24 +94,4 @@ public class ActorPathMoveAction extends Action {
         return true;
     }
 
-    protected int getMoveDirect(){
-        AnimationEntity entity = (AnimationEntity) getTarget();
-
-        float dx = currentPath.x - entity.getEntityX();
-        float dy = currentPath.y - entity.getEntityY();
-        if(Math.abs(dx) > Math.abs(dy)){
-            if(dx > 0){
-                return AnimationEntity.RIGHT;
-            }else{
-                return AnimationEntity.LEFT;
-            }
-        }else{
-            if(dy > 0){
-                return AnimationEntity.UP;
-            }else{
-                return AnimationEntity.DOWN;
-            }
-        }
-
-    }
 }

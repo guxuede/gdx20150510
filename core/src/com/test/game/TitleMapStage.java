@@ -81,16 +81,16 @@ public class TitleMapStage extends Stage{
                 //1.其中一个是子弹，一个是单位，且子弹不是单位射出的。 碰撞
                 //2。两个都是子弹，且来自不同的单位。碰撞
                 if (actorA != null && actorB == null) {
-                    System.err.println("1");
+                    System.err.println("ContactFilter 1");
                     return true;
                 } else if (actorB != null && actorA == null) {
-                    System.err.println("2");
+                    System.err.println("ContactFilter 2");
                     return true;
                 } else if (actorA instanceof AnimationProjection && actorB instanceof AnimationActor && actorA.sourceActor != actorB) {
-                    System.err.println("3");
+                    System.err.println("ContactFilter 3");
                     return true;
                 } else if (actorB instanceof AnimationProjection && actorA instanceof AnimationActor && actorB.sourceActor != actorA) {
-                    System.err.println("4");
+                    System.err.println("ContactFilter 4");
                     return true;
                 }
                 return false;
@@ -116,6 +116,9 @@ public class TitleMapStage extends Stage{
             @Override
             public void preSolve(Contact contact, Manifold oldManifold) {
                 System.err.println("preSolve");
+//                AnimationEntity actorA = (AnimationEntity) contact.getFixtureA().getBody().getUserData();
+//                AnimationEntity actorB = (AnimationEntity) contact.getFixtureB().getBody().getUserData();
+//                actorB.stop();
             }
 
             @Override
@@ -131,12 +134,11 @@ public class TitleMapStage extends Stage{
             //Contact.getFixtureA获得创建时间比较早的对象,Contact.getFixtureB获得创建时间晚的对象
             @Override
             public void beginContact(Contact contact) {
-                System.err.println("start");
+                System.err.println("beginContact start");
                 AnimationEntity actorA = (AnimationEntity) contact.getFixtureA().getBody().getUserData();
                 AnimationEntity actorB = (AnimationEntity) contact.getFixtureB().getBody().getUserData();
-                WorldManifold worldManifold = contact.getWorldManifold();
-                Vector2 vector2 = worldManifold.getPoints()[0];
-
+                Vector2 vector2 = contact.getWorldManifold().getNormal();
+                System.out.println("pppppppp:"+vector2.x+","+vector2.y);
                 if (actorA != null && actorB == null) {
                     if (actorA instanceof AnimationProjection) {
                         ((AnimationProjection) actorA).hit(actorB, vector2);

@@ -73,19 +73,19 @@ public class MyMapLayerGame implements ApplicationListener {
 					mapLayer.actor.stop();
 				}else if(Math.abs(touchpad.getKnobPercentX()) > Math.abs(touchpad.getKnobPercentY())){
 					if(touchpad.getKnobPercentX()>0){
-						System.out.println("left");
+						System.out.println("touchpad left");
 						mapLayer.actor.moveLeft();
 					}else{
-						System.out.println("right");
+						System.out.println("touchpad right");
 						mapLayer.actor.moveRight();
 					}
 				}else{
 					if(touchpad.getKnobPercentY()>0){
-						System.out.println("down");
+						System.out.println("touchpad down");
 						mapLayer.actor.moveDown();
 					}else{
 						mapLayer.actor.moveUp();
-						System.out.println("up");
+						System.out.println("touchpad up");
 					}
 				}
 			}

@@ -79,7 +79,7 @@ public abstract class AnimationEntity extends LevelDrawActor implements Poolable
 			ballShapeDef.friction = 1f;////摩擦粗糙程度
 			ballShapeDef.restitution = 0.0f;//碰撞后，恢复原状后的力量,力度返回程度（弹性）
 			ballShapeDef.shape = c;//形状
-            ballShapeDef.isSensor= true;//当isSensor为false时(这也是默认值)，在发生碰撞后，由Box2D模拟物理碰撞后的反弹或变向运动。当isSensor是true时，刚体只进行碰撞检测，而不模拟碰撞后的物理运动。此时，我们就可以自定义刚体处理方式了，如示例中的绕小圆运动。
+            ballShapeDef.isSensor= false;//当isSensor为false时(这也是默认值)，在发生碰撞后，由Box2D模拟物理碰撞后的反弹或变向运动。当isSensor是true时，刚体只进行碰撞检测，而不模拟碰撞后的物理运动。此时，我们就可以自定义刚体处理方式了，如示例中的绕小圆运动。
             body = world.createBody(bd);
 			body.createFixture(ballShapeDef);
 			body.setFixedRotation(true);//固定旋转标记把转动惯量逐渐设置成零。
@@ -216,6 +216,27 @@ public abstract class AnimationEntity extends LevelDrawActor implements Poolable
         stop();
         actorPathMoveAction = new ActorPathMoveAction(x,y);
         addAction(actorPathMoveAction);
+    }
+    public void moveToTarget(AnimationEntity target){
+        stop();
+        actorPathMoveAction = new ActorPathMoveAction(target);
+        addAction(actorPathMoveAction);
+    }
+
+    public AnimationEntity findClosestEntry(){
+        AnimationEntity finded = null;
+        float distance = Float.MAX_VALUE;
+        for(Actor actor : getStage().getActors()){
+            if(actor instanceof AnimationEntity && actor != this){
+                AnimationEntity entity = (AnimationEntity) actor;
+                float d = Vector2.dst2(entity.getEntityX(),entity.getEntityY(),this.getEntityX(),this.getEntityY());
+                if(d < distance){
+                    distance = d;
+                    finded = entity;
+                }
+            }
+        }
+        return finded;
     }
 
     public void turnDirection(float degrees){
