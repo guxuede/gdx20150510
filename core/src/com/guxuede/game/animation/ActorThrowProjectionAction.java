@@ -1,10 +1,16 @@
 package com.guxuede.game.animation;
 
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Action;
 import com.guxuede.game.actor.ActorFactory;
 import com.guxuede.game.actor.AnimationEntity;
 import com.guxuede.game.actor.AnimationProjection;
-import com.guxuede.game.libgdx.ResourceManager;
+import com.guxuede.game.animation.move.ActorMoveToAction;
+import com.guxuede.game.animation.move.ActorMoveToActorAction;
+import com.guxuede.game.animation.move.ActorMoveToMutilActorRandomAction;
+import com.guxuede.game.animation.move.ActorMoveToMutilPointAction;
+
+import java.util.Arrays;
 
 /**
  * Created by guxuede on 2016/6/15 .
@@ -50,11 +56,12 @@ public class ActorThrowProjectionAction extends Action {
         projection.sourceActor = animationEntity;
         projection.setEntityPosition(fx, fy);
         //projection.turnDirection(animationEntity.degrees);
-        ActorPathMoveAction actorPathMoveAction = new ActorPathMoveAction(animationEntity.findClosestEntry());
+        ActorMoveToAction actorMoveToAction = //new ActorMoveToActorAction(animationEntity.findClosestEntry()); new ActorMoveToMutilPointAction(Arrays.asList(new Vector2(100,100),new Vector2(200,200),new Vector2(500,200)));
+                new ActorMoveToMutilActorRandomAction(5);
         projection.addAction(
                 ActionsFactory.sequence(ActionsFactory.scaleBy(5, 5, 0.1f),
                         ActionsFactory.scaleBy(-5, -5, 0.1f),
-                        actorPathMoveAction
+                        actorMoveToAction
                         , ActionsFactory.actorDeathAnimation()
                 ));
         //projection.moveToPoint(dx,dy);

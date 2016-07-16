@@ -12,17 +12,20 @@ import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
-import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Pool.Poolable;
 import com.guxuede.game.actor.state.ActorState;
 import com.guxuede.game.actor.state.StandState;
 import com.guxuede.game.animation.ActorAlwayMoveAction;
-import com.guxuede.game.animation.ActorPathMoveAction;
+import com.guxuede.game.animation.move.ActorMoveToAction;
+import com.guxuede.game.animation.move.ActorMoveToActorAction;
+import com.guxuede.game.animation.move.ActorMoveToPointAction;
 import com.guxuede.game.libgdx.GdxSprite;
 import com.guxuede.game.resource.ActorAnimationPlayer;
 import com.guxuede.game.libgdx.ResourceManager;
 import com.guxuede.game.animation.ActionsFactory;
+
+import java.util.List;
 
 public abstract class AnimationEntity extends LevelDrawActor implements Poolable{
 
@@ -171,7 +174,7 @@ public abstract class AnimationEntity extends LevelDrawActor implements Poolable
 
 
     /**************************************position control**************************************************/
-    private ActorPathMoveAction actorPathMoveAction;
+    private ActorMoveToAction actorMoveToAction;
     public void moveLeft(){
 		addAction(ActionsFactory.actorMoveDirective(LEFT));
 		animationPlayer.onMoveLeft();
@@ -205,8 +208,8 @@ public abstract class AnimationEntity extends LevelDrawActor implements Poolable
 	}
 
 	public void stop(){
-        if(actorPathMoveAction!=null){
-            removeAction(actorPathMoveAction);
+        if(actorMoveToAction !=null){
+            removeAction(actorMoveToAction);
         }
 		addAction(ActionsFactory.actorMoveDirective(STOP));
 		animationPlayer.onStop(this.direction);
@@ -214,20 +217,20 @@ public abstract class AnimationEntity extends LevelDrawActor implements Poolable
 
     public void moveToPoint(float x, float y){
         stop();
-        actorPathMoveAction = new ActorPathMoveAction(x,y);
-        addAction(actorPathMoveAction);
+        actorMoveToAction = new ActorMoveToPointAction(x,y);
+        addAction(actorMoveToAction);
     }
     public void moveToTarget(AnimationEntity target){
         stop();
-        actorPathMoveAction = new ActorPathMoveAction(target);
-        addAction(actorPathMoveAction);
+        actorMoveToAction = new ActorMoveToActorAction(target);
+        addAction(actorMoveToAction);
     }
 
-    public AnimationEntity findClosestEntry(){
+    public AnimationEntity findClosestEntry(List<AnimationEntity> excludes){
         AnimationEntity finded = null;
         float distance = Float.MAX_VALUE;
         for(Actor actor : getStage().getActors()){
-            if(actor instanceof AnimationEntity && actor != this){
+            if(actor instanceof AnimationEntity && actor != this && (excludes == null || !excludes.contains(actor))){
                 AnimationEntity entity = (AnimationEntity) actor;
                 float d = Vector2.dst2(entity.getEntityX(),entity.getEntityY(),this.getEntityX(),this.getEntityY());
                 if(d < distance){
@@ -240,6 +243,7 @@ public abstract class AnimationEntity extends LevelDrawActor implements Poolable
     }
 
     public void turnDirection(float degrees){
+        final int oldDirection = this.direction;
 		this.degrees = degrees;
 		if(degrees > 45 && degrees < 135){
 			direction = AnimationEntity.UP;
@@ -250,6 +254,17 @@ public abstract class AnimationEntity extends LevelDrawActor implements Poolable
 		}else if(degrees > 325 || degrees < 45){
 			direction = AnimationEntity.RIGHT;
 		}
+
+            if(direction == AnimationEntity.LEFT){
+                animationPlayer.doMoveLeftAnimation();
+            }else if(direction == AnimationEntity.RIGHT){
+                animationPlayer.doMoveRightAnimation();
+            }else if(direction == AnimationEntity.DOWN){
+                animationPlayer.doMoveDownAnimation();
+            }else if(direction == AnimationEntity.UP){
+                animationPlayer.doMoveUpAnimation();
+            }
+
 	}
 
     public void setDirection(int direction) {

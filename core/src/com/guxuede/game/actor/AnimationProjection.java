@@ -35,7 +35,7 @@ public class AnimationProjection extends AnimationEntity {
 
     public void init(){
 		this.scaleBy(1);
-		speed = 50000;
+		speed = 50000000;
 	}
 	
 	@Override
