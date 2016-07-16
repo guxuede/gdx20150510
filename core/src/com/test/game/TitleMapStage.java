@@ -3,7 +3,6 @@ package com.test.game;
 import java.util.Comparator;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.Batch;
@@ -27,7 +26,6 @@ import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.Manifold;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
-import com.badlogic.gdx.physics.box2d.WorldManifold;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
@@ -37,7 +35,6 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 import com.guxuede.game.actor.*;
 import com.guxuede.game.animation.ActorChangeAppearanceAction;
 import com.guxuede.game.animation.ActorFormulaTracksAction;
-import com.guxuede.game.animation.ActorPathMoveAction;
 import com.guxuede.game.effects.AnimationEffect;
 import com.guxuede.game.effects.DoubleImageEffect;
 import com.guxuede.game.libgdx.ResourceManager;
@@ -198,8 +195,8 @@ public class TitleMapStage extends Stage{
         addActor(ActorFactory.createActor("thunder1", world, focusListener));
         //addActor(ActorFactory.createEffectsActor("special10", world, focusListener));
         addActor(ActorFactory.createActor("kulou1", world,focusListener));
-        AnimationProjection projection = ActorFactory.createProjectionActor("kulou1", world, focusListener);
-        addActor(projection);
+//        AnimationProjection projection = ActorFactory.createProjectionActor("kulou1", world, focusListener);
+//        addActor(projection);
 		//actor.body.setTransform(100, 100, 0);
 		createABoack(map);
 	}
@@ -215,8 +212,9 @@ boolean pause = false;
         if(pause){
             return;
         }
-		world.step(Gdx.app.getGraphics().getDeltaTime(), 6, 2); 
-		for(Actor actor:getActors()){
+		//world.step(Gdx.app.getGraphics().getDeltaTime(), 6, 2);
+        world.step(Gdx.graphics.getDeltaTime(), 3, 3);
+        for(Actor actor:getActors()){
 			if(actor instanceof AnimationEntity){
 				AnimationEntity a = ((AnimationEntity) actor);
 				a.createBody(world);
