@@ -3,11 +3,13 @@ package com.guxuede.game.actor;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.Action;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.viewport.Viewport;
 import com.guxuede.game.libgdx.GdxEffect;
 import com.guxuede.game.libgdx.GdxSprite;
 import com.guxuede.game.libgdx.ResourceManager;
@@ -44,14 +46,11 @@ public class LevelDrawActor extends Actor {
      * @return
      */
     public boolean isInScreen(){
-        Vector3 center = getStage().getViewport().getCamera().position;
-        float screenW = getStage().getViewport().getScreenWidth()/2;
-        float screenH = getStage().getViewport().getScreenHeight()/2;
-        if(getEntityX() > center.x-screenW && getEntityX() < center.x+screenW-100 &&
-                getEntityY() > center.y-screenH && getEntityY() < center.y+screenH-100 ){
-            return true;
-        }
-        return false;
+        Viewport viewport = getStage().getViewport();
+        Vector3 center = viewport.getCamera().position;
+        float screenW = Math.max(viewport.getScreenWidth(),viewport.getScreenHeight());
+        float dis = Vector2.dst(center.x,center.y,getEntityX(),getEntityY());
+        return dis < screenW/2;
     }
 
     @Override

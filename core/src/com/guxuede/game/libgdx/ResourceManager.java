@@ -23,6 +23,7 @@ public class ResourceManager {
     public static final List<AnimationHolder> ANIMATION_HOLDER_LIST = ActorJsonParse.parse("actor.json");
 
     public static Sound sound = Gdx.audio.newSound(Gdx.files.internal("164-Skill08.ogg"));;
+    public static Sound thunderSound = Gdx.audio.newSound(Gdx.files.internal("thunder1.wav"));;
 
     //一些资源初始化
 	public static Skin skin=new Skin(Gdx.files.internal("uiskin.json"));

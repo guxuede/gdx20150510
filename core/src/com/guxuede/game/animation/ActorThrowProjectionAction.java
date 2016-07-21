@@ -9,8 +9,15 @@ import com.guxuede.game.animation.move.ActorMoveToAction;
 import com.guxuede.game.animation.move.ActorMoveToActorAction;
 import com.guxuede.game.animation.move.ActorMoveToMutilActorRandomAction;
 import com.guxuede.game.animation.move.ActorMoveToMutilPointAction;
+import com.guxuede.game.effects.AnimationEffect;
+import com.guxuede.game.effects.LightningEffect;
+import com.guxuede.game.effects.LightningEffectMutilActor;
+import com.guxuede.game.effects.LightningEffectMutilPoint;
+import com.guxuede.game.tools.MathUtils;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 /**
  * Created by guxuede on 2016/6/15 .
@@ -21,7 +28,9 @@ public class ActorThrowProjectionAction extends Action {
 
     @Override
     public boolean act(float delta) {
-        throwProjection();
+        //throwProjection();
+        //throwLightProjectionMutilPoint();
+        throwLightProjectionMutilActor();
         return true;
     }
 
@@ -52,7 +61,7 @@ public class ActorThrowProjectionAction extends Action {
 
     public void throwProjection(float fx,float fy,float dx,float dy){
         AnimationEntity animationEntity = (AnimationEntity) getActor();
-        AnimationProjection projection = ActorFactory.createProjectionActor("wind1", animationEntity.body.getWorld(), null);
+        AnimationProjection projection = ActorFactory.createProjectionActor("lightningLine", animationEntity.body.getWorld(), null);
         projection.sourceActor = animationEntity;
         projection.setEntityPosition(fx, fy);
         //projection.turnDirection(animationEntity.degrees);
@@ -68,6 +77,28 @@ public class ActorThrowProjectionAction extends Action {
 
     //projection.moveToTarget();
         animationEntity.getStage().addActor(projection);
+    }
+    public void throwLightProjection(){
+        AnimationEntity animationEntity = (AnimationEntity) getActor();
+        AnimationEntity targetEntity = animationEntity.findClosestEntry(null);
+        LightningEffect lightningEffect = new LightningEffect("lightningLine",targetEntity);
+        animationEntity.addAction(lightningEffect);
+        targetEntity.addAction(new AnimationEffect("lightningAttacked"));
+    }
+    public void throwLightProjectionMutilPoint(){
+        AnimationEntity animationEntity = (AnimationEntity) getActor();
+        LightningEffectMutilPoint lightningEffect = new LightningEffectMutilPoint("lightningLine",Arrays.asList(new Vector2(100,100),new Vector2(200,200)));
+        animationEntity.addAction(lightningEffect);
+        //targetEntity.addAction(new AnimationEffect("lightningAttacked"));
+    }
+
+    public void throwLightProjectionMutilActor(){
+        AnimationEntity animationEntity = (AnimationEntity) getActor();
+        List<AnimationEntity> findList = new ArrayList<AnimationEntity>();
+        MathUtils.findClosestEntry(animationEntity.getStage().getActors(),findList,animationEntity);
+        LightningEffectMutilActor lightningEffect = new LightningEffectMutilActor("lightningLine",findList);
+        animationEntity.addAction(lightningEffect);
+        //targetEntity.addAction(new AnimationEffect("lightningAttacked"));
     }
 
 }

@@ -37,6 +37,12 @@ public class ActorFactory {
         AnimationProjection animationActor = new AnimationProjection(actorAnimationPlayer,world,l);
         return animationActor;
     }
+    public static LightningEntity createLightningEntity(String name,World world,InputListener l) {
+        AnimationHolder animationHolder = ResourceManager.getAnimationHolder(name);
+        ActorAnimationPlayer actorAnimationPlayer = new ActorAnimationPlayer(animationHolder);
+        LightningEntity animationActor = new LightningEntity(actorAnimationPlayer,world,l);
+        return animationActor;
+    }
 
 
     public static AnimationActor createAnimationActor(String name,World world,InputListener l) {

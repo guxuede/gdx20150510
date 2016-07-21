@@ -157,7 +157,7 @@ public abstract class AnimationEntity extends LevelDrawActor implements Poolable
     public float drawOffSetX,drawOffSetY;
 
     public void drawFoot(Batch batch, float parentAlpha){
-        batch.draw(ResourceManager.humanShadow,this.getEntityX() - ResourceManager.humanShadow.getRegionWidth()/2,this.getEntityY()-ResourceManager.humanShadow.getRegionHeight()/2);
+        //batch.draw(ResourceManager.humanShadow,this.getEntityX() - ResourceManager.humanShadow.getRegionWidth()/2,this.getEntityY()-ResourceManager.humanShadow.getRegionHeight()/2);
     }
     public void drawBody(Batch batch, float parentAlpha) {
         GdxSprite sprite = (GdxSprite) animationPlayer.getKeyFrame();
@@ -230,9 +230,13 @@ public abstract class AnimationEntity extends LevelDrawActor implements Poolable
         AnimationEntity finded = null;
         float distance = Float.MAX_VALUE;
         for(Actor actor : getStage().getActors()){
-            if(actor instanceof AnimationEntity && actor != this && (excludes == null || !excludes.contains(actor))){
+            if(actor instanceof AnimationEntity
+                && !(actor instanceof AnimationProjection)
+                && actor != this
+                && (excludes == null || !excludes.contains(actor))
+             ){
                 AnimationEntity entity = (AnimationEntity) actor;
-                float d = Vector2.dst2(entity.getEntityX(),entity.getEntityY(),this.getEntityX(),this.getEntityY());
+                float d = Vector2.dst(entity.getEntityX(),entity.getEntityY(),this.getEntityX(),this.getEntityY());
                 if(d < distance){
                     distance = d;
                     finded = entity;
@@ -255,15 +259,15 @@ public abstract class AnimationEntity extends LevelDrawActor implements Poolable
 			direction = AnimationEntity.RIGHT;
 		}
 
-            if(direction == AnimationEntity.LEFT){
-                animationPlayer.doMoveLeftAnimation();
-            }else if(direction == AnimationEntity.RIGHT){
-                animationPlayer.doMoveRightAnimation();
-            }else if(direction == AnimationEntity.DOWN){
-                animationPlayer.doMoveDownAnimation();
-            }else if(direction == AnimationEntity.UP){
-                animationPlayer.doMoveUpAnimation();
-            }
+        if(direction == AnimationEntity.LEFT){
+            animationPlayer.doMoveLeftAnimation();
+        }else if(direction == AnimationEntity.RIGHT){
+            animationPlayer.doMoveRightAnimation();
+        }else if(direction == AnimationEntity.DOWN){
+            animationPlayer.doMoveDownAnimation();
+        }else if(direction == AnimationEntity.UP){
+            animationPlayer.doMoveUpAnimation();
+        }
 
 	}
 

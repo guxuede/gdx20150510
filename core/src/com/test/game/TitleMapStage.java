@@ -189,15 +189,19 @@ public class TitleMapStage extends Stage{
         actor1.addAction(effect);
         addActor(actor1);
 
-		addActor(new ParticelActor());
-		addActor(new BarrageTip("hello",100,100));
-        //addActor(ActorFactory.createActor("light4", world, focusListener));
-        addActor(ActorFactory.createActor("thunder1", world, focusListener));
+		//addActor(new ParticelActor());
+		//addActor(new BarrageTip("hello",100,100));
+        addActor(ActorFactory.createActor("Bird", world, focusListener));
+        //addActor(ActorFactory.createActor("thunder1", world, focusListener));
         //addActor(ActorFactory.createEffectsActor("special10", world, focusListener));
-        addActor(ActorFactory.createActor("kulou1", world,focusListener));
+       // addActor(ActorFactory.createActor("kulou1", world,focusListener));
 //        AnimationProjection projection = ActorFactory.createProjectionActor("kulou1", world, focusListener);
 //        addActor(projection);
 		//actor.body.setTransform(100, 100, 0);
+//        LightningEntity lightningEntity = ActorFactory.createLightningEntity("lightningLine",world,focusListener);
+//        lightningEntity.sourceActor = actor;
+//        lightningEntity.targetAnimation = actor1;
+//        addActor(lightningEntity);
 		createABoack(map);
 	}
 	

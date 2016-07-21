@@ -27,8 +27,8 @@ public abstract class ActorMoveToAction extends Action {
         final AnimationEntity entity = (AnimationEntity) getTarget();
         if(!isArrive()){
             final Vector2 target = getTargetPoint();
-            final float angle = MathUtils.getAngle(entity.getEntityX(),entity.getEntityY(),target.x,target.y);
-            entity.turnDirection(angle);
+            final float degrees = MathUtils.getAngle(entity.getEntityX(),entity.getEntityY(),target.x,target.y);
+            entity.turnDirection(degrees);
             entity.isMoving = true;
             return false;
         }

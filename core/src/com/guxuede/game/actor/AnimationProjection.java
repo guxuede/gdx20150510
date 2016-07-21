@@ -20,6 +20,7 @@ import java.util.Map;
 
 public class AnimationProjection extends AnimationEntity {
 
+    protected boolean trunDirectionWhenMove = true;
 
     public AnimationProjection(ActorAnimationPlayer animationPlayer, World world, InputListener l) {
         super(animationPlayer, world, l);
@@ -72,21 +73,24 @@ public class AnimationProjection extends AnimationEntity {
 	@Override
 	public void turnDirection(float degrees) {
 		super.turnDirection(degrees);
-		//this.setRotation(degrees+90);
+        if(trunDirectionWhenMove){
+            this.setRotation(degrees+90);
+        }
 	}
 
     public void hit(AnimationEntity entity,Vector2 vector2){
         doShowDamageEffect(vector2, entity);
-        ResourceManager.sound.play();
     }
 
 
     public void doShowDamageEffect(Vector2 vector2, Actor actor) {
-        BarrageTip tip = new BarrageTip("-1", vector2.x, vector2.y);
-        tip.setZIndex(Integer.MAX_VALUE);
-        getStage().addActor(tip);
 
         if (actor != null) {
+            BarrageTip tip = new BarrageTip("-1", actor.getX(), actor.getY());
+            tip.setZIndex(Integer.MAX_VALUE);
+            getStage().addActor(tip);
+
+            ResourceManager.sound.play();
             actor.addAction(
                     ActionsFactory.sequence(
                             ActionsFactory.color(Color.RED, 0.1f),
@@ -95,7 +99,7 @@ public class AnimationProjection extends AnimationEntity {
                     )
             );
             AnimationEffect effect = new AnimationEffect();
-            effect.setEffectAnimation(ResourceManager.getAnimationHolder("special10").getStopDownAnimation());
+            effect.setEffectAnimation(ResourceManager.getAnimationHolder("attack1").getStopDownAnimation());
             actor.addAction(effect);
         }
     }

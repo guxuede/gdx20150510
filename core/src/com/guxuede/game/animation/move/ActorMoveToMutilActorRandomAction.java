@@ -20,26 +20,27 @@ public class ActorMoveToMutilActorRandomAction extends ActorMoveToMutilAction{
         this.times = times;
     }
 
+    private AnimationEntity findNextTarget(){
+        AnimationEntity me = ((AnimationEntity) getTarget());
+        AnimationEntity spellCaster = me.sourceActor;
+        AnimationEntity find
+                = currentEntity != null
+                ? currentEntity.findClosestEntry(Arrays.asList(me,spellCaster))
+                : me.findClosestEntry(Arrays.asList(spellCaster));
+        return find;
+    }
+
     @Override
     public boolean haveNextTarget() {
-        System.out.println("haveNextTarget");
         if(currentTime < times){
-            AnimationEntity spellCaster = (AnimationEntity) getTarget();
-            AnimationEntity find = currentEntity != null ?
-                    currentEntity.findClosestEntry(Arrays.asList(spellCaster))
-                    : spellCaster.findClosestEntry(null);
-            return find!=null;
+            return findNextTarget()!=null;
         }
         return false;
     }
 
     @Override
     public void moveToNextTarget() {
-        System.out.println("moveToNextTarget");
-        AnimationEntity spellCaster = (AnimationEntity) getTarget();
-        AnimationEntity find = currentEntity != null ?
-                currentEntity.findClosestEntry(Arrays.asList(spellCaster))
-                : spellCaster.findClosestEntry(null);
+        AnimationEntity find = findNextTarget();
         currentEntity = find;
         currentTime ++;
     }

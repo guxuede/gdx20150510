@@ -731,6 +731,61 @@
         "frames":[4,5,6,7,8,9]
       }
     ]
+  },
+  {
+    "name" : "bullet1",
+    "width":16,
+    "height":16,
+    "texture":"Image 160",
+    "animations":[
+      {
+        "name":"walkDownAnimation,walkLeftAnimation,walkRightAnimation,walkUpAnimation,stopDownAnimation,stopLeftAnimation,stopRightAnimation,stopUpAnimation,deathAnimation",
+        "frameDuration":0.1,
+        "frames":[0,1,2]
+      }
+    ]
+  },
+  {
+    "name" : "lightningLine",
+    "width":32,
+    "height":100,
+    "texture":"Thunder1",
+    "animations":[
+      {
+        "width":192,
+        "height":192,
+        "name":"walkDownAnimation,walkLeftAnimation,walkRightAnimation,walkUpAnimation,stopDownAnimation,stopLeftAnimation,stopRightAnimation,stopUpAnimation,deathAnimation",
+        "frameDuration":0.1,
+        "scaleX":0.4,
+        "scaleY":0.7,
+        "frames":[0,3,[0,192,192,100],4]
+      }
+    ]
+  },
+  {
+    "name" : "lightningSpell",
+    "width":192,
+    "height":192,
+    "texture":"ThunderSpell",
+    "animations":[
+      {
+        "name":"walkDownAnimation,walkLeftAnimation,walkRightAnimation,walkUpAnimation,stopDownAnimation,stopLeftAnimation,stopRightAnimation,stopUpAnimation,deathAnimation",
+        "frameDuration":0.1,
+        "frames":[6,5,4,3,2,1,0]
+      }
+    ]
+  },
+  {
+    "name" : "lightningAttacked",
+    "width":192,
+    "height":192,
+    "texture":"Thunder2",
+    "animations":[
+      {
+        "name":"walkDownAnimation,walkLeftAnimation,walkRightAnimation,walkUpAnimation,stopDownAnimation,stopLeftAnimation,stopRightAnimation,stopUpAnimation,deathAnimation",
+        "frameDuration":0.1,
+        "frames":[0,1,2,3,4,5]
+      }
+    ]
   }
-
 ]

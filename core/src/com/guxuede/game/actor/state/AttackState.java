@@ -26,7 +26,7 @@ public class AttackState extends StandState {
         entity.stop();
         //entity.animationPlayer.doAttackAnimation();
         //animationDuration = entity.animationPlayer.currentAnimation.getAnimationDuration();
-        animationEffect = new AnimationEffect("heal6");
+        animationEffect = new AnimationEffect("lightningSpell");
         entity.addAction(animationEffect);
         animationDuration =animationEffect.getDuration();
     }

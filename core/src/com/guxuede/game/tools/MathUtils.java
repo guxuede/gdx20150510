@@ -1,9 +1,18 @@
 package com.guxuede.game.tools;
 
+import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.utils.Array;
+import com.guxuede.game.actor.AnimationEntity;
+import com.guxuede.game.actor.AnimationProjection;
+
+import java.util.List;
+
 public class MathUtils {
 
     /**
-     * return p1 and p2 angle
+     * Compute the angle between two points
+     * return p1 and p2 angle (degree)
      * @param startX
      * @param startY
      * @param endX
@@ -23,6 +32,7 @@ public class MathUtils {
 	}
 	
     /**
+     * 返回从此 Point2D 到指定点的距离的平方
      * Returns the square of the distance between two points.
      *
      * @param x1 the X coordinate of the first specified point
@@ -42,7 +52,7 @@ public class MathUtils {
     }
 
     /**
-     * Returns the distance between two points.
+     * 返回两个点之间距离。
      *
      * @param x1 the X coordinate of the first specified point
      * @param y1 the Y coordinate of the first specified point
@@ -60,6 +70,35 @@ public class MathUtils {
         return Math.sqrt(x1 * x1 + y1 * y1);
     }
 
+
+    /**
+     * 找到最近This的单位
+     * @param actorList
+     * @param findedList
+     * @param This
+     */
+    public static void findClosestEntry(Array<Actor> actorList, List<AnimationEntity> findedList, AnimationEntity This){
+        AnimationEntity finded = null;
+        float distance = Float.MAX_VALUE;
+        for(Actor actor : actorList){
+            if(actor instanceof AnimationEntity
+                    && !(actor instanceof AnimationProjection)
+                    && actor != This
+                    && (findedList == null || !findedList.contains(actor))
+                    ){
+                AnimationEntity entity = (AnimationEntity) actor;
+                float d = Vector2.dst(entity.getEntityX(),entity.getEntityY(),This.getEntityX(),This.getEntityY());
+                if(d < distance){
+                    distance = d;
+                    finded = entity;
+                }
+            }
+        }
+        if(finded!=null){
+            findedList.add(finded);
+            findClosestEntry(actorList,findedList,This);
+        }
+    }
 
     
     public static void main(String[] args) {
