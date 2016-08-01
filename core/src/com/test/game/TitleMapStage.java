@@ -172,6 +172,7 @@ public class TitleMapStage extends Stage{
         DoubleImageEffect doubleImageEffect = new DoubleImageEffect();
         doubleImageEffect.setDuration(50);
         actor.addAction(doubleImageEffect);
+        actor.addAction(new AnimationEffect("3aaa",100));
         addActor(actor);
 
         AnimationActor actor1 = ActorFactory.createActor("Undead", world, focusListener);
@@ -192,6 +193,7 @@ public class TitleMapStage extends Stage{
 		//addActor(new ParticelActor());
 		//addActor(new BarrageTip("hello",100,100));
         addActor(ActorFactory.createActor("Bird", world, focusListener));
+
         //addActor(ActorFactory.createActor("thunder1", world, focusListener));
         //addActor(ActorFactory.createEffectsActor("special10", world, focusListener));
        // addActor(ActorFactory.createActor("kulou1", world,focusListener));
