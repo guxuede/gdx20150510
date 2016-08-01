@@ -787,5 +787,68 @@
         "frames":[0,1,2,3,4,5]
       }
     ]
-  }
+  },
+  {
+    "name" : "lightningLine1",
+    "width":128,
+    "height":128,
+    "scaleX":0.5,
+    "animations":[
+      {
+        "name":"walkDownAnimation,walkLeftAnimation,walkRightAnimation,walkUpAnimation,stopDownAnimation,stopLeftAnimation,stopRightAnimation,stopUpAnimation,deathAnimation",
+        "frameDuration":0.05,
+        "frames":[
+          {
+            "index":0,
+            "frameElements":[
+              {
+                "texture":"llllight",
+                "frame":[0,0,128,128]
+              }
+            ]
+          },
+          {
+            "index":0,
+            "frameElements":[
+              {
+                "texture":"llllight",
+                "frame":[0,128,128,128]
+              }
+            ]
+          },
+          {
+            "index":0,
+            "frameElements":[
+              {
+                "texture":"llllight",
+                "frame":[128,0,128,128]
+              }
+            ]
+          },
+          {
+            "index":0,
+            "frameElements":[
+              {
+                "texture":"llllight",
+                "frame":[128,128,128,128]
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+  "name" : "3aaa",
+  "width":64,
+  "height":32,
+  "texture":"3aaa",
+  "animations":[
+    {
+      "name":"walkDownAnimation,walkLeftAnimation,walkRightAnimation,walkUpAnimation,stopDownAnimation,stopLeftAnimation,stopRightAnimation,stopUpAnimation,deathAnimation",
+      "frameDuration":0.1,
+      "frames":[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15]
+    }
+  ]
+}
 ]

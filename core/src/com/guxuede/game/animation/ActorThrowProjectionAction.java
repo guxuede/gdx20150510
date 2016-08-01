@@ -29,6 +29,7 @@ public class ActorThrowProjectionAction extends Action {
     @Override
     public boolean act(float delta) {
         //throwProjection();
+        //throwLightProjection();
         //throwLightProjectionMutilPoint();
         throwLightProjectionMutilActor();
         return true;
@@ -96,7 +97,7 @@ public class ActorThrowProjectionAction extends Action {
         AnimationEntity animationEntity = (AnimationEntity) getActor();
         List<AnimationEntity> findList = new ArrayList<AnimationEntity>();
         MathUtils.findClosestEntry(animationEntity.getStage().getActors(),findList,animationEntity);
-        LightningEffectMutilActor lightningEffect = new LightningEffectMutilActor("lightningLine",findList);
+        LightningEffectMutilActor lightningEffect = new LightningEffectMutilActor("lightningLine1",findList);
         animationEntity.addAction(lightningEffect);
         //targetEntity.addAction(new AnimationEffect("lightningAttacked"));
     }

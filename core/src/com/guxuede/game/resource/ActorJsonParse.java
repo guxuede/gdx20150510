@@ -34,7 +34,7 @@ public class ActorJsonParse {
         protected float height;
         protected float alpha;
         protected float rotation;
-        protected float scale;
+
         protected float scaleX;
         protected float scaleY;
         //精灵展示位置
@@ -208,7 +208,7 @@ public class ActorJsonParse {
             JsonValue frameElementJ = it.next();
             if(frameElementJ.isObject()){
                 ParseContext localParseContext = extendParentParseContext(parentParseContext, frameElementJ);
-                TextureRegion textureRegion = getTextureRegion(parentParseContext, frameElementJ.get("frame"));
+                TextureRegion textureRegion = getTextureRegion(localParseContext, frameElementJ.get("frame"));
                 GdxSprite spriteElement = new GdxSprite(textureRegion);
                 applyDefaultValueToSprite(localParseContext,spriteElement);
                 frames[i] = spriteElement;
@@ -274,7 +274,6 @@ public class ActorJsonParse {
         if(parseContext == null){
             parseContext = new ParseContext();
             parseContext.alpha = 1;
-            parseContext.scale = 1;
             parseContext.scaleX = 1;
             parseContext.scaleY = 1;
             parseContext.frameDuration = 0.1f;
@@ -287,9 +286,17 @@ public class ActorJsonParse {
         float height = animJ.getFloat("height", parseContext.height);
         float alpha = animJ.getFloat("alpha", parseContext.alpha);
         float rotation = animJ.getFloat("rotation", parseContext.rotation);
-        float scale = animJ.getFloat("scale", parseContext.scale);
-        float scaleX = animJ.getFloat("scaleX", scale);
-        float scaleY = animJ.getFloat("scaleY", scale);
+        float scaleX = parseContext.scaleX, scaleY = parseContext.scaleY;
+        if(animJ.has("scale")){
+            scaleX = scaleY = animJ.getFloat("scale", 1);
+        }
+        if(animJ.has("scaleX")){
+            scaleX = animJ.getFloat("scaleX", scaleX);
+        }
+        if(animJ.has("scaleY")){
+            scaleY = animJ.getFloat("scaleY", scaleY);
+        }
+
         float textureOffSetX = animJ.getFloat("textureOffSetX",parseContext.textureOffSetX);
         float textureOffSetY = animJ.getFloat("textureOffSetY",parseContext.textureOffSetY);
 
@@ -300,7 +307,6 @@ public class ActorJsonParse {
         localParseContext.height = height;
         localParseContext.alpha = alpha;
         localParseContext.rotation =rotation;
-        localParseContext.scale = scale;
         localParseContext.scaleX = scaleX;
         localParseContext.scaleY = scaleY;
         localParseContext.x =x;

@@ -24,6 +24,12 @@ public class AnimationEffect extends GdxEffect {
         setEffectAnimation(effectAnimation);
     }
 
+    public AnimationEffect(String animationName,float duration){
+        Animation effectAnimation = ResourceManager.getAnimationHolder(animationName).getStopDownAnimation();
+        setEffectAnimation(effectAnimation);
+        this.setDuration(duration);
+    }
+
     @Override
     public void drawBodyEffect(Batch batch, float parentAlpha){
         if(effectAnimation!=null){

@@ -1,5 +1,6 @@
 package com.guxuede.game.effects;
 
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.math.Vector2;
 import com.guxuede.game.actor.AnimationEntity;
@@ -43,33 +44,15 @@ public class LightningEffectMutilActor extends AnimationEffect{
 
     private void drawLight(Batch batch, float parentAlpha, GdxSprite sprite, Vector2 source, Vector2 target) {
         float degrees = MathUtils.getAngle(source.x,source.y,target.x,target.y);
-        sprite.setRotation(degrees+90);
-        float distance = (float) MathUtils.distance(source.x,source.y,target.x,target.y);//2单位之间的距离
-        float lightLen = 100;//闪电素材的长度
-        //for(int i=0;i<getlenAnima(distance/lightLen,animationActor.stateTime);i++){
-        int totalDuan = (int) (distance/lightLen);
 
-        //修正闪电出发的位置应该，早于闪电长度的一半，这样，闪电在于施法者的前面
-        float drxa = source.x + com.badlogic.gdx.math.MathUtils.cosDeg(degrees) * (lightLen);
-        float drya = source.y + com.badlogic.gdx.math.MathUtils.sinDeg(degrees) * (lightLen);
+        float distance = (float) MathUtils.distance(source.x,source.y,target.x,target.y);//2单位之间的距离
+        float lightLen = 128;//闪电素材的长度
+
+        float drxa = source.x + com.badlogic.gdx.math.MathUtils.cosDeg(degrees) * (distance/2);
+        float drya = source.y + com.badlogic.gdx.math.MathUtils.sinDeg(degrees) * (distance/2);
         sprite.setPosition(drxa , drya);
-        sprite.draw(batch, parentAlpha);
-        //画闪电体
-        for(int i=1;i<totalDuan;i++){
-            float drx = 0;
-            float dry = 0;
-            drx = source.x + com.badlogic.gdx.math.MathUtils.cosDeg(degrees) * (lightLen) * i;
-            dry = source.y + com.badlogic.gdx.math.MathUtils.sinDeg(degrees) * (lightLen) * i;
-            sprite.setPosition(drx , dry);
-            sprite.draw(batch, parentAlpha);
-        }
-        //修正最后打在目标上的闪电位置
-        if(distance > lightLen){
-            float drx = target.x - com.badlogic.gdx.math.MathUtils.cosDeg(degrees) * (lightLen/2);// * totalDuan - com.badlogic.gdx.math.MathUtils.cosDeg(degrees) * (lightLen);
-            float dry = target.y - com.badlogic.gdx.math.MathUtils.sinDeg(degrees) * (lightLen/2);// * totalDuan - com.badlogic.gdx.math.MathUtils.sinDeg(degrees) * (lightLen) ;
-            sprite.setPosition(drx , dry);
-            sprite.draw(batch, parentAlpha);
-        }
+        sprite.draw(batch, parentAlpha,degrees+90,1,distance/lightLen, Color.GREEN);
+
     }
 
 
