@@ -10,7 +10,7 @@ import com.test.game.TitleMapGame;
 public class DesktopLauncher {
 	public static void main (String[] args) {
 		LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
-		//new LwjglApplication(new TitleMapGame(), config);
+		new LwjglApplication(new TitleMapGame(), config);
         //new LwjglApplication(new Box2DExample(),config);
         //new LwjglApplication(new MixTest(),config);
 
@@ -24,8 +24,8 @@ public class DesktopLauncher {
 //        }
 
         //new LwjglApplication(new SimpleTest1());
-       // new LwjglApplication(new SimpleTest2());
+       //new LwjglApplication(new SimpleTest2());
         //new LwjglApplication(new SimpleTest3());
-        new LwjglApplication(new SkeletonAttachmentTest(),config);
+        //new LwjglApplication(new SkeletonAttachmentTest(),config);
 	}
 }

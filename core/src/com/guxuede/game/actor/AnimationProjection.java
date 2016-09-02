@@ -1,26 +1,23 @@
 package com.guxuede.game.actor;
 
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.g2d.TextureAtlas;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.CircleShape;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.World;
-import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.guxuede.game.animation.ActionsFactory;
 import com.guxuede.game.effects.AnimationEffect;
 import com.guxuede.game.libgdx.ResourceManager;
 import com.guxuede.game.resource.ActorAnimationPlayer;
-
-import java.util.HashMap;
-import java.util.Map;
+import com.guxuede.game.tools.SoundUtils;
 
 public class AnimationProjection extends AnimationEntity {
 
     protected boolean trunDirectionWhenMove = true;
+
+    long soundId=-1;
 
     public AnimationProjection(ActorAnimationPlayer animationPlayer, World world, InputListener l) {
         super(animationPlayer, world, l);
@@ -37,12 +34,16 @@ public class AnimationProjection extends AnimationEntity {
     public void init(){
 		this.scaleBy(1);
 		speed = 50000000;
+        setZIndex(2);
+        soundId = ResourceManager.sound_fire_flying.play();
+        ResourceManager.sound_fire_flying.setLooping(soundId,true);
+        //ResourceManager.sound_fire_flying.setPan(soundId, -0.5f, 1f);
 	}
 	
 	@Override
 	public void createBody(World world) {
         if(lifeStatus == LIFE_STATUS_CREATE) {
-            lifeStatus = LIFE_STATUS_LIVE;
+            lifeStatus = LIFE_STATUS_BORN;
             int actorWidth = animationPlayer.width;
             this.setVisible(true);
             /**********************************box2d************************************************/
@@ -68,6 +69,9 @@ public class AnimationProjection extends AnimationEntity {
             this.body.setBullet(true);
             c.dispose();
         }
+        if(lifeStatus == LIFE_STATUS_BORN){
+            lifeStatus = LIFE_STATUS_LIVE;
+        }
 	}
 	
 	@Override
@@ -78,29 +82,49 @@ public class AnimationProjection extends AnimationEntity {
         }
 	}
 
-    public void hit(AnimationEntity entity,Vector2 vector2){
-        doShowDamageEffect(vector2, entity);
+    @Override
+    public void act(float delta) {
+        super.act(delta);
+        SoundUtils.set3dPan(ResourceManager.sound_fire_flying,soundId,getX(),getY(),getStage().getCamera());
+    }
+
+    /**
+     * 撞击
+     * @param entity 撞击对象
+     * @param position 撞击位置
+     */
+    public void hit(AnimationEntity entity,Vector2 position){
+        doShowDamageEffect(entity,position);
     }
 
 
-    public void doShowDamageEffect(Vector2 vector2, Actor actor) {
+    public void doShowDamageEffect(AnimationEntity entity,Vector2 position) {
+        BarrageTip tip = new BarrageTip("-1", position.x, position.y);
+        tip.setZIndex(Integer.MAX_VALUE);
+        getStage().addActor(tip);
 
-        if (actor != null) {
-            BarrageTip tip = new BarrageTip("-1", actor.getX(), actor.getY());
-            tip.setZIndex(Integer.MAX_VALUE);
-            getStage().addActor(tip);
-
-            ResourceManager.sound.play();
-            actor.addAction(
-                    ActionsFactory.sequence(
-                            ActionsFactory.color(Color.RED, 0.1f),
-                            ActionsFactory.color(Color.PINK, 0.1f),
-                            ActionsFactory.color(new Color(1, 1, 1, 1), 0.1f)
-                    )
-            );
-            AnimationEffect effect = new AnimationEffect();
-            effect.setEffectAnimation(ResourceManager.getAnimationHolder("attack1").getStopDownAnimation());
-            actor.addAction(effect);
+        if (entity != null) {
+            SoundUtils.play(ResourceManager.sound_hited,this);
+            if(entity.equals(this)){
+                entity.dead();
+            }else{
+                entity.addAction(
+                        ActionsFactory.sequence(
+                                ActionsFactory.color(Color.RED, 0.1f),
+                                ActionsFactory.color(Color.PINK, 0.1f),
+                                ActionsFactory.color(new Color(1, 1, 1, 1), 0.1f)
+                        )
+                );
+                AnimationEffect effect = new AnimationEffect();
+                effect.setEffectAnimation(ResourceManager.getAnimationHolder("attack1").getStopDownAnimation());
+                entity.addAction(effect);
+            }
         }
+    }
+
+    @Override
+    public void dispose() {
+        super.dispose();
+        ResourceManager.sound_fire_flying.setLooping(soundId,false);
     }
 }

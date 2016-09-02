@@ -22,8 +22,10 @@ public class ResourceManager {
     public static final TextureAtlas TEXTURE_ATLAS_PACK =new TextureAtlas(Gdx.files.internal("pack"));
     public static final List<AnimationHolder> ANIMATION_HOLDER_LIST = ActorJsonParse.parse("actor.json");
 
-    public static Sound sound = Gdx.audio.newSound(Gdx.files.internal("164-Skill08.ogg"));;
-    public static Sound thunderSound = Gdx.audio.newSound(Gdx.files.internal("thunder1.wav"));;
+    public static Sound sound_fire_spell = Gdx.audio.newSound(Gdx.files.internal("sounds/fire_spell.wav"));
+    public static Sound sound_hited = Gdx.audio.newSound(Gdx.files.internal("sounds/fire_hited.wav"));
+    public static Sound sound_fire_flying = Gdx.audio.newSound(Gdx.files.internal("sounds/fire_flying.wav"));
+    public static Sound thunderSound = Gdx.audio.newSound(Gdx.files.internal("sounds/thunder1.wav"));
 
     //一些资源初始化
 	public static Skin skin=new Skin(Gdx.files.internal("uiskin.json"));
@@ -96,8 +98,12 @@ public class ResourceManager {
     public static AnimationHolder getAnimationHolder(String name){
         for(AnimationHolder animationHolder : ANIMATION_HOLDER_LIST){
             if(name.equals(animationHolder.name)){
-                return animationHolder;
+                return animationHolder;//.getCopy();
             }
+        }
+        if("spine".equalsIgnoreCase(name)){
+
+            new AnimationHolder();
         }
         return null;
     }

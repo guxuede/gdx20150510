@@ -3,6 +3,8 @@ package com.test.game;
 import java.util.Comparator;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
+import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.Batch;
@@ -43,8 +45,8 @@ import com.guxuede.game.animation.ActionsFactory;
 
 public class TitleMapStage extends Stage{
 
-    private boolean isDebug = true;
-	
+    private boolean isDebug = false;
+
 	private MyOrthogonalTiledMapRenderer tileMapRenderer;
 	protected Box2DDebugRenderer debugRenderer;
 	private World world;
@@ -52,11 +54,6 @@ public class TitleMapStage extends Stage{
 	
 	public AnimationEntity actor;
 
-
-
-	public TitleMapStage() {
-		super();
-	}
 
 	public TitleMapStage(Viewport viewport, Batch batch) {
 		super(viewport, batch);
@@ -134,19 +131,23 @@ public class TitleMapStage extends Stage{
                 System.err.println("beginContact start");
                 AnimationEntity actorA = (AnimationEntity) contact.getFixtureA().getBody().getUserData();
                 AnimationEntity actorB = (AnimationEntity) contact.getFixtureB().getBody().getUserData();
-                Vector2 vector2 = contact.getWorldManifold().getNormal();
+                Vector2 vector2 = contact.getWorldManifold().getNormal();//TODO ?得到的位置不正确
                 System.out.println("pppppppp:"+vector2.x+","+vector2.y);
                 if (actorA != null && actorB == null) {
                     if (actorA instanceof AnimationProjection) {
+                        vector2.set(actorA.getEntityX(),actorA.getEntityY());
                         ((AnimationProjection) actorA).hit(actorB, vector2);
                     }
                 } else if (actorB != null && actorA == null) {
                     if (actorB instanceof AnimationProjection) {
-                        ((AnimationProjection) actorB).hit(actorA, vector2);
+                        vector2.set(actorB.getEntityX(),actorB.getEntityY());
+                        ((AnimationProjection) actorB).hit(actorB, vector2);
                     }
                 } else if (actorA instanceof AnimationProjection && actorB instanceof AnimationActor && actorA.sourceActor != actorB) {
+                    vector2.set(actorB.getEntityX(),actorB.getEntityY());
                     ((AnimationProjection) actorA).hit(actorB, vector2);
                 } else if (actorB instanceof AnimationProjection && actorA instanceof AnimationActor && actorB.sourceActor != actorA) {
+                    vector2.set(actorA.getEntityX(),actorA.getEntityY());
                     ((AnimationProjection) actorB).hit(actorA,vector2);
                 }
             }
@@ -193,6 +194,7 @@ public class TitleMapStage extends Stage{
 		//addActor(new ParticelActor());
 		//addActor(new BarrageTip("hello",100,100));
         addActor(ActorFactory.createActor("Bird", world, focusListener));
+        addActor(ActorFactory.createActor("lvbu", world, focusListener));
 
         //addActor(ActorFactory.createActor("thunder1", world, focusListener));
         //addActor(ActorFactory.createEffectsActor("special10", world, focusListener));
@@ -233,37 +235,75 @@ boolean pause = false;
 	
 	@Override
 	public void draw() {
-		tileMapRenderer.setView((OrthographicCamera) getCamera());
+        OrthographicCamera camera = (OrthographicCamera) getCamera();
+        camera.update();
+        tileMapRenderer.setView(camera);
 		tileMapRenderer.renderLayer1();
 		tileMapRenderer.renderLayer2();
-        drawActors();
+        drawThisStage(camera);
 		tileMapRenderer.renderLayer3();
         if(isDebug){
             debugRenderer.render(world, getCamera().combined);
         }
 
 		if(actor!=null){
-			getCamera().position.x=actor.getEntityX();
-			getCamera().position.y=actor.getEntityY();
-		}
+            camera.position.x=actor.getEntityX();
+            camera.position.y=actor.getEntityY();
+		}else{
+            if(Gdx.input.isKeyPressed(Input.Keys.UP)){
+                camera.position.y++;
+                camera.update();
+            }else if(Gdx.input.isKeyPressed(Input.Keys.DOWN)){
+                camera.position.y--;
+                camera.update();
+            }else if(Gdx.input.isKeyPressed(Input.Keys.LEFT)){
+                camera.position.x++;
+                camera.update();
+            }else if(Gdx.input.isKeyPressed(Input.Keys.RIGHT)){
+                camera.position.x--;
+                camera.update();
+            }
+        }
 	}
-	
-	protected void drawActors(){
-		getActors().sort(new Comparator<Actor>() {
+
+    /**
+     * 覆盖其父类的方法，因为我们需要画各种层级DRAW_LEVEL_FOOT，DRAW_LEVEL_BODY，DRAW_LEVEL_HEAD
+     * @param camera
+     */
+    public void drawThisStage(Camera camera){
+        if (getRoot().isVisible()){
+            Batch batch = this.getBatch();
+            if (batch != null) {
+                sortActor();
+                batch.setProjectionMatrix(camera.combined);
+                batch.begin();
+                setActorDrawLevel(LevelDrawActor.DRAW_LEVEL_FOOT);
+                getRoot().draw(batch, 1);
+                setActorDrawLevel(LevelDrawActor.DRAW_LEVEL_BODY);
+                getRoot().draw(batch, 1);
+                setActorDrawLevel(LevelDrawActor.DRAW_LEVEL_HEAD);
+                getRoot().draw(batch, 1);
+                batch.end();
+            }
+            //if (debug) drawDebug(); 不能debug看了 :(
+        }
+
+    }
+
+    private void sortActor(){
+        getActors().sort(new Comparator<Actor>() {
             @Override
             public int compare(Actor o1, Actor o2) {
-                //(o1.getZIndex() < o2.getZIndex())?1:
-                return Float.compare(o2.getY(), o1.getY());
+                if(o1.getZIndex() == o2.getZIndex()){
+                    return Float.compare(o2.getY(), o1.getY());
+                }else{
+                    return Float.compare(o1.getZIndex(), o2.getZIndex());
+                }
+                //return Float.compare(o2.getY(), o1.getY());
                 //return (int) (o2.getY()-o1.getY());
             }
         });
-        setActorDrawLevel(LevelDrawActor.DRAW_LEVEL_FOOT);
-        super.draw();
-        setActorDrawLevel(LevelDrawActor.DRAW_LEVEL_BODY);
-        super.draw();
-        setActorDrawLevel(LevelDrawActor.DRAW_LEVEL_HEAD);
-        super.draw();
-	}
+    }
 
     private void setActorDrawLevel(int drawLevel){
         for(Actor actor : getActors()){

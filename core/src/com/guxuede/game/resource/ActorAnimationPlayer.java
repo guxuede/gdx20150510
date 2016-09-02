@@ -33,8 +33,8 @@ public class ActorAnimationPlayer implements ActorEventListener{
         doIdelAnimation(AnimationActor.DOWN);
     }
 	
-	public void act(){
-        stateTime += Gdx.graphics.getDeltaTime();
+	public void act(float delta){
+        stateTime += delta;
 	}
 
     /**
@@ -123,7 +123,12 @@ public class ActorAnimationPlayer implements ActorEventListener{
 
 
 	public void doAnimation(String animationName){
-        currentAnimation = animationHolder.getAnimation(animationName);
-        lastAnimationName = animationName;
+        Animation animation = animationHolder.getAnimation(animationName);
+        //if animation not change,no need to re do Animation
+        if(currentAnimation != animation){
+            currentAnimation = animation;
+            stateTime = 0;
+            lastAnimationName = animationName;
+        }
     }
 }

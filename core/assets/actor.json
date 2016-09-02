@@ -742,6 +742,11 @@
         "name":"walkDownAnimation,walkLeftAnimation,walkRightAnimation,walkUpAnimation,stopDownAnimation,stopLeftAnimation,stopRightAnimation,stopUpAnimation,deathAnimation",
         "frameDuration":0.1,
         "frames":[0,1,2]
+      },
+      {
+        "name":"deathAnimation",
+        "frameDuration":0.3,
+        "frames":[0,1,2,3,4]
       }
     ]
   },
@@ -850,5 +855,46 @@
       "frames":[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15]
     }
   ]
-}
+  },
+  {
+    "name" : "lvbu",
+    "width":48,
+    "height":64,
+    "texture":"lvbu",
+    "frameDuration":0.1,
+    "animations":[
+      {
+        "name":"walkDownAnimation",
+        "frames":[0,1,2]
+      },
+      {
+        "name":"walkLeftAnimation",
+        "frames":[3,4,5]
+      },
+      {
+        "name":"walkRightAnimation",
+        "frames":[6,7,8]
+      },
+      {
+        "name":"walkUpAnimation",
+        "frames":[9,10,11]
+      },
+      {
+        "name":"stopDownAnimation",
+        "frames":[4]
+      },
+      {
+        "name":"stopLeftAnimation",
+        "frames":[7]
+      },
+      {
+        "name":"stopRightAnimation",
+        "frames":[8]
+      },
+      {
+        "name":"stopUpAnimation",
+        "frames":[10]
+      }
+    ]
+  }
 ]

@@ -159,7 +159,7 @@ public class SkeletonRendererDebug {
 			for (int i = 0, n = polygons.size; i < n; i++) {
 				FloatArray polygon = polygons.get(i);
 				shapes.setColor(boxes.get(i).getColor());
-				shapes.polygon(polygon.items, 0, polygon.size);
+				//shapes.polygon(polygon.items, 0, polygon.size);
 			}
 		}
 

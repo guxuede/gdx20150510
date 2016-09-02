@@ -20,9 +20,11 @@ public class AnimationHolder {
     public static final String DEATH_ANIMATION = "deathAnimation";
     public static final String ATTACK_ANIMATION = "attackAnimation";
 
+    /*********************************************/
     public Map<String,Animation> animationMap = new HashMap<String, Animation>();
     public int width,height;
     public String name;
+    /*********************************************/
 
     public AnimationHolder(){
 
@@ -111,5 +113,18 @@ public class AnimationHolder {
 
     public Animation getAnimation(String name){
         return animationMap.get(name);
+    }
+
+    public AnimationHolder getCopy(){
+        AnimationHolder animationHolder = new AnimationHolder();
+        animationHolder.name = this.name;
+        animationHolder.width = this.width;
+        animationHolder.height = this.height;
+        animationHolder.animationMap = new HashMap<String, Animation>();
+        for(String animationName : this.animationMap.keySet()){
+            Animation animation = this.animationMap.get(animationName);
+            animationHolder.animationMap.put(animationName,new Animation(animation.getFrameDuration(),animation.getKeyFrames()));
+        }
+        return animationHolder;
     }
 }

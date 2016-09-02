@@ -153,14 +153,14 @@ public class TitleMapGame implements ApplicationListener{
         mapStage.act(); 
         mapStage.draw();
         
-        uiStage.act();
-        uiStage.draw();
+        //uiStage.act();
+        //uiStage.draw();
         
 		
-        batch.begin();
-		effect.draw(batch, Gdx.app.getGraphics().getDeltaTime());
+       // batch.begin();
+		//effect.draw(batch, Gdx.app.getGraphics().getDeltaTime());
         //System.out.println(Gdx.graphics.getFramesPerSecond());
-		batch.end();
+		//batch.end();
 	}
 
 	@Override

@@ -28,10 +28,10 @@ public class ActorThrowProjectionAction extends Action {
 
     @Override
     public boolean act(float delta) {
-        //throwProjection();
+        throwProjection();
         //throwLightProjection();
         //throwLightProjectionMutilPoint();
-        throwLightProjectionMutilActor();
+        //throwLightProjectionMutilActor();
         return true;
     }
 
@@ -42,10 +42,25 @@ public class ActorThrowProjectionAction extends Action {
             throwProjection(d);
         }
     }
+
+    /**
+     * 朝施法者方抛射子弹到鼠标指向的地方
+     */
+    public void throwProjectionToMouse(){
+        AnimationEntity animationEntity = (AnimationEntity) getActor();
+        throwProjection(animationEntity.degrees);
+    }
+
+    /**
+     * 朝施法者面向的一方抛射子弹
+     */
     public void throwProjection(){
         AnimationEntity animationEntity = (AnimationEntity) getActor();
         throwProjection(animationEntity.degrees);
     }
+    /**
+     * 朝指定的角度抛射子弹
+     */
     public void throwProjection(float degrees){
         AnimationEntity animationEntity = (AnimationEntity) getActor();
         float l = DEFAULT_PROJECT_RANGE;
@@ -54,15 +69,53 @@ public class ActorThrowProjectionAction extends Action {
         float dy=(float) (animationEntity.getEntityY()+l*Math.sin(radians));
         throwProjection(dx,dy);
     }
+
+    /**
+     * 向指定的坐标抛射子弹
+     * @param dx
+     * @param dy
+     */
     public void throwProjection(float dx,float dy){
         AnimationEntity animationEntity = (AnimationEntity) getActor();
         throwProjection(animationEntity.getEntityX(), animationEntity.getEntityY(),dx,dy);
     }
 
-
+    /**
+     * 从指定位置抛射一个子弹发射到目标位置
+     * @param fx
+     * @param fy
+     * @param dx
+     * @param dy
+     */
     public void throwProjection(float fx,float fy,float dx,float dy){
         AnimationEntity animationEntity = (AnimationEntity) getActor();
-        AnimationProjection projection = ActorFactory.createProjectionActor("lightningLine", animationEntity.body.getWorld(), null);
+        AnimationProjection projection = ActorFactory.createProjectionActor("bullet1", animationEntity.body.getWorld(), null);
+        projection.sourceActor = animationEntity;
+        projection.setEntityPosition(fx, fy);
+        //projection.turnDirection(animationEntity.degrees);
+        ActorMoveToAction actorMoveToAction = new ActorMoveToMutilPointAction(Arrays.asList(new Vector2(dx,dy)));
+        projection.addAction(
+                ActionsFactory.sequence(ActionsFactory.scaleBy(5, 5, 0.1f),
+                        ActionsFactory.scaleBy(-5, -5, 0.1f),
+                        actorMoveToAction
+                        , ActionsFactory.actorDeathAnimation()
+                ));
+        //projection.moveToPoint(dx,dy);
+
+        //projection.moveToTarget();
+        animationEntity.getStage().addActor(projection);
+    }
+
+    /**
+     * 在多个单位来回多次的的子弹
+     * @param fx
+     * @param fy
+     * @param dx
+     * @param dy
+     */
+    public void throwProjection1(float fx,float fy,float dx,float dy){
+        AnimationEntity animationEntity = (AnimationEntity) getActor();
+        AnimationProjection projection = ActorFactory.createProjectionActor("bullet1", animationEntity.body.getWorld(), null);
         projection.sourceActor = animationEntity;
         projection.setEntityPosition(fx, fy);
         //projection.turnDirection(animationEntity.degrees);
@@ -79,6 +132,7 @@ public class ActorThrowProjectionAction extends Action {
     //projection.moveToTarget();
         animationEntity.getStage().addActor(projection);
     }
+
     public void throwLightProjection(){
         AnimationEntity animationEntity = (AnimationEntity) getActor();
         AnimationEntity targetEntity = animationEntity.findClosestEntry(null);

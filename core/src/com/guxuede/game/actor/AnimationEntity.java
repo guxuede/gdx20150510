@@ -30,7 +30,13 @@ import java.util.List;
 public abstract class AnimationEntity extends LevelDrawActor implements Poolable{
 
 	public static final int STOP=0, DOWN=1,LEFT=2,RIGHT=3,UP=4;
-	public static final int LIFE_STATUS_CREATE=0, LIFE_STATUS_BORN=1,LIFE_STATUS_LIVE=2,LIFE_STATUS_DEAD=3,LIFE_STATUS_DESTORY=-1;
+	public static final int         //实体状态
+            LIFE_STATUS_CREATE=0, //实体处于创建创建状态，还没有进入世界，系统将不久后初始化它，并进入LIFE_STATUS_BORN
+            LIFE_STATUS_BORN=1,//实体处于诞生状态，进入世界，诞生状态的实体，无敌不可攻击，并有诞生动画，诞生完成后进入LIFE_STATUS_LIVE
+            LIFE_STATUS_LIVE=2,//实体处于正常活动状态，参与世界的任何事件，可以被控制，可以被攻击
+            LIFE_STATUS_DEAD=3,//实体处于死亡状态，无敌不可攻击不可控制，并有死亡动画，死亡完成后进入LIFE_STATUS_DESTORY
+            LIFE_STATUS_DESTORY=-1;//实体处于摧毁状态，退出世界之外，系统将不久销毁它，内存空间将清理
+
 	public static long ID = 1000000000001L;
 	public long id;
 	public int direction=DOWN;
@@ -66,7 +72,7 @@ public abstract class AnimationEntity extends LevelDrawActor implements Poolable
 	//call by stage
 	public void createBody(World world){
 		if(lifeStatus == LIFE_STATUS_CREATE){
-			lifeStatus = LIFE_STATUS_LIVE;
+			lifeStatus = LIFE_STATUS_BORN;
 			int actorWidth= animationPlayer.width;
 			this.setVisible(true);
 			/**********************************box2d************************************************/
@@ -105,14 +111,15 @@ public abstract class AnimationEntity extends LevelDrawActor implements Poolable
 			//body.setAngularVelocity(0);//鏃嬭浆鏃剁殑瑙掗�搴�
 			//body.setLinearVelocity(1,1);//绾挎�閫熷害
 			/**********************************box2d************************************************/
-
 		}
-	}
+        if(lifeStatus == LIFE_STATUS_BORN){
+            lifeStatus = LIFE_STATUS_LIVE;
+        }
+    }
 
 	//call by stage
 	public void destroyBody(World world){
-		if(lifeStatus == LIFE_STATUS_DEAD){
-			lifeStatus = LIFE_STATUS_DESTORY;
+		if(lifeStatus == LIFE_STATUS_DESTORY){
 			world.destroyBody(body);
 			this.remove();//TODO 也许不应该在这里remove掉
 		}
@@ -138,8 +145,8 @@ public abstract class AnimationEntity extends LevelDrawActor implements Poolable
 	public void act(float delta) {
         super.act(delta);
         if(canAct()){
-            animationPlayer.act();
-			Vector2 v=body.getPosition();
+            animationPlayer.act(delta);
+            Vector2 v=body.getPosition();
 			this.setPosition(v.x - getWidth()/2, v.y - getHeight()/2);
             if(actorState!=null){
                 ActorState newState =  actorState.update(this, delta);
@@ -160,10 +167,12 @@ public abstract class AnimationEntity extends LevelDrawActor implements Poolable
         //batch.draw(ResourceManager.humanShadow,this.getEntityX() - ResourceManager.humanShadow.getRegionWidth()/2,this.getEntityY()-ResourceManager.humanShadow.getRegionHeight()/2);
     }
     public void drawBody(Batch batch, float parentAlpha) {
-        GdxSprite sprite = (GdxSprite) animationPlayer.getKeyFrame();
-        if (sprite != null) {
-            sprite.setPosition(this.getEntityX() + drawOffSetX, this.getEntityY() + drawOffSetY);
-            sprite.draw(batch, parentAlpha, getRotation(), getScaleX(), getScaleY(), getColor());
+        if(lifeStatus != LIFE_STATUS_DESTORY){
+            GdxSprite sprite = (GdxSprite) animationPlayer.getKeyFrame();
+            if (sprite != null) {
+                sprite.setPosition(this.getEntityX() + drawOffSetX, this.getEntityY() + drawOffSetY);
+                sprite.draw(batch, parentAlpha, getRotation(), getScaleX(), getScaleY(), getColor());
+            }
         }
     }
 
@@ -227,7 +236,7 @@ public abstract class AnimationEntity extends LevelDrawActor implements Poolable
     }
 
     public AnimationEntity findClosestEntry(List<AnimationEntity> excludes){
-        AnimationEntity finded = null;
+        AnimationEntity found = null;
         float distance = Float.MAX_VALUE;
         for(Actor actor : getStage().getActors()){
             if(actor instanceof AnimationEntity
@@ -239,11 +248,11 @@ public abstract class AnimationEntity extends LevelDrawActor implements Poolable
                 float d = Vector2.dst(entity.getEntityX(),entity.getEntityY(),this.getEntityX(),this.getEntityY());
                 if(d < distance){
                     distance = d;
-                    finded = entity;
+                    found = entity;
                 }
             }
         }
-        return finded;
+        return found;
     }
 
     public void turnDirection(float degrees){
@@ -258,7 +267,10 @@ public abstract class AnimationEntity extends LevelDrawActor implements Poolable
 		}else if(degrees > 325 || degrees < 45){
 			direction = AnimationEntity.RIGHT;
 		}
-
+        //if Direction not change,no need to re do Animation
+        if(!isMoving && oldDirection == this.direction){
+            return;
+        }
         if(direction == AnimationEntity.LEFT){
             animationPlayer.doMoveLeftAnimation();
         }else if(direction == AnimationEntity.RIGHT){
@@ -284,6 +296,12 @@ public abstract class AnimationEntity extends LevelDrawActor implements Poolable
         }else{
             degrees = 0;
         }
+    }
+    //让对象去死
+    public void dead(){
+        clearActions();
+        lifeStatus = LIFE_STATUS_DEAD;
+        addAction(ActionsFactory.sequence(ActionsFactory.actorDeathAnimation()));
     }
 
 
@@ -313,7 +331,7 @@ public abstract class AnimationEntity extends LevelDrawActor implements Poolable
 	
 
 	public void dispose(){
-		lifeStatus = LIFE_STATUS_DEAD;
+		lifeStatus = LIFE_STATUS_DESTORY;
 	}
 
 

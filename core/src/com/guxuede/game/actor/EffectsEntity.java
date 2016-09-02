@@ -21,7 +21,7 @@ public class EffectsEntity extends AnimationEntity {
 
     public void createBody(World world){
         if(lifeStatus == LIFE_STATUS_CREATE){
-            lifeStatus = LIFE_STATUS_LIVE;
+            lifeStatus = LIFE_STATUS_BORN;
             int actorWidth= animationPlayer.width;
             this.setVisible(true);
             /**********************************box2d************************************************/
@@ -43,6 +43,9 @@ public class EffectsEntity extends AnimationEntity {
             body.setAngularDamping(100);
             body.setUserData(this);
             c.dispose();
+        }
+        if(lifeStatus == LIFE_STATUS_BORN){
+            lifeStatus = LIFE_STATUS_LIVE;
         }
     }
 }
