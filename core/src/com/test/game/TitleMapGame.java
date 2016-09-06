@@ -5,8 +5,12 @@ import java.io.IOException;
 import java.util.Iterator;
 import java.util.List;
 
+import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.Pixmap;
+import com.badlogic.gdx.graphics.glutils.FrameBuffer;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.scenes.scene2d.*;
-import com.guxuede.game.animation.ActorThrowProjectionAction;
+import com.badlogic.gdx.utils.viewport.StretchViewport;
 import org.jsoup.Jsoup;
 import org.jsoup.helper.StringUtil;
 import org.jsoup.nodes.Document;
@@ -16,7 +20,6 @@ import org.jsoup.nodes.TextNode;
 
 import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.ParticleEffect;
@@ -35,9 +38,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.VerticalGroup;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Align;
-import com.badlogic.gdx.utils.Scaling;
-import com.badlogic.gdx.utils.viewport.ScalingViewport;
-import com.guxuede.game.actor.AnimationEntity;
 import com.guxuede.game.actor.DebugButton;
 import com.guxuede.game.libgdx.InputProcessorLine;
 import com.guxuede.game.libgdx.MovebleOrthographicCamera;
@@ -63,7 +63,7 @@ public class TitleMapGame implements ApplicationListener{
         cx = Context.enter();
         scope = cx.initStandardObjects();
 		camera=new MovebleOrthographicCamera(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-		mapStage = new TitleMapStage(new ScalingViewport(Scaling.stretch, Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), camera),
+		mapStage = new TitleMapStage(new StretchViewport( Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), camera),
 				new SpriteBatch());
 		mapStage.init();
 
@@ -145,8 +145,12 @@ public class TitleMapGame implements ApplicationListener{
 		// TODO Auto-generated method stub
 		//((OrthographicCamera) uiStage.getCamera()).setToOrtho(false, width/2, height/2);
 	}
-	
-	@Override
+
+
+
+
+
+    @Override
 	public void render() {
     	Gdx.gl.glClearColor(0, 0, 0, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
@@ -161,7 +165,12 @@ public class TitleMapGame implements ApplicationListener{
 		//effect.draw(batch, Gdx.app.getGraphics().getDeltaTime());
         //System.out.println(Gdx.graphics.getFramesPerSecond());
 		//batch.end();
+        if(this.CurFPS != Gdx.graphics.getFramesPerSecond()) {
+            Gdx.graphics.setTitle("FPS:"+String.valueOf(Gdx.graphics.getFramesPerSecond()));
+            this.CurFPS = Gdx.graphics.getFramesPerSecond();
+        }
 	}
+    float CurFPS;
 
 	@Override
 	public void pause() {

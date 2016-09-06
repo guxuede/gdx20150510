@@ -9,9 +9,11 @@ import com.badlogic.gdx.physics.box2d.CircleShape;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
+import com.badlogic.gdx.scenes.scene2d.Action;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
+import com.badlogic.gdx.scenes.scene2d.actions.TemporalAction;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Pool.Poolable;
 import com.guxuede.game.actor.state.ActorState;
@@ -145,7 +147,7 @@ public abstract class AnimationEntity extends LevelDrawActor implements Poolable
 	public void act(float delta) {
         super.act(delta);
         if(canAct()){
-            animationPlayer.act(delta);
+            animationPlayer.act(delta,this);
             Vector2 v=body.getPosition();
 			this.setPosition(v.x - getWidth()/2, v.y - getHeight()/2);
             if(actorState!=null){
@@ -332,6 +334,7 @@ public abstract class AnimationEntity extends LevelDrawActor implements Poolable
 
 	public void dispose(){
 		lifeStatus = LIFE_STATUS_DESTORY;
+        animationPlayer.onDispose();
 	}
 
 

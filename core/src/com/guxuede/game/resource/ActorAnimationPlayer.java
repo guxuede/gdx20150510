@@ -1,11 +1,13 @@
 package com.guxuede.game.resource;
 
-import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.guxuede.game.actor.ActorEventListener;
 import com.guxuede.game.actor.AnimationActor;
 import com.guxuede.game.actor.AnimationEntity;
+import com.guxuede.game.tools.SoundUtils;
 
 /**
  * 角色动画播放器，控制角色播放
@@ -14,6 +16,7 @@ public class ActorAnimationPlayer implements ActorEventListener{
 
     public AnimationHolder animationHolder;
     public Animation currentAnimation;
+
     //********************************************************
     //
     //********************************************************
@@ -24,6 +27,7 @@ public class ActorAnimationPlayer implements ActorEventListener{
     //
     //********************************************************
     public String lastAnimationName;
+    protected SoundHolder sound;
 
 	public ActorAnimationPlayer(AnimationHolder animationHolder) {
         this.animationHolder = animationHolder;
@@ -33,9 +37,12 @@ public class ActorAnimationPlayer implements ActorEventListener{
         doIdelAnimation(AnimationActor.DOWN);
     }
 	
-	public void act(float delta){
+	public void act(float delta,Actor entity){
         stateTime += delta;
-	}
+        if(sound!=null){
+            sound.act(delta,entity);
+        }
+    }
 
     /**
      * 设计一个好的方法，来恢复状态
@@ -126,9 +133,28 @@ public class ActorAnimationPlayer implements ActorEventListener{
         Animation animation = animationHolder.getAnimation(animationName);
         //if animation not change,no need to re do Animation
         if(currentAnimation != animation){
+            onAnimationChange(currentAnimation,animation,animationName);
             currentAnimation = animation;
             stateTime = 0;
             lastAnimationName = animationName;
+        }
+    }
+
+    protected void onAnimationChange(Animation oldAnimation,Animation newAnimation,String animationName){
+        if(sound!=null){
+            sound.stop();
+        }
+
+        SoundHolder sound = animationHolder.getAnimationSound(animationName);
+        if(sound!=null){
+            this.sound =sound;
+            sound.play();
+        }
+    }
+
+    public void onDispose(){
+        if(sound!=null){
+            sound.stop();
         }
     }
 }

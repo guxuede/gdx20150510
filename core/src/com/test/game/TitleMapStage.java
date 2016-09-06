@@ -4,11 +4,11 @@ import java.util.Comparator;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
-import com.badlogic.gdx.graphics.Camera;
-import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.*;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.graphics.glutils.FrameBuffer;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapImageLayer;
 import com.badlogic.gdx.maps.tiled.TiledMapTile;
@@ -42,6 +42,7 @@ import com.guxuede.game.effects.DoubleImageEffect;
 import com.guxuede.game.libgdx.ResourceManager;
 import com.guxuede.game.libgdx.maps.titled.MyOrthogonalTiledMapRenderer;
 import com.guxuede.game.animation.ActionsFactory;
+import com.guxuede.game.tools.MathUtils;
 
 public class TitleMapStage extends Stage{
 
@@ -169,7 +170,7 @@ public class TitleMapStage extends Stage{
 			}
 		} ;
         AnimationActor actor = ActorFactory.createActor("Undead",world,focusListener);
-		actor.setPosition(200, 100);
+		actor.setPosition(200, 400);
         DoubleImageEffect doubleImageEffect = new DoubleImageEffect();
         doubleImageEffect.setDuration(50);
         actor.addAction(doubleImageEffect);
@@ -207,7 +208,10 @@ public class TitleMapStage extends Stage{
 //        lightningEntity.targetAnimation = actor1;
 //        addActor(lightningEntity);
 		createABoack(map);
-	}
+        lightBuffer = new FrameBuffer(Pixmap.Format.RGBA8888, 300, 300, false);
+        shapeRenderer = new ShapeRenderer();
+
+    }
 	
 /**
  * 　float timeStep = 1.0f / 60.0f;//刷新时间粒度
@@ -241,7 +245,8 @@ boolean pause = false;
 		tileMapRenderer.renderLayer1();
 		tileMapRenderer.renderLayer2();
         drawThisStage(camera);
-		tileMapRenderer.renderLayer3();
+        tileMapRenderer.renderLayer3();
+        grawFog();
         if(isDebug){
             debugRenderer.render(world, getCamera().combined);
         }
@@ -265,7 +270,7 @@ boolean pause = false;
             }
         }
 	}
-
+    FrameBuffer lightBuffer;
     /**
      * 覆盖其父类的方法，因为我们需要画各种层级DRAW_LEVEL_FOOT，DRAW_LEVEL_BODY，DRAW_LEVEL_HEAD
      * @param camera
@@ -299,8 +304,6 @@ boolean pause = false;
                 }else{
                     return Float.compare(o1.getZIndex(), o2.getZIndex());
                 }
-                //return Float.compare(o2.getY(), o1.getY());
-                //return (int) (o2.getY()-o1.getY());
             }
         });
     }
@@ -311,6 +314,45 @@ boolean pause = false;
                 ((LevelDrawActor)actor).drawLevel = drawLevel;
             }
         }
+    }
+
+    ShapeRenderer shapeRenderer;
+    Color fogColor = new Color(0, 0, 0, 0.7f);
+    public void grawFog(){
+        Gdx.gl.glEnable(GL20.GL_BLEND);
+        Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
+
+        shapeRenderer.setColor(fogColor);
+        float tileW = 32;
+        float tileH = 32;
+        float totalXT = getWidth()/tileW;
+        float totalYT = getHeight()/tileH;
+        for(float y = 0;y<totalYT;y++) {
+            for (float x = 0; x < totalXT; x++) {
+                float tx = x * tileW + tileW / 2;
+                float ty = getHeight()-y * tileH + tileH / 2;
+                if(isTileVisible(tx,ty)){
+                    shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
+                    shapeRenderer.rect(x * tileW, y*tileH, tileW, tileH);
+                    shapeRenderer.end();
+                }
+            }
+        }
+    }
+    Vector2 temp = new Vector2();
+    static final float visibleR = 100;
+    public boolean isTileVisible(float x,float y){
+        temp.set(x,y);
+        this.screenToStageCoordinates(temp);
+        for(Actor actor : getActors()){
+            if(actor instanceof AnimationEntity){
+                AnimationEntity entity = (AnimationEntity) actor;
+                if(entity.isVisible() && MathUtils.distance(entity.getEntityX(),entity.getEntityY(),temp.x,temp.y) < visibleR){
+                    return false;
+                }
+            }
+        }
+        return true;
     }
 	
 	protected void createBlockWall(TiledMap map) {

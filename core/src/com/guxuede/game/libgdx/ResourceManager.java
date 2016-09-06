@@ -20,12 +20,8 @@ public class ResourceManager {
     private static final Map<String,Texture> TEXTURE_MAP = new HashMap<String, Texture>();
     private static final Map<String,TextureRegion> TEXTURE_REGION_MAP =  new HashMap<String, TextureRegion>();
     public static final TextureAtlas TEXTURE_ATLAS_PACK =new TextureAtlas(Gdx.files.internal("pack"));
+    public static final Map<String,Sound> soundMap = new HashMap<String, Sound>();
     public static final List<AnimationHolder> ANIMATION_HOLDER_LIST = ActorJsonParse.parse("actor.json");
-
-    public static Sound sound_fire_spell = Gdx.audio.newSound(Gdx.files.internal("sounds/fire_spell.wav"));
-    public static Sound sound_hited = Gdx.audio.newSound(Gdx.files.internal("sounds/fire_hited.wav"));
-    public static Sound sound_fire_flying = Gdx.audio.newSound(Gdx.files.internal("sounds/fire_flying.wav"));
-    public static Sound thunderSound = Gdx.audio.newSound(Gdx.files.internal("sounds/thunder1.wav"));
 
     //一些资源初始化
 	public static Skin skin=new Skin(Gdx.files.internal("uiskin.json"));
@@ -106,5 +102,16 @@ public class ResourceManager {
             new AnimationHolder();
         }
         return null;
+    }
+
+    public static Sound getSoundOrLoad(String soundFile){
+        if(soundMap.containsKey(soundFile)){
+            return soundMap.get(soundFile);
+        }
+        if(Gdx.files.internal("sounds/"+soundFile).exists()){
+            Sound sound = Gdx.audio.newSound(Gdx.files.internal("sounds/"+soundFile));
+            soundMap.put(soundFile,sound);
+        }
+        return soundMap.get(soundFile);
     }
 }

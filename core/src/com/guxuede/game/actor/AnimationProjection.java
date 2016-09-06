@@ -17,7 +17,6 @@ public class AnimationProjection extends AnimationEntity {
 
     protected boolean trunDirectionWhenMove = true;
 
-    long soundId=-1;
 
     public AnimationProjection(ActorAnimationPlayer animationPlayer, World world, InputListener l) {
         super(animationPlayer, world, l);
@@ -35,9 +34,6 @@ public class AnimationProjection extends AnimationEntity {
 		this.scaleBy(1);
 		speed = 50000000;
         setZIndex(2);
-        soundId = ResourceManager.sound_fire_flying.play();
-        ResourceManager.sound_fire_flying.setLooping(soundId,true);
-        //ResourceManager.sound_fire_flying.setPan(soundId, -0.5f, 1f);
 	}
 	
 	@Override
@@ -85,7 +81,6 @@ public class AnimationProjection extends AnimationEntity {
     @Override
     public void act(float delta) {
         super.act(delta);
-        SoundUtils.set3dPan(ResourceManager.sound_fire_flying,soundId,getX(),getY(),getStage().getCamera());
     }
 
     /**
@@ -104,7 +99,6 @@ public class AnimationProjection extends AnimationEntity {
         getStage().addActor(tip);
 
         if (entity != null) {
-            SoundUtils.play(ResourceManager.sound_hited,this);
             if(entity.equals(this)){
                 entity.dead();
             }else{
@@ -120,11 +114,5 @@ public class AnimationProjection extends AnimationEntity {
                 entity.addAction(effect);
             }
         }
-    }
-
-    @Override
-    public void dispose() {
-        super.dispose();
-        ResourceManager.sound_fire_flying.setLooping(soundId,false);
     }
 }

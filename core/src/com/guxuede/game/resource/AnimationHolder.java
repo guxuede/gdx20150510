@@ -1,5 +1,6 @@
 package com.guxuede.game.resource;
 
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.g2d.Animation;
 
 import java.util.HashMap;
@@ -21,7 +22,8 @@ public class AnimationHolder {
     public static final String ATTACK_ANIMATION = "attackAnimation";
 
     /*********************************************/
-    public Map<String,Animation> animationMap = new HashMap<String, Animation>();
+    private Map<String,Animation> animationMap = new HashMap<String, Animation>();
+    private Map<String,SoundHolder> animationSoundMap = new HashMap();
     public int width,height;
     public String name;
     /*********************************************/
@@ -71,6 +73,9 @@ public class AnimationHolder {
         this.animationMap.put(name,animation);
     }
 
+    public void addSound(String name,SoundHolder sound){
+        this.animationSoundMap.put(name,sound);
+    }
 
     public Animation getWalkDownAnimation() {
         return getAnimation(WALK_DOWN_ANIMATION);
@@ -113,6 +118,15 @@ public class AnimationHolder {
 
     public Animation getAnimation(String name){
         return animationMap.get(name);
+    }
+
+    public SoundHolder getAnimationSound(String name) {
+        SoundHolder sh = animationSoundMap.get(name);
+        if(sh!=null){
+            SoundHolder nw = new SoundHolder(sh.getSound(),sh.isLoop());
+            return nw;
+        }
+        return null;
     }
 
     public AnimationHolder getCopy(){

@@ -3,7 +3,6 @@ package com.guxuede.game.tools;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.scenes.scene2d.Actor;
-import com.guxuede.game.libgdx.ResourceManager;
 
 /**
  * Created by guxuede on 2016/9/3 .
@@ -11,7 +10,7 @@ import com.guxuede.game.libgdx.ResourceManager;
 public class SoundUtils {
 
     public static final long play(Sound sound, Actor actor) {
-        long soundId = ResourceManager.sound_hited.play();
+        long soundId = sound.play();
         set3dPan(sound,soundId,actor.getX(),actor.getY(),actor.getStage().getCamera());
         return soundId;
     }

@@ -93,6 +93,13 @@
         "frameDuration":0.3,
         "frames":[0,4,8,12,4,5,6]
       }
+    ],
+    "sounds":[
+      {
+        "name":"walkDownAnimation,walkLeftAnimation,walkRightAnimation,walkUpAnimation",
+        "sound":"step1.ogg",
+        "loop":"true"
+      }
     ]
   },
 
@@ -748,6 +755,18 @@
         "frameDuration":0.3,
         "frames":[0,1,2,3,4]
       }
+    ],
+    "sounds":[
+      {
+        "name":"walkDownAnimation,walkLeftAnimation,walkRightAnimation,walkUpAnimation,stopDownAnimation,stopLeftAnimation,stopRightAnimation,stopUpAnimation",
+        "sound":"fire_flying.wav",
+        "loop":"true"
+      },
+      {
+        "name":"deathAnimation",
+        "sound":"fire_hited.wav",
+        "loop":"false"
+      }
     ]
   },
   {
@@ -777,6 +796,13 @@
         "name":"walkDownAnimation,walkLeftAnimation,walkRightAnimation,walkUpAnimation,stopDownAnimation,stopLeftAnimation,stopRightAnimation,stopUpAnimation,deathAnimation",
         "frameDuration":0.1,
         "frames":[6,5,4,3,2,1,0]
+      }
+    ],
+    "sounds":[
+      {
+        "name":"walkDownAnimation,walkLeftAnimation,walkRightAnimation,walkUpAnimation,stopDownAnimation,stopLeftAnimation,stopRightAnimation,stopUpAnimation,deathAnimation",
+        "sound":"fire_spell.ogg",
+        "loop":"true"
       }
     ]
   },
@@ -894,6 +920,13 @@
       {
         "name":"stopUpAnimation",
         "frames":[10]
+      }
+    ],
+    "sounds":[
+      {
+        "name":"walkDownAnimation,walkLeftAnimation,walkRightAnimation,walkUpAnimation",
+        "sound":"step1.ogg",
+        "loop":"true"
       }
     ]
   }

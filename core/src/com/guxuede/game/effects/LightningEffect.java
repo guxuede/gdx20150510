@@ -1,11 +1,8 @@
 package com.guxuede.game.effects;
 
-import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Batch;
-import com.badlogic.gdx.math.Vector2;
 import com.guxuede.game.actor.AnimationEntity;
 import com.guxuede.game.libgdx.GdxSprite;
-import com.guxuede.game.libgdx.ResourceManager;
 import com.guxuede.game.tools.MathUtils;
 
 /**
@@ -21,7 +18,6 @@ public class LightningEffect extends AnimationEffect{
         super(animationName);
         this.targetEntity = targetEntity;
         setDuration(0.5f);
-        ResourceManager.thunderSound.play();
     }
 
     @Override

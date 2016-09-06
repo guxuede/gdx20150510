@@ -4,7 +4,6 @@ import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.math.Vector2;
 import com.guxuede.game.actor.AnimationEntity;
 import com.guxuede.game.libgdx.GdxSprite;
-import com.guxuede.game.libgdx.ResourceManager;
 import com.guxuede.game.tools.MathUtils;
 
 import java.util.List;
@@ -22,7 +21,6 @@ public class LightningEffectMutilPoint extends AnimationEffect{
         super(animationName);
         this.targetPoints = targetPoints;
         setDuration(0.5f);
-        ResourceManager.thunderSound.play();
     }
 
     @Override

@@ -3,13 +3,13 @@ package com.mygdx.game.desktop;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
 import com.esotericsoftware.spine.test.*;
-import com.test.game.MyGdxGame;
-import com.test.game.MyMapLayerGame;
-import com.test.game.TitleMapGame;
+import com.test.game.*;
 
 public class DesktopLauncher {
 	public static void main (String[] args) {
 		LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
+        config.vSyncEnabled = true;
+        config.useGL30 = true;
 		new LwjglApplication(new TitleMapGame(), config);
         //new LwjglApplication(new Box2DExample(),config);
         //new LwjglApplication(new MixTest(),config);

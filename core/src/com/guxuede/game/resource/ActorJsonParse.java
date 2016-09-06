@@ -1,6 +1,7 @@
 package com.guxuede.game.resource;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.utils.JsonReader;
@@ -42,6 +43,8 @@ public class ActorJsonParse {
 
         protected float textureOffSetX = 0;
         protected float textureOffSetY = 0;
+
+        protected String sound;
     }
 
     public static List<AnimationHolder> parse(String jsonFile){
@@ -77,7 +80,7 @@ public class ActorJsonParse {
         animationHolder.width = (int) parseContext.width;
         animationHolder.height = (int) parseContext.height;
         animationHolder.name = name;
-
+        /////////////////////////animations/////////////////////////////
         JsonValue animationsJ = jsonValue.get("animations");
         JsonValue.JsonIterator it = animationsJ.iterator();
         for(;it.hasNext();){
@@ -92,9 +95,27 @@ public class ActorJsonParse {
                 }
             }
         }
+        /////////////////////////sounds/////////////////////////////
+        JsonValue soundsJ = jsonValue.get("sounds");
+        if(soundsJ!=null){
+            JsonValue.JsonIterator sit = soundsJ.iterator();
+            for(;sit.hasNext();) {
+                JsonValue soundJ = sit.next();
+                String soundName= soundJ.getString("name");
+                String soundFile = soundJ.getString("sound");
+                boolean isLoop = soundJ.getBoolean("loop",false);
+                Sound sound = ResourceManager.getSoundOrLoad(soundFile);
+                if(!soundName.contains(",")){
+                    animationHolder.addSound(soundName,new SoundHolder(sound,isLoop));
+                }else{
+                    for(String sn : soundName.split(",")){
+                        animationHolder.addSound(sn,new SoundHolder(sound,isLoop));
+                    }
+                }
+            }
+        }
         return animationHolder;
     }
-
 
     /**
      * 解析
@@ -300,6 +321,7 @@ public class ActorJsonParse {
         float textureOffSetX = animJ.getFloat("textureOffSetX",parseContext.textureOffSetX);
         float textureOffSetY = animJ.getFloat("textureOffSetY",parseContext.textureOffSetY);
 
+        String sound = animJ.getString("sound",parseContext.sound);
 
         ParseContext localParseContext = new ParseContext();
         localParseContext.textureName = textureName;
@@ -314,6 +336,7 @@ public class ActorJsonParse {
         localParseContext.frameDuration = frameDuration;
         localParseContext.textureOffSetX = textureOffSetX;
         localParseContext.textureOffSetY = textureOffSetY;
+        localParseContext.sound = sound;
         return localParseContext;
     }
 

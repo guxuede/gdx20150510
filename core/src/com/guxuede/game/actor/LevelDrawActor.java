@@ -7,6 +7,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.Action;
 import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.actions.TemporalAction;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.Viewport;
@@ -130,5 +131,36 @@ public class LevelDrawActor extends Actor {
             }
         }
     }
+
+
+
+    //覆盖下面两个方法，确保TemporalAction类型的action能被及时掉用end方法
+    @Override
+    public void clearActions() {
+        for (int i = getActions().size - 1; i >= 0; i--){
+            Action action = getActions().get(i);
+            if (action instanceof TemporalAction){
+                TemporalAction ta = (TemporalAction) action;
+                ta.finish();
+                ta.act(Float.MAX_VALUE);
+            }
+            action.setActor(null);
+        }
+
+        getActions().clear();
+    }
+
+    @Override
+    public void removeAction(Action action) {
+        if (getActions().removeValue(action, true)) {
+            if (action instanceof TemporalAction){
+                TemporalAction ta = (TemporalAction) action;
+                ta.finish();
+                ta.act(Float.MAX_VALUE);
+            }
+            action.setActor(null);
+        }
+    }
+
 
 }

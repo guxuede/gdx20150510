@@ -22,7 +22,6 @@ public class AttackState extends StandState {
     public float animationDuration;
     public float stateTime;
     AnimationEffect animationEffect;
-    public long soundId = -1;
 
     @Override
     public void enter(AnimationEntity entity, InputEvent event) {
@@ -32,7 +31,6 @@ public class AttackState extends StandState {
         animationEffect = new AnimationEffect("lightningSpell");
         entity.addAction(animationEffect);
         animationDuration =animationEffect.getDuration();
-        soundId = SoundUtils.play(ResourceManager.sound_fire_spell,entity);
     }
 
 //    @Override
@@ -56,6 +54,5 @@ public class AttackState extends StandState {
         animationDuration = 0;
         entity.removeAction(animationEffect);
         animationEffect = null;
-        ResourceManager.sound_fire_spell.stop(soundId);
     }
 }
