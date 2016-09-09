@@ -10,6 +10,7 @@ import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.glutils.FrameBuffer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.scenes.scene2d.*;
+import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 import org.jsoup.Jsoup;
 import org.jsoup.helper.StringUtil;
@@ -63,7 +64,7 @@ public class TitleMapGame implements ApplicationListener{
         cx = Context.enter();
         scope = cx.initStandardObjects();
 		camera=new MovebleOrthographicCamera(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-		mapStage = new TitleMapStage(new StretchViewport( Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), camera),
+		mapStage = new TitleMapStage(new FitViewport( Gdx.graphics.getWidth(), Gdx.graphics.getHeight()),
 				new SpriteBatch());
 		mapStage.init();
 

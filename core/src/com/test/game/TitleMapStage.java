@@ -6,6 +6,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.*;
 import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.FrameBuffer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
@@ -47,19 +48,15 @@ import com.guxuede.game.tools.MathUtils;
 public class TitleMapStage extends Stage{
 
     private boolean isDebug = false;
-
 	private MyOrthogonalTiledMapRenderer tileMapRenderer;
 	protected Box2DDebugRenderer debugRenderer;
 	private World world;
-
-	
 	public AnimationEntity actor;
-
+    private LightManager lightManager;
 
 	public TitleMapStage(Viewport viewport, Batch batch) {
 		super(viewport, batch);
 	}
-
 	public TitleMapStage(Viewport viewport) {
 		super(viewport);
 	}
@@ -208,9 +205,7 @@ public class TitleMapStage extends Stage{
 //        lightningEntity.targetAnimation = actor1;
 //        addActor(lightningEntity);
 		createABoack(map);
-        lightBuffer = new FrameBuffer(Pixmap.Format.RGBA8888, 300, 300, false);
-        shapeRenderer = new ShapeRenderer();
-
+        lightManager = new LightManager(this);
     }
 	
 /**
@@ -242,35 +237,36 @@ boolean pause = false;
         OrthographicCamera camera = (OrthographicCamera) getCamera();
         camera.update();
         tileMapRenderer.setView(camera);
-		tileMapRenderer.renderLayer1();
-		tileMapRenderer.renderLayer2();
+        tileMapRenderer.renderLayer1();
+        tileMapRenderer.renderLayer2();
         drawThisStage(camera);
         tileMapRenderer.renderLayer3();
-        grawFog();
+
         if(isDebug){
             debugRenderer.render(world, getCamera().combined);
         }
+        lightManager.render(camera);
 
 		if(actor!=null){
             camera.position.x=actor.getEntityX();
             camera.position.y=actor.getEntityY();
 		}else{
             if(Gdx.input.isKeyPressed(Input.Keys.UP)){
-                camera.position.y++;
+                camera.position.y+=5;
                 camera.update();
             }else if(Gdx.input.isKeyPressed(Input.Keys.DOWN)){
-                camera.position.y--;
+                camera.position.y-=5;
                 camera.update();
             }else if(Gdx.input.isKeyPressed(Input.Keys.LEFT)){
-                camera.position.x++;
+                camera.position.x-=5;
                 camera.update();
             }else if(Gdx.input.isKeyPressed(Input.Keys.RIGHT)){
-                camera.position.x--;
+                camera.position.x+=5;
                 camera.update();
             }
         }
 	}
-    FrameBuffer lightBuffer;
+
     /**
      * 覆盖其父类的方法，因为我们需要画各种层级DRAW_LEVEL_FOOT，DRAW_LEVEL_BODY，DRAW_LEVEL_HEAD
      * @param camera
@@ -316,45 +312,6 @@ boolean pause = false;
         }
     }
 
-    ShapeRenderer shapeRenderer;
-    Color fogColor = new Color(0, 0, 0, 0.7f);
-    public void grawFog(){
-        Gdx.gl.glEnable(GL20.GL_BLEND);
-        Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
-
-        shapeRenderer.setColor(fogColor);
-        float tileW = 32;
-        float tileH = 32;
-        float totalXT = getWidth()/tileW;
-        float totalYT = getHeight()/tileH;
-        for(float y = 0;y<totalYT;y++) {
-            for (float x = 0; x < totalXT; x++) {
-                float tx = x * tileW + tileW / 2;
-                float ty = getHeight()-y * tileH + tileH / 2;
-                if(isTileVisible(tx,ty)){
-                    shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
-                    shapeRenderer.rect(x * tileW, y*tileH, tileW, tileH);
-                    shapeRenderer.end();
-                }
-            }
-        }
-    }
-    Vector2 temp = new Vector2();
-    static final float visibleR = 100;
-    public boolean isTileVisible(float x,float y){
-        temp.set(x,y);
-        this.screenToStageCoordinates(temp);
-        for(Actor actor : getActors()){
-            if(actor instanceof AnimationEntity){
-                AnimationEntity entity = (AnimationEntity) actor;
-                if(entity.isVisible() && MathUtils.distance(entity.getEntityX(),entity.getEntityY(),temp.x,temp.y) < visibleR){
-                    return false;
-                }
-            }
-        }
-        return true;
-    }
-	
 	protected void createBlockWall(TiledMap map) {
 		com.badlogic.gdx.maps.MapLayer layer = map.getLayers().get(1);
 		if (layer.isVisible()) {

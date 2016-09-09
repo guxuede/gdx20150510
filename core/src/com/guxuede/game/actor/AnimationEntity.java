@@ -1,7 +1,9 @@
 package com.guxuede.game.actor;
 
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Batch;
 
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
@@ -43,9 +45,10 @@ public abstract class AnimationEntity extends LevelDrawActor implements Poolable
 	public long id;
 	public int direction=DOWN;
 	public float degrees;
-	public float speed=200;
+	public float speed=120;
 	public boolean isMoving;
-
+    public float visualRadius=100;
+    public Color  primaryColor;
 	public int lifeStatus = LIFE_STATUS_CREATE;
 	
 	public Body body;
@@ -67,6 +70,8 @@ public abstract class AnimationEntity extends LevelDrawActor implements Poolable
         this.setVisible(false);
         this.lifeStatus = LIFE_STATUS_CREATE;
         this.addAction(new ActorAlwayMoveAction());
+        this.visualRadius = actorWidth * 4;
+        this.primaryColor = new Color(MathUtils.random(), MathUtils.random(), MathUtils.random(), 1);
 	}
 
 
