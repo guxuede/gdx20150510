@@ -7,7 +7,7 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 
 public class MovebleOrthographicCamera extends OrthographicCamera{
 
-	private float speed = 1.0f;
+	private float speed = 5.0f;
 	
 	public MovebleOrthographicCamera() {
 	}

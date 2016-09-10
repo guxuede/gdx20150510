@@ -1,62 +1,81 @@
 package com.test.game;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.maps.tiled.TiledMap;
-import com.badlogic.gdx.maps.tiled.TiledMapImageLayer;
-import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
-import com.badlogic.gdx.scenes.scene2d.Actor;
-import com.badlogic.gdx.scenes.scene2d.InputEvent;
-import com.badlogic.gdx.scenes.scene2d.InputListener;
-import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.utils.viewport.Viewport;
+import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.scenes.scene2d.*;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.guxuede.game.DefaultWorld;
-import com.guxuede.game.GameWorld;
-import com.guxuede.game.actor.ActorFactory;
-import com.guxuede.game.actor.AnimationActor;
-import com.guxuede.game.actor.AnimationEntity;
-import com.guxuede.game.actor.LevelDrawActor;
-import com.guxuede.game.animation.ActionsFactory;
-import com.guxuede.game.animation.ActorChangeAppearanceAction;
-import com.guxuede.game.animation.ActorFormulaTracksAction;
-import com.guxuede.game.effects.AnimationEffect;
-import com.guxuede.game.effects.DoubleImageEffect;
+import com.guxuede.game.StageWorld;
+import com.guxuede.game.actor.*;
+import com.guxuede.game.action.ActionsFactory;
+import com.guxuede.game.action.ActorChangeAppearanceAction;
+import com.guxuede.game.action.ActorFormulaTracksAction;
+import com.guxuede.game.action.effects.AnimationEffect;
+import com.guxuede.game.action.effects.DoubleImageEffect;
+import com.guxuede.game.libgdx.MovebleOrthographicCamera;
 import com.guxuede.game.libgdx.ResourceManager;
-import com.guxuede.game.libgdx.maps.titled.MyOrthogonalTiledMapRenderer;
+import com.guxuede.game.libgdx.MyOrthogonalTiledMapRenderer;
+import com.guxuede.game.light.DefaultLightManager;
+import com.guxuede.game.light.LightManager;
 
 import java.util.Comparator;
 
-public class TitleMapStage extends Stage{
+public class TitleMapStage extends Stage {
 
-    private boolean isDebug = false;
+
 	private MyOrthogonalTiledMapRenderer tileMapRenderer;
-	private GameWorld world;
-	public AnimationEntity actor;
+    public StageWorld world;
+	public AnimationEntity viewActor;
     private LightManager lightManager;
 
-	public TitleMapStage(Viewport viewport, Batch batch) {
-		super(viewport, batch);
-	}
+    public String stageName;
 
-	public void init(){
-        this.setDebugAll(isDebug);
-		world = new DefaultWorld(this);
+	public TitleMapStage(String stageName) {
+        super(
+                new FitViewport(Gdx.graphics.getWidth(),
+                                Gdx.graphics.getHeight(),
+                                new MovebleOrthographicCamera(Gdx.graphics.getWidth(), Gdx.graphics.getHeight())
+                )
+                , new SpriteBatch());
+        init(stageName);
+        this.stageName = stageName;
+    }
 
-		TiledMap map = new TmxMapLoader().load("desert1.tmx");
-		
-        tileMapRenderer = new MyOrthogonalTiledMapRenderer(map,this.getBatch()); 
-        
-		
+	public void init(String mapName){
+        this.setDebugAll(StageWorld.isDebug);
+        //
+		this.world = new DefaultWorld(this);
+		TiledMap map = new TmxMapLoader().load(mapName);//"desert.tmx"
+        this.tileMapRenderer = new MyOrthogonalTiledMapRenderer(map,this.getBatch());
+        this.lightManager = new DefaultLightManager(world);
+        this.lightManager.onMapLoad(map);
+        this.world.getPhysicsManager().onMapLoad(map);
+        this.addListener(new ClickListener() {
+            @Override
+            public boolean handle(Event e) {
+                System.out.println("TitleMapStage ClickListener:"+e);
+                if (!(e instanceof InputEvent)) return false;
+                InputEvent event = (InputEvent) e;
+                if (viewActor != null) {
+                    viewActor.handleInput(event);
+                    return true;
+                }
+                return super.handle(e);
+            }
+        });
         InputListener focusListener = new InputListener() {
 			@Override
 			public boolean touchDown(InputEvent event, float x, float y,int pointer, int button) {
-				actor = (AnimationEntity) event.getListenerActor();
-				System.out.println("Switch actor.");
+				viewActor = (AnimationEntity) event.getListenerActor();
+				System.out.println("Switch viewActor.");
 				return super.touchDown(event, x, y, pointer, button);
 			}
 		} ;
@@ -82,75 +101,57 @@ public class TitleMapStage extends Stage{
         effect.setEffectAnimation(ResourceManager.getAnimationHolder("wind2").getStopDownAnimation());
         actor1.addAction(effect);
         addActor(actor1);
-
-		//addActor(new ParticelActor());
-		//addActor(new BarrageTip("hello",100,100));
-        addActor(ActorFactory.createActor("Bird", world, focusListener));
-        addActor(ActorFactory.createActor("lvbu", world, focusListener));
+//
+//		//addActor(new ParticelActor());
+//		//addActor(new BarrageTip("hello",100,100));
+//        addActor(ActorFactory.createActor("Bird", world, focusListener));
+//        addActor(ActorFactory.createActor("lvbu", world, focusListener));
 
         //addActor(ActorFactory.createActor("thunder1", world, focusListener));
         //addActor(ActorFactory.createEffectsActor("special10", world, focusListener));
        // addActor(ActorFactory.createActor("kulou1", world,focusListener));
 //        AnimationProjection projection = ActorFactory.createProjectionActor("kulou1", world, focusListener);
 //        addActor(projection);
-		//actor.positionPlayer.setTransform(100, 100, 0);
+		//viewActor.physicsPlayer.setTransform(100, 100, 0);
 //        LightningEntity lightningEntity = ActorFactory.createLightningEntity("lightningLine",world,focusListener);
-//        lightningEntity.sourceActor = actor;
+//        lightningEntity.sourceActor = viewActor;
 //        lightningEntity.targetAnimation = actor1;
-//        addActor(lightningEntity);
-		//createABoack(map);
-        lightManager = new LightManager(this);
+        createRandomDoor();
     }
 
-boolean pause = false;
 	@Override
 	public void act(float delta) {
-        if(pause){
-            return;
+        if(world.isNotPause()){
+            world.act(Gdx.graphics.getDeltaTime());
+            for(Actor actor:getActors()){
+                if(actor instanceof AnimationEntity){
+                    AnimationEntity a = ((AnimationEntity) actor);
+                    a.createBody(world);
+                    a.destroyBody(world);
+                }
+            }
+            super.act(delta);
         }
-        world.act(Gdx.graphics.getDeltaTime());
-        for(Actor actor:getActors()){
-			if(actor instanceof AnimationEntity){
-				AnimationEntity a = ((AnimationEntity) actor);
-				a.createBody(world);
-				a.destroyBody(world);
-			}
-		}
-		super.act(delta);
 	}
 
 	
 	@Override
 	public void draw() {
-        OrthographicCamera camera = (OrthographicCamera) getCamera();
-        camera.update();
-        tileMapRenderer.setView(camera);
-        tileMapRenderer.renderLayer1();
-        tileMapRenderer.renderLayer2();
-        drawThisStage(camera);
-        tileMapRenderer.renderLayer3();
+        if(world.isVisible()){
+            OrthographicCamera camera = (OrthographicCamera) getCamera();
+            camera.update();
+            tileMapRenderer.setView(camera);
+            tileMapRenderer.renderLayer1();
+            tileMapRenderer.renderLayer2();
+            drawThisStage(camera);
+            tileMapRenderer.renderLayer3();
 
-        if(isDebug){
-            //debugRenderer.render(world, getCamera().combined);
-        }
-        lightManager.render(camera);
+            world.getPhysicsManager().render();
+            lightManager.render();
 
-		if(actor!=null){
-            camera.position.x=actor.getCenterX();
-            camera.position.y=actor.getCenterY();
-		}else{
-            if(Gdx.input.isKeyPressed(Input.Keys.UP)){
-                camera.position.y+=5;
-                camera.update();
-            }else if(Gdx.input.isKeyPressed(Input.Keys.DOWN)){
-                camera.position.y-=5;
-                camera.update();
-            }else if(Gdx.input.isKeyPressed(Input.Keys.LEFT)){
-                camera.position.x-=5;
-                camera.update();
-            }else if(Gdx.input.isKeyPressed(Input.Keys.RIGHT)){
-                camera.position.x+=5;
-                camera.update();
+            if(viewActor !=null){
+                camera.position.x= viewActor.getCenterX();
+                camera.position.y= viewActor.getCenterY();
             }
         }
 	}
@@ -200,110 +201,11 @@ boolean pause = false;
         }
     }
 
-	protected void createBlockWall(TiledMap map) {
-		com.badlogic.gdx.maps.MapLayer layer = map.getLayers().get(1);
-		if (layer.isVisible()) {
-			if (layer instanceof TiledMapTileLayer) {
-				TiledMapTileLayer tiledMapTileLayer = ((TiledMapTileLayer)layer);
-				for(int x = 0;x < tiledMapTileLayer.getHeight();x++){
-					
-				}
-			} else if (layer instanceof TiledMapImageLayer) {
-				
-			} else {
-				
-			}
-		}
-		
-	}
-//
-//	private void createABoack(TiledMap map){
-//		 {
-//		BodyDef  bd;
-//			bd = new BodyDef();
-//			bd.type = BodyType.KinematicBody;
-//			bd.position.set(100, 200);
-//			CircleShape c = new CircleShape();
-//			c.setRadius(200 / 3);
-//			FixtureDef ballShapeDef = new FixtureDef();
-//			ballShapeDef.density = 1.0f;//密度
-//			ballShapeDef.friction = 1f;////摩擦粗糙程度
-//			ballShapeDef.restitution = 0.0f;//碰撞后，恢复原状后的力量,力度返回程度（弹性）
-//			ballShapeDef.shape = c;//形状
-//			//ballShapeDef.isSensor=
-//			Body positionPlayer = world.createBody(bd);
-//			positionPlayer.createFixture(ballShapeDef);
-//			//positionPlayer.setFixedRotation(true);//纰版挒鏃�鏄惁鏃嬭浆
-//			positionPlayer.setLinearDamping(100);//阻尼
-//			positionPlayer.setAngularDamping(100);//瑙掗樆灏�鎽╂摝?
-//			positionPlayer.setUserData(null);
-//			c.dispose();
-//		}
-//		TiledMapTileLayer layer = (TiledMapTileLayer) map.getLayers().get(1);
-//		float unitScale = 1;
-//		final int layerWidth = layer.getWidth();
-//		final int layerHeight = layer.getHeight();
-//
-//		final float layerTileWidth = layer.getTileWidth() * unitScale;
-//		final float layerTileHeight = layer.getTileHeight() * unitScale;
-//
-//		final int col1 = 0;
-//		final int col2 = layerWidth;
-//
-//		final int row1 = 0;
-//		final int row2 = layerHeight;
-//
-//		float y = row2 * layerTileHeight;
-//		float xStart = col1 * layerTileWidth;
-//
-//		for (int row = row2; row >= row1; row--) {
-//			float x = xStart;
-//			for (int col = col1; col < col2; col++) {
-//				final TiledMapTileLayer.Cell cell = layer.getCell(col, row);
-//				if (cell == null) {
-//					x += layerTileWidth;
-//					continue;
-//				}
-//				final TiledMapTile tile = cell.getTile();
-//
-//				if (tile != null) {
-//					final boolean flipX = cell.getFlipHorizontally();
-//					final boolean flipY = cell.getFlipVertically();
-//					final int rotations = cell.getRotation();
-//
-//					TextureRegion region = tile.getTextureRegion();
-//
-//					float x1 = x + tile.getOffsetX() * unitScale;
-//					float y1 = y + tile.getOffsetY() * unitScale;
-//					float x2 = x1 + region.getRegionWidth() * unitScale;
-//					float y2 = y1 + region.getRegionHeight() * unitScale;
-//
-//					//batch.draw(region.getTexture(), vertices, 0, NUM_VERTICES);BodyDef  bd = new  BodyDef ();
-//					BodyDef  bd = new BodyDef();
-//					bd.type=BodyType.KinematicBody;
-//					bd.position.set(x1+16,y1+16);
-//
-//					PolygonShape c=new PolygonShape();
-//					c.setAsBox(16, 16);
-//					FixtureDef ballShapeDef = new FixtureDef();
-//					ballShapeDef.density = 1.0f;//密度
-//					ballShapeDef.friction = 1f;////摩擦粗糙程度
-//					ballShapeDef.restitution = 0.0f;//碰撞后，恢复原状后的力量,力度返回程度（弹性）
-//					ballShapeDef.shape = c;//形状
-//					//ballShapeDef.isSensor=
-//					Body positionPlayer = world.createBody(bd);
-//					positionPlayer.createFixture(ballShapeDef);
-//					//positionPlayer.setFixedRotation(true);//纰版挒鏃�鏄惁鏃嬭浆
-//					positionPlayer.setLinearDamping(100);//阻尼
-//					positionPlayer.setAngularDamping(100);//瑙掗樆灏�鎽╂摝?
-//					positionPlayer.setUserData(null);
-//					c.dispose();
-//
-//
-//				}
-//				x += layerTileWidth;
-//			}
-//			y -= layerTileHeight;
-//		}
-//	}
+    private void createRandomDoor(){
+        for(int i = 0;i<5;i++){
+            AnimationDoor door = ActorFactory.creatDoor("wind2",world,null);
+            door.setPosition(MathUtils.random(-100,1000),MathUtils.random(-100,1000));
+            this.addActor(door);
+        }
+    }
 }

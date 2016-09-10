@@ -1,17 +1,17 @@
 package com.guxuede.game.actor;
 
 import com.badlogic.gdx.scenes.scene2d.InputListener;
-import com.guxuede.game.GameWorld;
+import com.guxuede.game.StageWorld;
 import com.guxuede.game.resource.ActorAnimationPlayer;
 
 public class AnimationActor extends AnimationEntity{
 
 
-    public AnimationActor(ActorAnimationPlayer animationPlayer, GameWorld world, InputListener l) {
+    public AnimationActor(ActorAnimationPlayer animationPlayer, StageWorld world, InputListener l) {
         super(animationPlayer, world, l);
     }
 
-    public AnimationActor(ActorAnimationPlayer animationPlayer, GameWorld world) {
+    public AnimationActor(ActorAnimationPlayer animationPlayer, StageWorld world) {
         super(animationPlayer, world);
     }
 }

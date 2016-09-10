@@ -5,13 +5,7 @@ import java.io.IOException;
 import java.util.Iterator;
 import java.util.List;
 
-import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.Pixmap;
-import com.badlogic.gdx.graphics.glutils.FrameBuffer;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.scenes.scene2d.*;
-import com.badlogic.gdx.utils.viewport.FitViewport;
-import com.badlogic.gdx.utils.viewport.StretchViewport;
 import org.jsoup.Jsoup;
 import org.jsoup.helper.StringUtil;
 import org.jsoup.nodes.Document;
@@ -51,7 +45,7 @@ import org.mozilla.javascript.ScriptableObject;
 public class TitleMapGame implements ApplicationListener{
 
 	Context cx;Scriptable scope;
-    private TitleMapStage mapStage; 
+    private TitleMapStage mapStage;
     private OrthographicCamera camera;
     
     private Stage uiStage;
@@ -64,9 +58,7 @@ public class TitleMapGame implements ApplicationListener{
         cx = Context.enter();
         scope = cx.initStandardObjects();
 		camera=new MovebleOrthographicCamera(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-		mapStage = new TitleMapStage(new FitViewport( Gdx.graphics.getWidth(), Gdx.graphics.getHeight()),
-				new SpriteBatch());
-		mapStage.init();
+		mapStage = new TitleMapStage("desert1.tmx");
 
 		 //添加一个button用来测试对比该
 		 TextButtonStyle bs=new TextButtonStyle(ResourceManager.up,ResourceManager.down,null,ResourceManager.font);
@@ -86,21 +78,21 @@ public class TitleMapGame implements ApplicationListener{
 			public void changed(ChangeEvent event, Actor actor1) {
 				//System.out.println(touchpad.getKnobPercentX()+","+touchpad.getKnobPercentY());
 				if(touchpad.getKnobPercentX()==0 && touchpad.getKnobPercentY()==0){
-					mapStage.actor.stop();
+					mapStage.viewActor.stop();
 				}else if(Math.abs(touchpad.getKnobPercentX()) > Math.abs(touchpad.getKnobPercentY())){
 					if(touchpad.getKnobPercentX()>0){
 						System.out.println("touchpad left");
-						mapStage.actor.moveLeft();
+						mapStage.viewActor.moveLeft();
 					}else{
                         System.out.println("touchpad right");
-						mapStage.actor.moveRight();
+						mapStage.viewActor.moveRight();
 					}
 				}else{
 					if(touchpad.getKnobPercentY()>0){
 						System.out.println("touchpad down");
-						mapStage.actor.moveDown();
+						mapStage.viewActor.moveDown();
 					}else{
-						mapStage.actor.moveUp();
+						mapStage.viewActor.moveUp();
 						System.out.println("touchpad up");
 					}
 				}
@@ -120,8 +112,8 @@ public class TitleMapGame implements ApplicationListener{
 
                  if (!(e instanceof InputEvent)) return false;
                  InputEvent event = (InputEvent) e;
-                 if (mapStage.actor != null) {
-                     mapStage.actor.handleInput(event);
+                 if (mapStage.viewActor != null) {
+                     mapStage.viewActor.handleInput(event);
                      return true;
                  }
                  return super.handle(e);

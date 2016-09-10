@@ -21,6 +21,7 @@ public class LevelDrawActor extends Actor {
     public static final int DRAW_LEVEL_HEAD = 2;
     public int drawLevel;
     public float stateTime;
+    public boolean isInScreen = true;//是否在视野中
 
     public float getCenterX() {
         return super.getX(Align.center);
@@ -44,7 +45,8 @@ public class LevelDrawActor extends Actor {
 
     @Override
     public void draw(Batch batch, float parentAlpha) {
-        if(isInScreen()){
+        isInScreen = isInScreen();
+        if(isInScreen){
             if(drawLevel == 0){
                 drawFoot(batch,parentAlpha);
                 drawFootEffect(batch,parentAlpha);

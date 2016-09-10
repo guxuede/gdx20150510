@@ -1,13 +1,9 @@
 package com.guxuede.game.actor.state;
 
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
-import com.guxuede.game.actor.AnimationActor;
 import com.guxuede.game.actor.AnimationEntity;
-import com.guxuede.game.animation.ActionsFactory;
-import com.guxuede.game.animation.ActorThrowProjectionAction;
-import com.guxuede.game.effects.AnimationEffect;
-import com.guxuede.game.libgdx.ResourceManager;
-import com.guxuede.game.tools.SoundUtils;
+import com.guxuede.game.action.ActorThrowProjectionAction;
+import com.guxuede.game.action.effects.AnimationEffect;
 
 /**
  * Created by guxuede on 2016/6/16 .

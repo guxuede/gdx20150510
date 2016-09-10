@@ -50,7 +50,7 @@ public class ActorAnimationPlayer implements ActorEventListener{
      */
     public void setAnimationHolder(AnimationHolder animationHolder){
         this.animationHolder = animationHolder;
-        //animation changed,consider to restore player status
+        //action changed,consider to restore player status
         doAnimation(lastAnimationName);
     }
 	
@@ -131,7 +131,7 @@ public class ActorAnimationPlayer implements ActorEventListener{
 
 	public void doAnimation(String animationName){
         Animation animation = animationHolder.getAnimation(animationName);
-        //if animation not change,no need to re do Animation
+        //if action not change,no need to re do Animation
         if(currentAnimation != animation){
             onAnimationChange(currentAnimation,animation,animationName);
             currentAnimation = animation;

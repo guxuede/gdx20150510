@@ -9,16 +9,17 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Pool.Poolable;
-import com.guxuede.game.GameWorld;
+import com.guxuede.game.StageWorld;
 import com.guxuede.game.actor.state.ActorState;
 import com.guxuede.game.actor.state.StandState;
-import com.guxuede.game.animation.ActionsFactory;
-import com.guxuede.game.animation.ActorAlwayMoveAction;
-import com.guxuede.game.animation.move.ActorMoveToAction;
-import com.guxuede.game.animation.move.ActorMoveToActorAction;
-import com.guxuede.game.animation.move.ActorMoveToPointAction;
+import com.guxuede.game.action.ActionsFactory;
+import com.guxuede.game.action.ActorAlwayMoveAction;
+import com.guxuede.game.action.move.ActorMoveToAction;
+import com.guxuede.game.action.move.ActorMoveToActorAction;
+import com.guxuede.game.action.move.ActorMoveToPointAction;
 import com.guxuede.game.libgdx.GdxSprite;
-import com.guxuede.game.position.PositionPlayer;
+import com.guxuede.game.libgdx.ResourceManager;
+import com.guxuede.game.physics.PhysicsPlayer;
 import com.guxuede.game.resource.ActorAnimationPlayer;
 
 import java.util.List;
@@ -34,26 +35,27 @@ public abstract class AnimationEntity extends LevelDrawActor implements Poolable
             LIFE_STATUS_DESTORY=-1;//实体处于摧毁状态，退出世界之外，系统将不久销毁它，内存空间将清理
 
 	public static long ID = 1000000000001L;
-	public long id;
-	public int direction=DOWN;
-	public float degrees;
-	public float speed=1200000;
-	public boolean isMoving;
+    public AnimationEntity sourceActor;//源单位，此单位可能是宠物，寄主，生产者
+    public long id;
+    public int direction=DOWN;
+    public float degrees;
+    public float speed=1200000;
+    public boolean isMoving;
     public float visualRadius=100;
     public Color  primaryColor;
-	public int lifeStatus = LIFE_STATUS_CREATE;
+    public int lifeStatus = LIFE_STATUS_CREATE;
 
-    public GameWorld gameWorld;
-	public PositionPlayer positionPlayer;
-	public ActorAnimationPlayer animationPlayer;
-	public AnimationEntity sourceActor;
+    public boolean isSensor = false;
+    public StageWorld stageWorld;
+    public PhysicsPlayer physicsPlayer;
+    public ActorAnimationPlayer animationPlayer;
 
-    public AnimationEntity(ActorAnimationPlayer animationPlayer,GameWorld world,InputListener l) {
+    public AnimationEntity(ActorAnimationPlayer animationPlayer, StageWorld world, InputListener l) {
         this(animationPlayer, world);
         if(l!=null)addListener(l);
     }
 
-    public AnimationEntity(ActorAnimationPlayer animationPlayer,GameWorld world) {
+    public AnimationEntity(ActorAnimationPlayer animationPlayer,StageWorld world) {
         id = ID++;
         this.animationPlayer = animationPlayer;
         int actorWidth= animationPlayer.width;
@@ -65,16 +67,16 @@ public abstract class AnimationEntity extends LevelDrawActor implements Poolable
         this.addAction(new ActorAlwayMoveAction());
         this.visualRadius = actorWidth * 4;
         this.primaryColor = new Color(MathUtils.random(), MathUtils.random(), MathUtils.random(), 1);
-        this.positionPlayer = world.getPositionWorld().createPositionPlayer();
-        this.gameWorld = world;
+        this.physicsPlayer = world.getPhysicsManager().createPositionPlayer();
+        this.stageWorld = world;
     }
 
     /**************************************box2d control**************************************************/
 	//call by stage
-	public void createBody(GameWorld world){
+	public void createBody(StageWorld world){
 		if(lifeStatus == LIFE_STATUS_CREATE){
 			lifeStatus = LIFE_STATUS_BORN;
-            this.positionPlayer.init(this);
+            this.physicsPlayer.init(this);
 			this.setVisible(true);
 		}
         if(lifeStatus == LIFE_STATUS_BORN){
@@ -83,40 +85,41 @@ public abstract class AnimationEntity extends LevelDrawActor implements Poolable
     }
 
 	//call by stage
-	public void destroyBody(GameWorld world){
+	public void destroyBody(StageWorld world){
 		if(lifeStatus == LIFE_STATUS_DESTORY){
-            this.positionPlayer.destroy(this);
+            this.physicsPlayer.destroy(this);
 			this.remove();//TODO 也许不应该在这里remove掉
 		}
 	}
 
     //=============================================Position Control========================================================================
+
+    /**
+     * 一下两个方法不要再改单位初始化时调用
+     * @param actorLinearVelocity
+     */
     public void setLinearVelocity(Vector2 actorLinearVelocity) {
-        this.positionPlayer.setLinearVelocity(actorLinearVelocity);
+        this.physicsPlayer.setLinearVelocity(actorLinearVelocity);
     }
 
     public void setEntityPosition(float x,float y){
-        this.positionPlayer.setXY(x,y);
+        this.physicsPlayer.setXY(x,y);
     }
 
 	@Override
 	public void moveBy(float x, float y) {
 		if (x != 0 || y != 0) {
-			positionPlayer.setXY(positionPlayer.getX() + x, positionPlayer.getY() + y);
+			physicsPlayer.setXY(physicsPlayer.getX() + x, physicsPlayer.getY() + y);
 			positionChanged();
 		}
 	}
 
-    //这个方法被body调用注意死循环
-    //System.err.println(x+","+y);
-    //positionPlayer.setTransform(x, y, 0);
-
     /**
-     * 不要在外面调用下面三个方法。这些方法被内部位置系统positionPlayer无数次的调用用来同步actor位置，外部调用无用。
+     * 禁止！在外面调用下面三个方法。这些方法被内部位置系统positionPlayer无数次的调用用来同步actor位置，外部调用无用。
      * 仅初始状态可调用来调整位置.
      * 如需实时改变位置请使用 setEntityPosition。
      *  @see AnimationEntity.setCenterPosition
-     *  @see PositionPlayer.act()
+     *  @see PhysicsPlayer.act()
      * @param x
      * @param y
      */
@@ -130,6 +133,8 @@ public abstract class AnimationEntity extends LevelDrawActor implements Poolable
     public void setPosition(float x, float y, int alignment) {
         super.setPosition(x, y, alignment);
     }
+
+    /**仅建议在初始化对象时调用一次*/
     public void setCenterPosition(float x, float y) {
         this.setPosition(x, y, Align.center);
     }
@@ -140,7 +145,7 @@ public abstract class AnimationEntity extends LevelDrawActor implements Poolable
 	public void act(float delta) {
         super.act(delta);
         if(canAct()){
-            positionPlayer.act(delta,this);
+            physicsPlayer.act(delta,this);
             animationPlayer.act(delta,this);
             if(actorState!=null){
                 ActorState newState =  actorState.update(this, delta);
@@ -157,9 +162,9 @@ public abstract class AnimationEntity extends LevelDrawActor implements Poolable
 
     public float drawOffSetX,drawOffSetY;
 
-//    public void drawFoot(Batch batch, float parentAlpha){
-//        //batch.draw(ResourceManager.humanShadow,this.getCenterX() - ResourceManager.humanShadow.getRegionWidth()/2,this.getCenterY()-ResourceManager.humanShadow.getRegionHeight()/2);
-//    }
+    public void drawFoot(Batch batch, float parentAlpha){
+        batch.draw(ResourceManager.humanShadow,this.getCenterX() - this.getWidth()/2,this.getCenterY()-50,this.getWidth(),ResourceManager.humanShadow.getRegionHeight());
+    }
     public void drawBody(Batch batch, float parentAlpha) {
         if(lifeStatus != LIFE_STATUS_DESTORY){
             GdxSprite sprite = (GdxSprite) animationPlayer.getKeyFrame();
@@ -349,8 +354,8 @@ public abstract class AnimationEntity extends LevelDrawActor implements Poolable
         return (int) (id ^ (id >>> 32));
     }
 
-    public GameWorld getWorld() {
-        return gameWorld;
+    public StageWorld getWorld() {
+        return stageWorld;
     }
 
 }

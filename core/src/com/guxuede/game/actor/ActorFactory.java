@@ -1,7 +1,7 @@
 package com.guxuede.game.actor;
 
 import com.badlogic.gdx.scenes.scene2d.InputListener;
-import com.guxuede.game.GameWorld;
+import com.guxuede.game.StageWorld;
 import com.guxuede.game.libgdx.ResourceManager;
 import com.guxuede.game.resource.*;
 
@@ -10,37 +10,43 @@ import com.guxuede.game.resource.*;
  */
 public class ActorFactory {
 
-    public static AnimationActor createActor(String name, GameWorld world) {
+    public static AnimationActor createActor(String name, StageWorld world) {
         AnimationHolder animationHolder = ResourceManager.getAnimationHolder(name);
         ActorAnimationPlayer actorAnimationPlayer = new ActorAnimationPlayer(animationHolder);
         AnimationActor animationActor = new AnimationActor(actorAnimationPlayer,world);
         return animationActor;
     }
-    public static AnimationActor createActor(String name,GameWorld world,InputListener l) {
+    public static AnimationActor createActor(String name, StageWorld world, InputListener l) {
         AnimationHolder animationHolder = ResourceManager.getAnimationHolder(name);
         ActorAnimationPlayer actorAnimationPlayer = new ActorAnimationPlayer(animationHolder);
         AnimationActor animationActor = new AnimationActor(actorAnimationPlayer,world,l);
         return animationActor;
     }
-    public static EffectsEntity createEffectsActor(String name,GameWorld world,InputListener l) {
+    public static EffectsEntity createEffectsActor(String name, StageWorld world, InputListener l) {
         AnimationHolder animationHolder = ResourceManager.getAnimationHolder(name);
         ActorAnimationPlayer actorAnimationPlayer = new ActorAnimationPlayer(animationHolder);
         EffectsEntity animationActor = new EffectsEntity(actorAnimationPlayer,world,l);
         return animationActor;
     }
-    public static AnimationProjection createProjectionActor(String name,GameWorld world,InputListener l) {
+    public static AnimationProjection createProjectionActor(String name, StageWorld world, InputListener l) {
         AnimationHolder animationHolder = ResourceManager.getAnimationHolder(name);
         ActorAnimationPlayer actorAnimationPlayer = new ActorAnimationPlayer(animationHolder);
         AnimationProjection animationActor = new AnimationProjection(actorAnimationPlayer,world,l);
         return animationActor;
     }
-    public static LightningEntity createLightningEntity(String name,GameWorld world,InputListener l) {
+    public static LightningEntity createLightningEntity(String name, StageWorld world, InputListener l) {
         AnimationHolder animationHolder = ResourceManager.getAnimationHolder(name);
         ActorAnimationPlayer actorAnimationPlayer = new ActorAnimationPlayer(animationHolder);
         LightningEntity animationActor = new LightningEntity(actorAnimationPlayer,world,l);
         return animationActor;
     }
 
+    public static AnimationDoor creatDoor(String name, StageWorld world, InputListener l) {
+        AnimationHolder animationHolder = ResourceManager.getAnimationHolder(name);
+        ActorAnimationPlayer actorAnimationPlayer = new ActorAnimationPlayer(animationHolder);
+        AnimationDoor animationActor = new AnimationDoor(actorAnimationPlayer,world,l);
+        return animationActor;
+    }
 
 
     //==============================

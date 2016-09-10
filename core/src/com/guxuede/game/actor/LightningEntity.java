@@ -2,7 +2,7 @@ package com.guxuede.game.actor;
 
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
-import com.guxuede.game.GameWorld;
+import com.guxuede.game.StageWorld;
 import com.guxuede.game.libgdx.GdxSprite;
 import com.guxuede.game.resource.ActorAnimationPlayer;
 import com.guxuede.game.tools.MathUtils;
@@ -14,11 +14,11 @@ public class LightningEntity extends AnimationProjection {
 
     public AnimationEntity targetAnimation;
 
-    public LightningEntity(ActorAnimationPlayer animationPlayer, GameWorld world, InputListener l) {
+    public LightningEntity(ActorAnimationPlayer animationPlayer, StageWorld world, InputListener l) {
         super(animationPlayer, world, l);
     }
 
-    public LightningEntity(ActorAnimationPlayer animationPlayer, GameWorld world) {
+    public LightningEntity(ActorAnimationPlayer animationPlayer, StageWorld world) {
         super(animationPlayer, world);
     }
 

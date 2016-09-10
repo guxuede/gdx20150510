@@ -39,7 +39,7 @@ public class ResourceManager {
     public static TextureRegionDrawable BTNImmolationOn=new TextureRegionDrawable(getTextureRegion("limiui_psd",456,316,34,25/*742,296,156,47*/));
     public static MiniatureTextureRegionDrawable BTNImmolationOn1=new MiniatureTextureRegionDrawable(getTextureRegion("limiui_psd",456,341,34,25/*742,346,156,47*/));
 
-    //public static Sprite humanShadow = new Sp
+    public static TextureRegion humanShadow= getTextureRegion("180-Switch03",96,96,32,32);
 
     public static Texture getTexture(String name){
         Texture texture = null;

@@ -3,9 +3,9 @@ package com.guxuede.game.actor;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
-import com.guxuede.game.GameWorld;
-import com.guxuede.game.animation.ActionsFactory;
-import com.guxuede.game.effects.AnimationEffect;
+import com.guxuede.game.StageWorld;
+import com.guxuede.game.action.ActionsFactory;
+import com.guxuede.game.action.effects.AnimationEffect;
 import com.guxuede.game.libgdx.ResourceManager;
 import com.guxuede.game.resource.ActorAnimationPlayer;
 
@@ -14,12 +14,12 @@ public class AnimationProjection extends AnimationEntity {
     protected boolean trunDirectionWhenMove = true;
 
 
-    public AnimationProjection(ActorAnimationPlayer animationPlayer, GameWorld world, InputListener l) {
+    public AnimationProjection(ActorAnimationPlayer animationPlayer, StageWorld world, InputListener l) {
         super(animationPlayer, world, l);
         init();
     }
 
-    public AnimationProjection(ActorAnimationPlayer animationPlayer, GameWorld world) {
+    public AnimationProjection(ActorAnimationPlayer animationPlayer, StageWorld world) {
         super(animationPlayer, world);
         init();
     }
@@ -30,13 +30,9 @@ public class AnimationProjection extends AnimationEntity {
 		this.scaleBy(1);
 		speed = 50000000;
         setZIndex(2);
+        this.isSensor = true;
 	}
-	
-//	@Override
-//	public void createBody(World world) {
-    //TODO 设置 子弹可以接受碰撞但没有物理反应。
-//	}
-	
+
 	@Override
 	public void turnDirection(float degrees) {
 		super.turnDirection(degrees);

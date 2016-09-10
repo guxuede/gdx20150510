@@ -2,10 +2,9 @@ package com.guxuede.game.actor;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Batch;
-import com.badlogic.gdx.scenes.scene2d.Action;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import com.guxuede.game.animation.FontScaleAction;
+import com.guxuede.game.action.FontScaleAction;
 import com.guxuede.game.libgdx.ResourceManager;
 
 public class BarrageTip extends Label{
