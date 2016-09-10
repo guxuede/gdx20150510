@@ -6,7 +6,9 @@ import com.badlogic.gdx.scenes.scene2d.actions.TemporalAction;
 import com.guxuede.game.actor.AnimationEntity;
 import com.guxuede.game.tools.MathUtils;
 
-
+/**
+ * 给定角色速度，使其移动
+ */
 public class ActorMoveAction extends TemporalAction {
 	private float startX, startY;
 	private float endX,endY;
@@ -14,40 +16,25 @@ public class ActorMoveAction extends TemporalAction {
 
 	protected void begin () {
 		AnimationEntity actor = ((AnimationEntity)target);
-		startX = actor.body.getPosition().x;
-		startY = actor.body.getPosition().y;
+		startX = actor.getCenterX();
+		startY = actor.getCenterY();
 		float duration = (float) (MathUtils.distance(startX,startY,endX,endY)/actor.speed);
 		this.setDuration(duration);
 		 degrees = MathUtils.getAngle(startX,startY,endX,endY);
 		
 		actor.turnDirection(degrees);
-		actor.body.setAwake(true);
 		Vector2 v = new Vector2(100, 100);
 		v.setAngle(degrees);
-		actor.body.setLinearVelocity(v);
+		actor.setLinearVelocity(v);
 		
 	}
 
 	protected void update (float percent) {
 		AnimationEntity actor = ((AnimationEntity)target);
-		//actor.body.setTransform(startX + (endX - startX) * percent,startY + (endY - startY) * percent, 99);
-		//target.setPosition(startX + (endX - startX) * percent, startY + (endY - startY) * percent);
 		Vector2 v = new Vector2(100, 100);
 		v.setAngle(degrees);
-		actor.body.setLinearVelocity(v);
-		
-		final int direction = actor.direction;
-		if(direction==AnimationEntity.DOWN){
-			actor.animationPlayer.doMoveDownAnimation();
-        }else if(direction==AnimationEntity.UP){
-        	actor.animationPlayer.doMoveUpAnimation();
-        }else if(direction==AnimationEntity.LEFT){
-        	actor.animationPlayer.doMoveLeftAnimation();
-        }else if(direction==AnimationEntity.RIGHT){
-        	actor.animationPlayer.doMoveRightAnimation();
-        }else{
-        	actor.animationPlayer.doIdelAnimation(actor.direction);
-        }
+		actor.setLinearVelocity(v);
+		actor.doMoveAnimation();
 	}
 	
 	@Override

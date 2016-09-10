@@ -36,7 +36,7 @@ public class LightningEffectMutilPoint extends AnimationEffect{
             AnimationEntity source = this.getAnimationEntity();
             for(int i=0;i<targetPoints.size();i++){
                 Vector2 s_v = targetPoints.get(i);
-                Vector2 t_v = i == 0? new Vector2(source.getEntityX(),source.getEntityY()):targetPoints.get(i-1);
+                Vector2 t_v = i == 0? new Vector2(source.getCenterX(),source.getCenterY()):targetPoints.get(i-1);
                 drawLight(batch, parentAlpha, sprite, s_v, t_v);
             }
         }

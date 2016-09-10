@@ -17,7 +17,7 @@ public abstract class ActorMoveToAction extends Action {
         if(target == null){
             return true;
         }else{
-            float dist = target.dst2(entity.getEntityX(), entity.getEntityY());
+            float dist = target.dst2(entity.getCenterX(), entity.getCenterY());
             return dist < IS_ARRIVE_RADIO;
         }
     }
@@ -27,7 +27,7 @@ public abstract class ActorMoveToAction extends Action {
         final AnimationEntity entity = (AnimationEntity) getTarget();
         if(!isArrive()){
             final Vector2 target = getTargetPoint();
-            final float degrees = MathUtils.getAngle(entity.getEntityX(),entity.getEntityY(),target.x,target.y);
+            final float degrees = MathUtils.getAngle(entity.getCenterX(),entity.getCenterY(),target.x,target.y);
             entity.turnDirection(degrees);
             entity.isMoving = true;
             return false;

@@ -28,7 +28,7 @@ public class DoubleImageEffect extends GdxEffect {
             if(last5Animation.size() > 5){
                 last5Animation.poll();
             }
-            last5Animation.offer(new AnimationEntitySnapshot(sprite,animationEntity.getEntityX(),animationEntity.getEntityY()));
+            last5Animation.offer(new AnimationEntitySnapshot(sprite,animationEntity.getCenterX(),animationEntity.getCenterY()));
         }
     }
 

@@ -38,7 +38,7 @@ public class AnimationEffect extends GdxEffect {
         if(effectAnimation!=null){
             AnimationEntity animationActor = getAnimationEntity();
             GdxSprite sprite = (GdxSprite) effectAnimation.getKeyFrame(animationActor.stateTime, true);
-            sprite.setPosition(animationActor.getEntityX(),animationActor.getEntityY());
+            sprite.setPosition(animationActor.getCenterX(),animationActor.getCenterY());
             sprite.draw(batch, parentAlpha);
         }
     }

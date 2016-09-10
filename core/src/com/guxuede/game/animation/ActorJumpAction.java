@@ -5,7 +5,9 @@ import com.badlogic.gdx.scenes.scene2d.actions.TemporalAction;
 import com.guxuede.game.actor.AnimationEntity;
 import com.guxuede.game.tools.MathUtils;
 
-
+/**
+ * 无视物理，直接改变位置
+ */
 public class ActorJumpAction extends TemporalAction {
 	private float startX, startY;
 	private float endX,endY;
@@ -14,8 +16,8 @@ public class ActorJumpAction extends TemporalAction {
 
 	protected void begin () {
 		AnimationEntity actor = ((AnimationEntity)target);
-		startX = actor.body.getPosition().x;
-		startY = actor.body.getPosition().y;
+		startX = actor.getCenterX();
+		startY = actor.getCenterY();
 		this.setDuration(duration);
 		actor.addAction(ActionsFactory.sequence(ActionsFactory.scaleBy(0.2f, 0.2f, duration / 2), ActionsFactory.scaleBy(-0.2f, -0.2f, duration / 2)));
 		
@@ -26,19 +28,8 @@ public class ActorJumpAction extends TemporalAction {
 
 	protected void update (float percent) {
 		AnimationEntity actor = ((AnimationEntity)target);
-		actor.body.setTransform(startX + (endX - startX) * percent,startY + (endY - startY) * percent, 99);
-		final int direction = actor.direction;
-		if(direction==AnimationEntity.DOWN){
-			actor.animationPlayer.doMoveDownAnimation();
-        }else if(direction==AnimationEntity.UP){
-        	actor.animationPlayer.doMoveUpAnimation();
-        }else if(direction==AnimationEntity.LEFT){
-        	actor.animationPlayer.doMoveLeftAnimation();
-        }else if(direction==AnimationEntity.RIGHT){
-        	actor.animationPlayer.doMoveRightAnimation();
-        }else{
-        	actor.animationPlayer.doIdelAnimation(actor.direction);
-        }
+		actor.setEntityPosition(startX + (endX - startX) * percent,startY + (endY - startY) * percent);
+        actor.doMoveAnimation();
 	}
 	
 	@Override

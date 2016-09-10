@@ -89,7 +89,7 @@ public class LightManager {
             if(actor instanceof AnimationEntity){
                 AnimationEntity entity = (AnimationEntity) actor;
                 batch.setColor(entity.primaryColor);
-                tVector2.set(entity.getEntityX(),entity.getEntityY());
+                tVector2.set(entity.getCenterX(),entity.getCenterY());
                 stage.stageToScreenCoordinates(tVector2);
                 //(4.75f + 0.25f * (float)Math.sin(zAngle) + .2f* MathUtils.random())
                 float visualRadius = entity.visualRadius;//+MathUtils.random(entity.visualRadius*0.1f);

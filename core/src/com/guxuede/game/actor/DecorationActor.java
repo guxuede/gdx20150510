@@ -1,9 +1,7 @@
 package com.guxuede.game.actor;
 
-import com.badlogic.gdx.graphics.g2d.TextureAtlas;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
+import com.guxuede.game.GameWorld;
 import com.guxuede.game.resource.ActorAnimationPlayer;
 
 /**
@@ -11,11 +9,11 @@ import com.guxuede.game.resource.ActorAnimationPlayer;
  */
 public class DecorationActor extends AnimationEntity {
 
-    public DecorationActor(ActorAnimationPlayer animationPlayer, World world, InputListener l) {
+    public DecorationActor(ActorAnimationPlayer animationPlayer, GameWorld world, InputListener l) {
         super(animationPlayer, world, l);
     }
 
-    public DecorationActor(ActorAnimationPlayer animationPlayer, World world) {
+    public DecorationActor(ActorAnimationPlayer animationPlayer, GameWorld world) {
         super(animationPlayer, world);
     }
 }

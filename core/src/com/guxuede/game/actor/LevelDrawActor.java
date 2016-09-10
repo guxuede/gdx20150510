@@ -1,7 +1,5 @@
 package com.guxuede.game.actor;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
@@ -12,12 +10,6 @@ import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.guxuede.game.libgdx.GdxEffect;
-import com.guxuede.game.libgdx.GdxSprite;
-import com.guxuede.game.libgdx.ResourceManager;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 
 /**
  * Created by guxuede on 2016/5/31 .
@@ -30,16 +22,12 @@ public class LevelDrawActor extends Actor {
     public int drawLevel;
     public float stateTime;
 
-    public float getEntityX() {
+    public float getCenterX() {
         return super.getX(Align.center);
     }
 
-    public float getEntityY() {
+    public float getCenterY() {
         return super.getY(Align.center);
-    }
-
-    public void setEntityPosition(float x, float y) {
-        this.setPosition(x, y, Align.center);
     }
 
     /**
@@ -50,7 +38,7 @@ public class LevelDrawActor extends Actor {
         Viewport viewport = getStage().getViewport();
         Vector3 center = viewport.getCamera().position;
         float screenW = Math.max(viewport.getScreenWidth(),viewport.getScreenHeight());
-        float dis = Vector2.dst(center.x,center.y,getEntityX(),getEntityY());
+        float dis = Vector2.dst(center.x,center.y, getCenterX(), getCenterY());
         return dis < screenW/2;
     }
 

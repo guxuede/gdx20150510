@@ -6,7 +6,6 @@ import com.guxuede.game.actor.ActorFactory;
 import com.guxuede.game.actor.AnimationEntity;
 import com.guxuede.game.actor.AnimationProjection;
 import com.guxuede.game.animation.move.ActorMoveToAction;
-import com.guxuede.game.animation.move.ActorMoveToActorAction;
 import com.guxuede.game.animation.move.ActorMoveToMutilActorRandomAction;
 import com.guxuede.game.animation.move.ActorMoveToMutilPointAction;
 import com.guxuede.game.effects.AnimationEffect;
@@ -65,8 +64,8 @@ public class ActorThrowProjectionAction extends Action {
         AnimationEntity animationEntity = (AnimationEntity) getActor();
         float l = DEFAULT_PROJECT_RANGE;
         double radians = (float) (2*Math.PI * degrees / 360);
-        float dx=(float) (animationEntity.getEntityX()+l*Math.cos(radians));
-        float dy=(float) (animationEntity.getEntityY()+l*Math.sin(radians));
+        float dx=(float) (animationEntity.getCenterX()+l*Math.cos(radians));
+        float dy=(float) (animationEntity.getCenterY()+l*Math.sin(radians));
         throwProjection(dx,dy);
     }
 
@@ -77,7 +76,7 @@ public class ActorThrowProjectionAction extends Action {
      */
     public void throwProjection(float dx,float dy){
         AnimationEntity animationEntity = (AnimationEntity) getActor();
-        throwProjection(animationEntity.getEntityX(), animationEntity.getEntityY(),dx,dy);
+        throwProjection(animationEntity.getCenterX(), animationEntity.getCenterY(),dx,dy);
     }
 
     /**
@@ -89,9 +88,9 @@ public class ActorThrowProjectionAction extends Action {
      */
     public void throwProjection(float fx,float fy,float dx,float dy){
         AnimationEntity animationEntity = (AnimationEntity) getActor();
-        AnimationProjection projection = ActorFactory.createProjectionActor("bullet1", animationEntity.body.getWorld(), null);
+        AnimationProjection projection = ActorFactory.createProjectionActor("bullet1", animationEntity.getWorld(), null);
         projection.sourceActor = animationEntity;
-        projection.setEntityPosition(fx, fy);
+        projection.setCenterPosition(fx, fy);
         //projection.turnDirection(animationEntity.degrees);
         ActorMoveToAction actorMoveToAction = new ActorMoveToMutilPointAction(Arrays.asList(new Vector2(dx,dy)));
         projection.addAction(
@@ -115,9 +114,9 @@ public class ActorThrowProjectionAction extends Action {
      */
     public void throwProjection1(float fx,float fy,float dx,float dy){
         AnimationEntity animationEntity = (AnimationEntity) getActor();
-        AnimationProjection projection = ActorFactory.createProjectionActor("bullet1", animationEntity.body.getWorld(), null);
+        AnimationProjection projection = ActorFactory.createProjectionActor("bullet1", animationEntity.getWorld(), null);
         projection.sourceActor = animationEntity;
-        projection.setEntityPosition(fx, fy);
+        projection.setCenterPosition(fx, fy);
         //projection.turnDirection(animationEntity.degrees);
         ActorMoveToAction actorMoveToAction = //new ActorMoveToActorAction(animationEntity.findClosestEntry()); new ActorMoveToMutilPointAction(Arrays.asList(new Vector2(100,100),new Vector2(200,200),new Vector2(500,200)));
                 new ActorMoveToMutilActorRandomAction(5);

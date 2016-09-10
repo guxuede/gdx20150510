@@ -87,7 +87,7 @@ public class MathUtils {
                     && (findedList == null || !findedList.contains(actor))
                     ){
                 AnimationEntity entity = (AnimationEntity) actor;
-                float d = Vector2.dst(entity.getEntityX(),entity.getEntityY(),This.getEntityX(),This.getEntityY());
+                float d = Vector2.dst(entity.getCenterX(),entity.getCenterY(),This.getCenterX(),This.getCenterY());
                 if(d < distance){
                     distance = d;
                     finded = entity;

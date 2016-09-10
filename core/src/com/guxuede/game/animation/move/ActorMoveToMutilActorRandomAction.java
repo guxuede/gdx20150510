@@ -4,8 +4,6 @@ import com.badlogic.gdx.math.Vector2;
 import com.guxuede.game.actor.AnimationEntity;
 
 import java.util.Arrays;
-import java.util.Iterator;
-import java.util.List;
 
 /**
  * Created by guxuede on 2016/7/16 .
@@ -47,6 +45,6 @@ public class ActorMoveToMutilActorRandomAction extends ActorMoveToMutilAction{
 
     @Override
     public Vector2 getCurrentTarget() {
-        return currentEntity==null?null:new Vector2(currentEntity.getEntityX(),currentEntity.getEntityY());
+        return currentEntity==null?null:new Vector2(currentEntity.getCenterX(),currentEntity.getCenterY());
     }
 }

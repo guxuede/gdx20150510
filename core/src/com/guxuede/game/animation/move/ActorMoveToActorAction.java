@@ -17,6 +17,6 @@ public class ActorMoveToActorAction extends ActorMoveToAction {
 
     @Override
     public Vector2 getTargetPoint() {
-        return targetActor==null?null:new Vector2(targetActor.getEntityX(),targetActor.getEntityY());
+        return targetActor==null?null:new Vector2(targetActor.getCenterX(),targetActor.getCenterY());
     }
 }

@@ -16,7 +16,7 @@ public class ActorAlwayMoveAction extends RelativeTemporalAction{
 	protected void updateRelative(float percentDelta) {
 		AnimationEntity actor = ((AnimationEntity)target);
         if(actor.isMoving){
-            actor.body.setLinearVelocity(getActorLinearVelocity());
+            actor.setLinearVelocity(getActorLinearVelocity());
 		}
 	}
 

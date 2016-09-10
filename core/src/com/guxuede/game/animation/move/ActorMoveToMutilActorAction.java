@@ -31,6 +31,6 @@ public class ActorMoveToMutilActorAction extends ActorMoveToMutilAction{
 
     @Override
     public Vector2 getCurrentTarget() {
-        return currentEntity==null?null:new Vector2(currentEntity.getEntityX(),currentEntity.getEntityY());
+        return currentEntity==null?null:new Vector2(currentEntity.getCenterX(),currentEntity.getCenterY());
     }
 }

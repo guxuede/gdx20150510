@@ -1,8 +1,8 @@
 package com.guxuede.game.actor;
 
 import com.badlogic.gdx.graphics.g2d.Batch;
-import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
+import com.guxuede.game.GameWorld;
 import com.guxuede.game.libgdx.GdxSprite;
 import com.guxuede.game.resource.ActorAnimationPlayer;
 import com.guxuede.game.tools.MathUtils;
@@ -14,11 +14,11 @@ public class LightningEntity extends AnimationProjection {
 
     public AnimationEntity targetAnimation;
 
-    public LightningEntity(ActorAnimationPlayer animationPlayer, World world, InputListener l) {
+    public LightningEntity(ActorAnimationPlayer animationPlayer, GameWorld world, InputListener l) {
         super(animationPlayer, world, l);
     }
 
-    public LightningEntity(ActorAnimationPlayer animationPlayer, World world) {
+    public LightningEntity(ActorAnimationPlayer animationPlayer, GameWorld world) {
         super(animationPlayer, world);
     }
 
@@ -31,12 +31,12 @@ public class LightningEntity extends AnimationProjection {
         if (sprite != null) {
             AnimationEntity source = this.sourceActor;
             AnimationEntity target = this.targetAnimation;
-            float degrees = MathUtils.getAngle(source.getEntityX(),source.getEntityY(),target.getEntityX(),target.getEntityY());
-            float distance = (float) MathUtils.distance(source.getEntityX(),source.getEntityY(),target.getEntityX(),target.getEntityY());
+            float degrees = MathUtils.getAngle(source.getCenterX(),source.getCenterY(),target.getCenterX(),target.getCenterY());
+            float distance = (float) MathUtils.distance(source.getCenterX(),source.getCenterY(),target.getCenterX(),target.getCenterY());
             float lightLen = getHeight();
             for(int i=0;i<getlenAnima(distance/lightLen);i++){
-                float drx = source.getEntityX();
-                float dry = source.getEntityY();
+                float drx = source.getCenterX();
+                float dry = source.getCenterY();
                 drx = drx+com.badlogic.gdx.math.MathUtils.cosDeg(degrees)*lightLen*i;
                 dry = dry+com.badlogic.gdx.math.MathUtils.sinDeg(degrees)*lightLen*i;
                 sprite.setPosition(drx + drawOffSetX, dry + drawOffSetY);

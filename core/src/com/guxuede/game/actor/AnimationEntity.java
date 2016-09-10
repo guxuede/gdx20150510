@@ -2,32 +2,24 @@ package com.guxuede.game.actor;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Batch;
-
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.physics.box2d.Body;
-import com.badlogic.gdx.physics.box2d.BodyDef;
-import com.badlogic.gdx.physics.box2d.CircleShape;
-import com.badlogic.gdx.physics.box2d.FixtureDef;
-import com.badlogic.gdx.physics.box2d.World;
-import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
-import com.badlogic.gdx.scenes.scene2d.Action;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
-import com.badlogic.gdx.scenes.scene2d.actions.TemporalAction;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Pool.Poolable;
+import com.guxuede.game.GameWorld;
 import com.guxuede.game.actor.state.ActorState;
 import com.guxuede.game.actor.state.StandState;
+import com.guxuede.game.animation.ActionsFactory;
 import com.guxuede.game.animation.ActorAlwayMoveAction;
 import com.guxuede.game.animation.move.ActorMoveToAction;
 import com.guxuede.game.animation.move.ActorMoveToActorAction;
 import com.guxuede.game.animation.move.ActorMoveToPointAction;
 import com.guxuede.game.libgdx.GdxSprite;
+import com.guxuede.game.position.PositionPlayer;
 import com.guxuede.game.resource.ActorAnimationPlayer;
-import com.guxuede.game.libgdx.ResourceManager;
-import com.guxuede.game.animation.ActionsFactory;
 
 import java.util.List;
 
@@ -45,26 +37,27 @@ public abstract class AnimationEntity extends LevelDrawActor implements Poolable
 	public long id;
 	public int direction=DOWN;
 	public float degrees;
-	public float speed=120;
+	public float speed=1200000;
 	public boolean isMoving;
     public float visualRadius=100;
     public Color  primaryColor;
 	public int lifeStatus = LIFE_STATUS_CREATE;
-	
-	public Body body;
+
+    public GameWorld gameWorld;
+	public PositionPlayer positionPlayer;
 	public ActorAnimationPlayer animationPlayer;
 	public AnimationEntity sourceActor;
 
-    public AnimationEntity(ActorAnimationPlayer animationPlayer,World world,InputListener l) {
-		this(animationPlayer, world);
-		if(l!=null)addListener(l);
-	}
-	
-	public AnimationEntity(ActorAnimationPlayer animationPlayer,World world) {
-		id = ID++;
-		this.animationPlayer = animationPlayer;
-		int actorWidth= animationPlayer.width;
-		int actorHeight= animationPlayer.height;
+    public AnimationEntity(ActorAnimationPlayer animationPlayer,GameWorld world,InputListener l) {
+        this(animationPlayer, world);
+        if(l!=null)addListener(l);
+    }
+
+    public AnimationEntity(ActorAnimationPlayer animationPlayer,GameWorld world) {
+        id = ID++;
+        this.animationPlayer = animationPlayer;
+        int actorWidth= animationPlayer.width;
+        int actorHeight= animationPlayer.height;
         this.setSize(actorWidth, actorHeight);
         this.setOrigin(Align.center);
         this.setVisible(false);
@@ -72,52 +65,17 @@ public abstract class AnimationEntity extends LevelDrawActor implements Poolable
         this.addAction(new ActorAlwayMoveAction());
         this.visualRadius = actorWidth * 4;
         this.primaryColor = new Color(MathUtils.random(), MathUtils.random(), MathUtils.random(), 1);
-	}
-
+        this.positionPlayer = world.getPositionWorld().createPositionPlayer();
+        this.gameWorld = world;
+    }
 
     /**************************************box2d control**************************************************/
 	//call by stage
-	public void createBody(World world){
+	public void createBody(GameWorld world){
 		if(lifeStatus == LIFE_STATUS_CREATE){
 			lifeStatus = LIFE_STATUS_BORN;
-			int actorWidth= animationPlayer.width;
+            this.positionPlayer.init(this);
 			this.setVisible(true);
-			/**********************************box2d************************************************/
-            //http://www.firedragonpzy.com.cn/index.php/archives/2524
-			BodyDef  bd = new  BodyDef ();
-			bd.type=BodyType.DynamicBody;
-			bd.position.set(getEntityX(), getEntityY());
-
-			CircleShape c=new CircleShape();
-			c.setRadius(actorWidth/3);
-			FixtureDef ballShapeDef = new FixtureDef();
-			ballShapeDef.density = 1.0f;//密度
-			ballShapeDef.friction = 1f;////摩擦粗糙程度
-			ballShapeDef.restitution = 0.0f;//碰撞后，恢复原状后的力量,力度返回程度（弹性）
-			ballShapeDef.shape = c;//形状
-            ballShapeDef.isSensor= false;//当isSensor为false时(这也是默认值)，在发生碰撞后，由Box2D模拟物理碰撞后的反弹或变向运动。当isSensor是true时，刚体只进行碰撞检测，而不模拟碰撞后的物理运动。此时，我们就可以自定义刚体处理方式了，如示例中的绕小圆运动。
-            body = world.createBody(bd);
-			body.createFixture(ballShapeDef);
-			body.setFixedRotation(true);//固定旋转标记把转动惯量逐渐设置成零。
-			body.setLinearDamping(100);//阻尼，阻尼用来降低世界中物体的速度。阻尼和摩擦不同，因为摩擦仅仅和接触同时发生。阻尼不是摩擦的一个替代者，并且这两个效果可以被同时使用。
-			body.setAngularDamping(100);//瑙掗樆灏�鎽╂摝?
-			body.setUserData(this);
-			c.dispose();
-			/**
-			 * 1.力，循序渐进——ApplyForce 顾名思义，ApplyForce方法会在刚体上施加一个力。学过物理力学的同学都知道，F=ma，有了力F就有了加速度a，有了加速度，物体就会有速度，就会慢慢动起来。(但是不会立马动起来，因为力不会直接影响速度)。 举个简单的例子，小明推一个静止的箱子，箱子不会立马飞出去，而是慢慢的、越来越快的动起来(减速也一样)。
-			 */
-			//body.applyForce(force, point, wake);
-			/**
-			 * 与ApplyForce不同，ApplyImpulse不会产生力，而是直接影响刚体的速度。通过ApplyImpulse方法添加的速度会与刚体原有的速度叠加，产生新的速度。
-			 */
-			//body.applyLinearImpulse(impulse, point, wake);
-			//body.applyAngularImpulse(impulse, wake);
-			/**
-			 * setLinearVelocity与ApplyImpulse一样，直接影响刚体的速度。不一样的是，setLinearVelocity添加的速度会覆盖刚体原有的速度。不过，在SetLinearVelocity方法不会自动唤醒sleeping的刚体，所以在调用该方法之前，记得将刚体body.wakeUp()一下。
-			 */
-			//body.setAngularVelocity(0);//鏃嬭浆鏃剁殑瑙掗�搴�
-			//body.setLinearVelocity(1,1);//绾挎�閫熷害
-			/**********************************box2d************************************************/
 		}
         if(lifeStatus == LIFE_STATUS_BORN){
             lifeStatus = LIFE_STATUS_LIVE;
@@ -125,36 +83,65 @@ public abstract class AnimationEntity extends LevelDrawActor implements Poolable
     }
 
 	//call by stage
-	public void destroyBody(World world){
+	public void destroyBody(GameWorld world){
 		if(lifeStatus == LIFE_STATUS_DESTORY){
-			world.destroyBody(body);
+            this.positionPlayer.destroy(this);
 			this.remove();//TODO 也许不应该在这里remove掉
 		}
 	}
-	
+
+    //=============================================Position Control========================================================================
+    public void setLinearVelocity(Vector2 actorLinearVelocity) {
+        this.positionPlayer.setLinearVelocity(actorLinearVelocity);
+    }
+
+    public void setEntityPosition(float x,float y){
+        this.positionPlayer.setXY(x,y);
+    }
+
 	@Override
 	public void moveBy(float x, float y) {
 		if (x != 0 || y != 0) {
-			body.setTransform(body.getPosition().x += x, body.getPosition().y += y, 99);
+			positionPlayer.setXY(positionPlayer.getX() + x, positionPlayer.getY() + y);
 			positionChanged();
 		}
 	}
-	
+
+    //这个方法被body调用注意死循环
+    //System.err.println(x+","+y);
+    //positionPlayer.setTransform(x, y, 0);
+
+    /**
+     * 不要在外面调用下面三个方法。这些方法被内部位置系统positionPlayer无数次的调用用来同步actor位置，外部调用无用。
+     * 仅初始状态可调用来调整位置.
+     * 如需实时改变位置请使用 setEntityPosition。
+     *  @see AnimationEntity.setCenterPosition
+     *  @see PositionPlayer.act()
+     * @param x
+     * @param y
+     */
+    @Deprecated
 	@Override
 	public void setPosition(float x, float y) {
 		super.setPosition(x, y);
-		//这个方法被body调用注意死循环
-		//System.err.println(x+","+y);
-		//body.setTransform(x, y, 0);
 	}
-	
-	@Override
+    @Deprecated
+    @Override
+    public void setPosition(float x, float y, int alignment) {
+        super.setPosition(x, y, alignment);
+    }
+    public void setCenterPosition(float x, float y) {
+        this.setPosition(x, y, Align.center);
+    }
+
+//====================================================================================================================
+
+    @Override
 	public void act(float delta) {
         super.act(delta);
         if(canAct()){
+            positionPlayer.act(delta,this);
             animationPlayer.act(delta,this);
-            Vector2 v=body.getPosition();
-			this.setPosition(v.x - getWidth()/2, v.y - getHeight()/2);
             if(actorState!=null){
                 ActorState newState =  actorState.update(this, delta);
                 processNewState(newState,null);
@@ -170,26 +157,26 @@ public abstract class AnimationEntity extends LevelDrawActor implements Poolable
 
     public float drawOffSetX,drawOffSetY;
 
-    public void drawFoot(Batch batch, float parentAlpha){
-        //batch.draw(ResourceManager.humanShadow,this.getEntityX() - ResourceManager.humanShadow.getRegionWidth()/2,this.getEntityY()-ResourceManager.humanShadow.getRegionHeight()/2);
-    }
+//    public void drawFoot(Batch batch, float parentAlpha){
+//        //batch.draw(ResourceManager.humanShadow,this.getCenterX() - ResourceManager.humanShadow.getRegionWidth()/2,this.getCenterY()-ResourceManager.humanShadow.getRegionHeight()/2);
+//    }
     public void drawBody(Batch batch, float parentAlpha) {
         if(lifeStatus != LIFE_STATUS_DESTORY){
             GdxSprite sprite = (GdxSprite) animationPlayer.getKeyFrame();
             if (sprite != null) {
-                sprite.setPosition(this.getEntityX() + drawOffSetX, this.getEntityY() + drawOffSetY);
+                sprite.setPosition(this.getCenterX() + drawOffSetX, this.getCenterY() + drawOffSetY);
                 sprite.draw(batch, parentAlpha, getRotation(), getScaleX(), getScaleY(), getColor());
             }
         }
     }
 
-    @Override
-    public void drawHead(Batch batch, float parentAlpha) {
-        super.drawHead(batch, parentAlpha);
-    }
+//    @Override
+//    public void drawHead(Batch batch, float parentAlpha) {
+//        super.drawHead(batch, parentAlpha);
+//    }
 
 
-    /**************************************position control**************************************************/
+    /**************************************move control**************************************************/
     private ActorMoveToAction actorMoveToAction;
     public void moveLeft(){
 		addAction(ActionsFactory.actorMoveDirective(LEFT));
@@ -252,7 +239,7 @@ public abstract class AnimationEntity extends LevelDrawActor implements Poolable
                 && (excludes == null || !excludes.contains(actor))
              ){
                 AnimationEntity entity = (AnimationEntity) actor;
-                float d = Vector2.dst(entity.getEntityX(),entity.getEntityY(),this.getEntityX(),this.getEntityY());
+                float d = Vector2.dst(entity.getCenterX(),entity.getCenterY(),this.getCenterX(),this.getCenterY());
                 if(d < distance){
                     distance = d;
                     found = entity;
@@ -278,6 +265,10 @@ public abstract class AnimationEntity extends LevelDrawActor implements Poolable
         if(!isMoving && oldDirection == this.direction){
             return;
         }
+        doMoveAnimation();
+	}
+
+    public void doMoveAnimation(){
         if(direction == AnimationEntity.LEFT){
             animationPlayer.doMoveLeftAnimation();
         }else if(direction == AnimationEntity.RIGHT){
@@ -287,8 +278,7 @@ public abstract class AnimationEntity extends LevelDrawActor implements Poolable
         }else if(direction == AnimationEntity.UP){
             animationPlayer.doMoveUpAnimation();
         }
-
-	}
+    }
 
     public void setDirection(int direction) {
         this.direction = direction;
@@ -358,4 +348,9 @@ public abstract class AnimationEntity extends LevelDrawActor implements Poolable
     public int hashCode() {
         return (int) (id ^ (id >>> 32));
     }
+
+    public GameWorld getWorld() {
+        return gameWorld;
+    }
+
 }

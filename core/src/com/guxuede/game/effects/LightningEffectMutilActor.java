@@ -35,7 +35,7 @@ public class LightningEffectMutilActor extends AnimationEffect{
             for(int i = 0; i< targetEntries.size(); i++){
                 AnimationEntity s_v = targetEntries.get(i);
                 AnimationEntity t_v = i == 0? source: targetEntries.get(i-1);
-                drawLight(batch, parentAlpha, sprite, new Vector2(s_v.getEntityX(), s_v.getEntityY()), new Vector2(t_v.getEntityX(),t_v.getEntityY()));
+                drawLight(batch, parentAlpha, sprite, new Vector2(s_v.getCenterX(), s_v.getCenterY()), new Vector2(t_v.getCenterX(),t_v.getCenterY()));
             }
         }
     }
