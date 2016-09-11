@@ -1,6 +1,8 @@
 package com.guxuede.game.actor;
 
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
+import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.guxuede.game.StageWorld;
 import com.guxuede.game.libgdx.ResourceManager;
 import com.guxuede.game.resource.*;
@@ -48,6 +50,21 @@ public class ActorFactory {
         return animationActor;
     }
 
+    public static  void createRandomDoor(StageWorld world, Stage stage){
+        for(int i = 0;i<5;i++){
+            AnimationDoor door = ActorFactory.creatDoor("wind2",world,null);
+            door.setPosition(MathUtils.random(-100,1000),MathUtils.random(-100,1000));
+            stage.addActor(door);
+        }
+    }
+
+    public static  void createRandomActor(StageWorld world, Stage stage, InputListener l){
+        for(int i = 0;i<10;i++){
+            AnimationActor actor = ActorFactory.createActor(ResourceManager.ANIMATION_HOLDER_LIST.get(MathUtils.random(0,ResourceManager.ANIMATION_HOLDER_LIST.size()-1)).name,world,l);
+            actor.setPosition(MathUtils.random(0,200),MathUtils.random(-0,200));
+            stage.addActor(actor);
+        }
+    }
 
     //==============================
 

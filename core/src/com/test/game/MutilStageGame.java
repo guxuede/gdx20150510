@@ -5,6 +5,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -47,18 +48,19 @@ public class MutilStageGame implements ApplicationListener {
     public static void actorToStage(AnimationEntity actor, String stageName, Vector2 pos){
         TitleMapStage oldTitleMapStage = (TitleMapStage) actor.getStage();
         if(oldTitleMapStage!=null){
-            oldTitleMapStage.getRoot().removeActor(actor);
+            oldTitleMapStage.detachActor(actor);
+
         }
         int stageIndex = -1;
         TitleMapStage newTitleMapStage = null;
         for (int i = 0; i < mapStages.size; i++) {
-            if(mapStages.get(i).stageName.equals(mapStages.get(i).stageName)){
+            if(mapStages.get(i).stageName.equals(stageName)){
                 stageIndex = i;
                 newTitleMapStage = mapStages.get(i);
                 break;
             }
         }
-        newTitleMapStage.addActor(actor);
+        newTitleMapStage.attachActor(actor);
         actor.setEntityPosition(pos.x,pos.y);
         if(actor.equals(oldTitleMapStage.viewActor)){
             oldTitleMapStage.viewActor = null;
@@ -79,6 +81,7 @@ public class MutilStageGame implements ApplicationListener {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         currentStage.act();
         currentStage.draw();
+
         if(this.CurFPS != Gdx.graphics.getFramesPerSecond()) {
             Gdx.graphics.setTitle("FPS:"+String.valueOf(Gdx.graphics.getFramesPerSecond()));
             this.CurFPS = Gdx.graphics.getFramesPerSecond();

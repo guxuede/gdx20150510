@@ -44,11 +44,13 @@ public abstract class AnimationEntity extends LevelDrawActor implements Poolable
     public float visualRadius=100;
     public Color  primaryColor;
     public int lifeStatus = LIFE_STATUS_CREATE;
-
     public boolean isSensor = false;
-    public StageWorld stageWorld;
-    public PhysicsPlayer physicsPlayer;
+
     public ActorAnimationPlayer animationPlayer;
+    /******************bellow attribute not share with other stage *****************/
+    public StageWorld stageWorld;
+    private PhysicsPlayer physicsPlayer;
+    /******************bellow attribute not share with other stage end *****************/
 
     public AnimationEntity(ActorAnimationPlayer animationPlayer, StageWorld world, InputListener l) {
         this(animationPlayer, world);
@@ -70,27 +72,6 @@ public abstract class AnimationEntity extends LevelDrawActor implements Poolable
         this.physicsPlayer = world.getPhysicsManager().createPositionPlayer();
         this.stageWorld = world;
     }
-
-    /**************************************box2d control**************************************************/
-	//call by stage
-	public void createBody(StageWorld world){
-		if(lifeStatus == LIFE_STATUS_CREATE){
-			lifeStatus = LIFE_STATUS_BORN;
-            this.physicsPlayer.init(this);
-			this.setVisible(true);
-		}
-        if(lifeStatus == LIFE_STATUS_BORN){
-            lifeStatus = LIFE_STATUS_LIVE;
-        }
-    }
-
-	//call by stage
-	public void destroyBody(StageWorld world){
-		if(lifeStatus == LIFE_STATUS_DESTORY){
-            this.physicsPlayer.destroy(this);
-			this.remove();//TODO 也许不应该在这里remove掉
-		}
-	}
 
     //=============================================Position Control========================================================================
 
@@ -118,8 +99,8 @@ public abstract class AnimationEntity extends LevelDrawActor implements Poolable
      * 禁止！在外面调用下面三个方法。这些方法被内部位置系统positionPlayer无数次的调用用来同步actor位置，外部调用无用。
      * 仅初始状态可调用来调整位置.
      * 如需实时改变位置请使用 setEntityPosition。
-     *  @see AnimationEntity.setCenterPosition
-     *  @see PhysicsPlayer.act()
+     *  @see AnimationEntity setCenterPosition
+     *  @see PhysicsPlayer act()
      * @param x
      * @param y
      */
@@ -358,4 +339,15 @@ public abstract class AnimationEntity extends LevelDrawActor implements Poolable
         return stageWorld;
     }
 
+    public void setStageWorld(StageWorld stageWorld) {
+        this.stageWorld = stageWorld;
+    }
+
+    public void setPhysicsPlayer(PhysicsPlayer physicsPlayer) {
+        this.physicsPlayer = physicsPlayer;
+    }
+
+    public PhysicsPlayer getPhysicsPlayer() {
+        return physicsPlayer;
+    }
 }

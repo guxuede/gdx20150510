@@ -25,8 +25,11 @@ import com.guxuede.game.libgdx.ResourceManager;
 import com.guxuede.game.libgdx.MyOrthogonalTiledMapRenderer;
 import com.guxuede.game.light.DefaultLightManager;
 import com.guxuede.game.light.LightManager;
+import com.guxuede.game.resource.AnimationHolder;
 
+import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.List;
 
 public class TitleMapStage extends Stage {
 
@@ -61,7 +64,7 @@ public class TitleMapStage extends Stage {
         this.addListener(new ClickListener() {
             @Override
             public boolean handle(Event e) {
-                System.out.println("TitleMapStage ClickListener:"+e);
+                //System.out.println("TitleMapStage ClickListener:"+e);
                 if (!(e instanceof InputEvent)) return false;
                 InputEvent event = (InputEvent) e;
                 if (viewActor != null) {
@@ -75,7 +78,7 @@ public class TitleMapStage extends Stage {
 			@Override
 			public boolean touchDown(InputEvent event, float x, float y,int pointer, int button) {
 				viewActor = (AnimationEntity) event.getListenerActor();
-				System.out.println("Switch viewActor.");
+				//System.out.println("Switch viewActor.");
 				return super.touchDown(event, x, y, pointer, button);
 			}
 		} ;
@@ -85,6 +88,7 @@ public class TitleMapStage extends Stage {
         doubleImageEffect.setDuration(50);
         actor.addAction(doubleImageEffect);
         actor.addAction(new AnimationEffect("3aaa",100));
+        actor.addAction(new AnimationEffect("special10"));
         addActor(actor);
 
         AnimationActor actor1 = ActorFactory.createActor("Undead", world, focusListener);
@@ -101,22 +105,9 @@ public class TitleMapStage extends Stage {
         effect.setEffectAnimation(ResourceManager.getAnimationHolder("wind2").getStopDownAnimation());
         actor1.addAction(effect);
         addActor(actor1);
-//
-//		//addActor(new ParticelActor());
-//		//addActor(new BarrageTip("hello",100,100));
-//        addActor(ActorFactory.createActor("Bird", world, focusListener));
-//        addActor(ActorFactory.createActor("lvbu", world, focusListener));
 
-        //addActor(ActorFactory.createActor("thunder1", world, focusListener));
-        //addActor(ActorFactory.createEffectsActor("special10", world, focusListener));
-       // addActor(ActorFactory.createActor("kulou1", world,focusListener));
-//        AnimationProjection projection = ActorFactory.createProjectionActor("kulou1", world, focusListener);
-//        addActor(projection);
-		//viewActor.physicsPlayer.setTransform(100, 100, 0);
-//        LightningEntity lightningEntity = ActorFactory.createLightningEntity("lightningLine",world,focusListener);
-//        lightningEntity.sourceActor = viewActor;
-//        lightningEntity.targetAnimation = actor1;
-        createRandomDoor();
+        ActorFactory.createRandomActor(world,this,focusListener);
+        ActorFactory.createRandomDoor(world,this);
     }
 
 	@Override
@@ -126,8 +117,7 @@ public class TitleMapStage extends Stage {
             for(Actor actor:getActors()){
                 if(actor instanceof AnimationEntity){
                     AnimationEntity a = ((AnimationEntity) actor);
-                    a.createBody(world);
-                    a.destroyBody(world);
+                    processActorLife(a);
                 }
             }
             super.act(delta);
@@ -201,11 +191,29 @@ public class TitleMapStage extends Stage {
         }
     }
 
-    private void createRandomDoor(){
-        for(int i = 0;i<5;i++){
-            AnimationDoor door = ActorFactory.creatDoor("wind2",world,null);
-            door.setPosition(MathUtils.random(-100,1000),MathUtils.random(-100,1000));
-            this.addActor(door);
+    public void detachActor(AnimationEntity actor){
+        actor.getPhysicsPlayer().destroy(actor);
+        actor.remove();
+        actor.setStageWorld(null);
+    }
+    public void attachActor(AnimationEntity actor){
+        actor.setPhysicsPlayer(world.getPhysicsManager().createPositionPlayer());
+        this.addActor(actor);
+        actor.setStageWorld(world);
+        actor.getPhysicsPlayer().init(actor);
+    }
+
+    private void processActorLife(AnimationEntity entity){
+        if(entity.lifeStatus == AnimationEntity.LIFE_STATUS_CREATE){
+            entity.lifeStatus = AnimationEntity.LIFE_STATUS_BORN;
+            entity.getPhysicsPlayer().init(entity);
+            entity.setVisible(true);
+        }else if(entity.lifeStatus == AnimationEntity.LIFE_STATUS_BORN){
+            entity.lifeStatus = AnimationEntity.LIFE_STATUS_LIVE;
+        }else if(entity.lifeStatus == AnimationEntity.LIFE_STATUS_DESTORY){
+            entity.getPhysicsPlayer().destroy(entity);
+            entity.remove();//TODO 也许不应该在这里remove掉
         }
     }
+
 }

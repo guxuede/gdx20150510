@@ -81,19 +81,19 @@ public class TitleMapGame implements ApplicationListener{
 					mapStage.viewActor.stop();
 				}else if(Math.abs(touchpad.getKnobPercentX()) > Math.abs(touchpad.getKnobPercentY())){
 					if(touchpad.getKnobPercentX()>0){
-						System.out.println("touchpad left");
+						//System.out.println("touchpad left");
 						mapStage.viewActor.moveLeft();
 					}else{
-                        System.out.println("touchpad right");
+                        //System.out.println("touchpad right");
 						mapStage.viewActor.moveRight();
 					}
 				}else{
 					if(touchpad.getKnobPercentY()>0){
-						System.out.println("touchpad down");
+						//System.out.println("touchpad down");
 						mapStage.viewActor.moveDown();
 					}else{
 						mapStage.viewActor.moveUp();
-						System.out.println("touchpad up");
+						//System.out.println("touchpad up");
 					}
 				}
 			}
@@ -108,7 +108,7 @@ public class TitleMapGame implements ApplicationListener{
 		 mapStage.addListener(new ClickListener() {
              @Override
              public boolean handle(Event e) {
-                 System.out.println("mapStage ClickListener:"+e);
+                 //System.out.println("mapStage ClickListener:"+e);
 
                  if (!(e instanceof InputEvent)) return false;
                  InputEvent event = (InputEvent) e;

@@ -2,8 +2,12 @@ package com.guxuede.game.actor;
 
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.scenes.scene2d.Action;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.guxuede.game.StageWorld;
+import com.guxuede.game.action.ActionsFactory;
+import com.guxuede.game.action.effects.AnimationEffect;
+import com.guxuede.game.action.move.ActorSwitchStageAction;
 import com.guxuede.game.resource.ActorAnimationPlayer;
 import com.test.game.MutilStageGame;
 
@@ -22,7 +26,10 @@ public class AnimationDoor extends AnimationEntity {
         super(animationPlayer, world);
     }
 
-    public void doDoor(AnimationActor animationActor){
-        MutilStageGame.actorToStage(animationActor,stageName,point);
+    public void doDoor(AnimationEntity animationActor){
+        ActorSwitchStageAction actorSwitchStageAction = new ActorSwitchStageAction();
+        animationActor.addAction(ActionsFactory.sequence(actorSwitchStageAction,new AnimationEffect("special10")));
+        animationActor.addAction(new AnimationEffect("special10"));
+        //MutilStageGame.actorToStage(animationActor,stageName,point);
     }
 }

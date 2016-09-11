@@ -97,7 +97,7 @@ public class Box2DPhysicsPlayer implements PhysicsPlayer {
     public void act(float delta,AnimationEntity entity) {
         //将模拟位置同步到actor上
         Vector2 v = this.getXY();
-
+        //出于立体感效果，将碰撞设置到角色脚部
         entity.setPosition(v.x - entity.getWidth()/2,v.y - entity.getHeight()/4);
     }
 }

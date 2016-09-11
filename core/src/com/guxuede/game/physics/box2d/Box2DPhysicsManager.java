@@ -39,7 +39,7 @@ public class Box2DPhysicsManager implements PhysicsManager {
         this.world.setContactListener(new ContactListener() {
             @Override
             public void preSolve(Contact contact, Manifold oldManifold) {
-                System.err.println("preSolve");
+                //System.err.println("preSolve");
 //                AnimationEntity actorA = (AnimationEntity) contact.getFixtureA().getBody().getUserData();
 //                AnimationEntity actorB = (AnimationEntity) contact.getFixtureB().getBody().getUserData();
 //                actorB.stop();
@@ -47,18 +47,18 @@ public class Box2DPhysicsManager implements PhysicsManager {
 
             @Override
             public void postSolve(Contact contact, ContactImpulse impulse) {
-                System.err.println("postSolve");
+                //System.err.println("postSolve");
             }
 
             @Override
             public void endContact(Contact contact) {
-                System.err.println("endContact");
+                //System.err.println("endContact");
             }
 
             //Contact.getFixtureA获得创建时间比较早的对象,Contact.getFixtureB获得创建时间晚的对象
             @Override
             public void beginContact(Contact contact) {
-                System.err.println("beginContact start");
+                //System.err.println("beginContact start");
                 AnimationEntity actorA = (AnimationEntity) contact.getFixtureA().getBody().getUserData();
                 AnimationEntity actorB = (AnimationEntity) contact.getFixtureB().getBody().getUserData();
                 //Vector2 vector2 = contact.getWorldManifold().getNormal();//TODO ?得到的位置不正确
@@ -83,20 +83,20 @@ public class Box2DPhysicsManager implements PhysicsManager {
         //1.其中一个是子弹，一个是单位，且子弹不是单位射出的。 碰撞
         //2。两个都是子弹，且来自不同的单位。碰撞
         if (actorA != null && actorB == null) {
-            System.err.println("shouldCollide 1");
+            //System.err.println("shouldCollide 1");
             return true;
         } else if (actorB != null && actorA == null) {
-            System.err.println("shouldCollide 2");
+            //System.err.println("shouldCollide 2");
             return true;
         } else if (actorA instanceof AnimationProjection && actorB instanceof AnimationActor && actorA.sourceActor != actorB) {
-            System.err.println("shouldCollide 3");
+            //System.err.println("shouldCollide 3");
             return true;
         } else if (actorB instanceof AnimationProjection && actorA instanceof AnimationActor && actorB.sourceActor != actorA) {
-            System.err.println("shouldCollide 4");
+            //System.err.println("shouldCollide 4");
             return true;
-        }else if(actorA instanceof AnimationActor && actorB instanceof AnimationDoor){
+        }else if(actorA instanceof AnimationEntity && actorB instanceof AnimationDoor){
             return true;
-        }else if(actorA instanceof AnimationDoor && actorB instanceof AnimationActor){
+        }else if(actorA instanceof AnimationDoor && actorB instanceof AnimationEntity){
             return true;
         }
         return false;
