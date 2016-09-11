@@ -2,6 +2,7 @@ package com.guxuede.game;
 
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.guxuede.game.libgdx.GdxGame;
 import com.guxuede.game.physics.box2d.Box2DPhysicsManager;
 import com.guxuede.game.physics.PhysicsManager;
 
@@ -13,11 +14,13 @@ public class DefaultWorld extends StageWorld {
     private boolean isNotPause = true;
     private boolean isVisible = true;
 
+    private GdxGame gdxGame;
     private PhysicsManager physicsManager;
     private Stage stage;
     private Camera camera;
 
-    public DefaultWorld(Stage stage) {
+    public DefaultWorld(Stage stage,GdxGame gdxGame) {
+        this.gdxGame = gdxGame;
         this.physicsManager = new Box2DPhysicsManager(this);
         this.stage = stage;
         this.camera = stage.getCamera();
@@ -35,6 +38,11 @@ public class DefaultWorld extends StageWorld {
     @Override
     public Camera getCamera() {
         return camera;
+    }
+
+    @Override
+    public GdxGame getGame() {
+        return gdxGame;
     }
 
     @Override

@@ -12,5 +12,7 @@ public interface LightManager {
 
     public void render ();
 
+    public void resize(int width, int height);
+
     public void act(float delta);
 }

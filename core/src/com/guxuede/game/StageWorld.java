@@ -2,6 +2,7 @@ package com.guxuede.game;
 
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.guxuede.game.libgdx.GdxGame;
 import com.guxuede.game.physics.PhysicsManager;
 
 /**
@@ -13,6 +14,8 @@ public abstract class StageWorld {
     public abstract PhysicsManager getPhysicsManager();
     public abstract Stage getStage();
     public abstract Camera getCamera();
+    public abstract GdxGame getGame();
+
     public abstract boolean isNotPause();
     public abstract boolean isVisible();
     public abstract void pause();

@@ -19,7 +19,7 @@ public class ActorSwitchStageAction extends Action {
     public boolean act(float delta) {
         if(target instanceof AnimationEntity){
             AnimationEntity entity = (AnimationEntity) target;
-            MutilStageGame.actorToStage(entity,MathUtils.randomBoolean()?"desert1.tmx":"desert.tmx",new Vector2(MathUtils.random(-100,1000),MathUtils.random(-100,1000)));
+            entity.getWorld().getGame().transferActorToStage(entity,MathUtils.randomBoolean()?"desert1.tmx":"desert.tmx",new Vector2(MathUtils.random(-100,1000),MathUtils.random(-100,1000)));
         }
         return true;
     }

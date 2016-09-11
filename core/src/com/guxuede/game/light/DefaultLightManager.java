@@ -14,6 +14,7 @@ import com.badlogic.gdx.utils.Array;
 import com.guxuede.game.StageWorld;
 import com.guxuede.game.actor.AnimationEntity;
 import com.guxuede.game.libgdx.ResourceManager;
+import com.guxuede.game.tools.TempObjects;
 
 /**
  * Created by guxuede on 2016/9/10 .
@@ -28,7 +29,6 @@ public class DefaultLightManager implements LightManager {
 
     private TextureRegion lightBufferRegion;
     private TextureRegion lightRegion;
-    private TextureRegion coneLightRegion;
     private Color ambiance;
     private Array<Light> lights = new Array<Light>();
 
@@ -37,11 +37,9 @@ public class DefaultLightManager implements LightManager {
         this.world = world;
 
         this.stage = world.getStage();
-        this.batch = new SpriteBatch();
+
         Texture lightTex = ResourceManager.getTexture("light");
         lightRegion = new TextureRegion(lightTex);
-        coneLightRegion = new TextureRegion(lightTex, 0, 0, 64, 64);
-        coneLightRegion.flip(true, false);
         ambiance = new Color(0.3f, 0.38f, 0.4f, 1);
         createLight(0,0);
         resize(Gdx.graphics.getWidth(),Gdx.graphics.getHeight());
@@ -60,46 +58,25 @@ public class DefaultLightManager implements LightManager {
 
     @Override
     public void render() {
-        //batch.setProjectionMatrix(gameCamera.projection);
-        // start rendering to the lightBuffer
         lightBuffer.begin();
-        // setup the right blending
         batch.enableBlending();
         batch.setBlendFunction(GL20.GL_SRC_ALPHA, GL20.GL_ONE);
-        // set the ambient color values, this is the "global" light of your scene
-        // imagine it being the sun.  Usually the alpha value is just 1, and you change the darkness/brightness with the Red, Green and Blue values for best effect
         Gdx.gl.glClearColor(ambiance.r, ambiance.g, ambiance.b, ambiance.a);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-        // start rendering the lights to our spriteBatch
         batch.begin();
-//        for (Light light : lights) {
-//            batch.setColor(light.color);
-//            // note: this is very dumb
-//            if (light.region == coneLightRegion) {
-//                batch.draw(light.region, light.x, light.y, 0, 0, light.width, light.height, 1, 1, light.rotation);
-//            } else {
-//                batch.draw(light.region, light.x, light.y, light.width, light.height);
-//            }
-//        }
         drawEntryLight();
         batch.end();
         lightBuffer.end();
-        //batch.setProjectionMatrix(gameCamera.combined);
-        // now we render the lightBuffer to the default "frame buffer"
-        // with the right blending !
         batch.setBlendFunction(GL20.GL_DST_COLOR, GL20.GL_ZERO);
-        // reset the batch color or we will get last light color tint
         batch.setColor(Color.WHITE);
         batch.begin();
-        //batch.setProjectionMatrix(gameCamera.combined);
         batch.draw(lightBufferRegion, 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         batch.end();
-        // draw fbo without fancy blending, for debug
         batch.setBlendFunction(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
     }
 
-    Vector2 tVector2 = new Vector2();
     public void drawEntryLight(){
+        final Vector2 tVector2 = TempObjects.temp1Vector2;
         for(Actor actor : stage.getActors()){
             if(actor instanceof AnimationEntity){
                 AnimationEntity entity = (AnimationEntity) actor;
@@ -114,14 +91,19 @@ public class DefaultLightManager implements LightManager {
         }
     }
 
+    @Override
     public void resize (int width, int height) {
         // Fakedlight system (alpha blending)
         // if lightBuffer was created before, dispose, we recreate a new one
         if (lightBuffer!=null)
             lightBuffer.dispose();
-        lightBuffer = new FrameBuffer(Pixmap.Format.RGBA8888, MathUtils.nextPowerOfTwo(width), MathUtils.nextPowerOfTwo(height), false);
+        if(batch!=null){
+            batch.dispose();
+        }
+        batch = new SpriteBatch();
+        lightBuffer = new FrameBuffer(Pixmap.Format.RGBA8888, width, height, false);
         lightBuffer.getColorBufferTexture().setFilter(Texture.TextureFilter.Nearest, Texture.TextureFilter.Nearest);
-        lightBufferRegion = new TextureRegion(lightBuffer.getColorBufferTexture(), 0, 0, MathUtils.nextPowerOfTwo(width), MathUtils.nextPowerOfTwo(height));
+        lightBufferRegion = new TextureRegion(lightBuffer.getColorBufferTexture(), 0, 0, width, height);
         lightBufferRegion.flip(false, true);
     }
 

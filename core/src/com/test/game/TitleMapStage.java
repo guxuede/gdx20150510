@@ -8,30 +8,28 @@ import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
-import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.scenes.scene2d.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.guxuede.game.DefaultWorld;
 import com.guxuede.game.StageWorld;
-import com.guxuede.game.actor.*;
 import com.guxuede.game.action.ActionsFactory;
 import com.guxuede.game.action.ActorChangeAppearanceAction;
 import com.guxuede.game.action.ActorFormulaTracksAction;
 import com.guxuede.game.action.effects.AnimationEffect;
 import com.guxuede.game.action.effects.DoubleImageEffect;
-import com.guxuede.game.libgdx.MovebleOrthographicCamera;
-import com.guxuede.game.libgdx.ResourceManager;
-import com.guxuede.game.libgdx.MyOrthogonalTiledMapRenderer;
+import com.guxuede.game.actor.ActorFactory;
+import com.guxuede.game.actor.AnimationActor;
+import com.guxuede.game.actor.AnimationEntity;
+import com.guxuede.game.actor.LevelDrawActor;
+import com.guxuede.game.libgdx.*;
 import com.guxuede.game.light.DefaultLightManager;
 import com.guxuede.game.light.LightManager;
-import com.guxuede.game.resource.AnimationHolder;
+import com.guxuede.game.tools.TempObjects;
 
-import java.util.ArrayList;
 import java.util.Comparator;
-import java.util.List;
 
-public class TitleMapStage extends Stage {
+public class TitleMapStage extends Stage implements GdxScreen {
 
 
 	private MyOrthogonalTiledMapRenderer tileMapRenderer;
@@ -41,22 +39,17 @@ public class TitleMapStage extends Stage {
 
     public String stageName;
 
-	public TitleMapStage(String stageName) {
+	public TitleMapStage(String stageName, GdxGame gdxGame) {
         super(
                 new FitViewport(Gdx.graphics.getWidth(),
                                 Gdx.graphics.getHeight(),
                                 new MovebleOrthographicCamera(Gdx.graphics.getWidth(), Gdx.graphics.getHeight())
                 )
                 , new SpriteBatch());
-        init(stageName);
         this.stageName = stageName;
-    }
-
-	public void init(String mapName){
         this.setDebugAll(StageWorld.isDebug);
-        //
-		this.world = new DefaultWorld(this);
-		TiledMap map = new TmxMapLoader().load(mapName);//"desert.tmx"
+		this.world = new DefaultWorld(this,gdxGame);
+		TiledMap map = new TmxMapLoader().load(stageName);//"desert.tmx"
         this.tileMapRenderer = new MyOrthogonalTiledMapRenderer(map,this.getBatch());
         this.lightManager = new DefaultLightManager(world);
         this.lightManager.onMapLoad(map);
@@ -88,7 +81,6 @@ public class TitleMapStage extends Stage {
         doubleImageEffect.setDuration(50);
         actor.addAction(doubleImageEffect);
         actor.addAction(new AnimationEffect("3aaa",100));
-        actor.addAction(new AnimationEffect("special10"));
         addActor(actor);
 
         AnimationActor actor1 = ActorFactory.createActor("Undead", world, focusListener);
@@ -109,42 +101,6 @@ public class TitleMapStage extends Stage {
         ActorFactory.createRandomActor(world,this,focusListener);
         ActorFactory.createRandomDoor(world,this);
     }
-
-	@Override
-	public void act(float delta) {
-        if(world.isNotPause()){
-            world.act(Gdx.graphics.getDeltaTime());
-            for(Actor actor:getActors()){
-                if(actor instanceof AnimationEntity){
-                    AnimationEntity a = ((AnimationEntity) actor);
-                    processActorLife(a);
-                }
-            }
-            super.act(delta);
-        }
-	}
-
-	
-	@Override
-	public void draw() {
-        if(world.isVisible()){
-            OrthographicCamera camera = (OrthographicCamera) getCamera();
-            camera.update();
-            tileMapRenderer.setView(camera);
-            tileMapRenderer.renderLayer1();
-            tileMapRenderer.renderLayer2();
-            drawThisStage(camera);
-            tileMapRenderer.renderLayer3();
-
-            world.getPhysicsManager().render();
-            lightManager.render();
-
-            if(viewActor !=null){
-                camera.position.x= viewActor.getCenterX();
-                camera.position.y= viewActor.getCenterY();
-            }
-        }
-	}
 
     /**
      * 覆盖其父类的方法，因为我们需要画各种层级DRAW_LEVEL_FOOT，DRAW_LEVEL_BODY，DRAW_LEVEL_HEAD
@@ -216,4 +172,79 @@ public class TitleMapStage extends Stage {
         }
     }
 
+    @Override
+    public void show() {
+        this.world.show();
+    }
+
+    @Override
+    public void act(float delta) {
+        if(world.isNotPause()){
+            world.act(Gdx.graphics.getDeltaTime());
+            for(Actor actor:getActors()){
+                if(actor instanceof AnimationEntity){
+                    AnimationEntity a = ((AnimationEntity) actor);
+                    processActorLife(a);
+                }
+            }
+            super.act(delta);
+        }
+    }
+
+    @Deprecated
+    @Override
+    public void draw() {
+        throw new RuntimeException("Please call render");
+    }
+
+    @Override
+    public void render(float delta) {
+        this.act(delta);
+        if(world.isVisible()){
+            OrthographicCamera camera = (OrthographicCamera) getCamera();
+            camera.update();
+            tileMapRenderer.setView(camera);
+            tileMapRenderer.renderLayer1();
+            tileMapRenderer.renderLayer2();
+            drawThisStage(camera);
+            tileMapRenderer.renderLayer3();
+
+            world.getPhysicsManager().render();
+            lightManager.render();
+
+            if(viewActor !=null){
+                camera.position.x= viewActor.getCenterX();
+                camera.position.y= viewActor.getCenterY();
+            }
+        }
+        //if (debug) drawDebug();
+    }
+
+    @Override
+    public void resize(int width, int height) {
+        lightManager.resize(width,height);
+        OrthographicCamera camera = (OrthographicCamera) getCamera();
+        TempObjects.temp0Vector3.set(camera.position);
+        //getViewport().setScreenSize(width,height);
+        getViewport().update(width,height);
+        camera.setToOrtho(false, width, height);
+        camera.position.set(TempObjects.temp0Vector3);
+        camera.update();
+    }
+
+    @Override
+    public void pause() {
+        this.world.pause();
+    }
+
+    @Override
+    public void resume() {
+        this.world.show();
+        this.world.start();
+    }
+
+    @Override
+    public void hide() {
+        this.world.hide();
+    }
 }

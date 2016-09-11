@@ -1,6 +1,7 @@
 package com.guxuede.game.tools;
 
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.math.Vector3;
 
 /**
  * Created by guxuede on 2016/9/10 .
@@ -15,4 +16,6 @@ public class TempObjects {
     public static final Vector2 temp2Vector2 = new Vector2();
     public static final Vector2 temp3Vector2 = new Vector2();
 
+    public static final Vector3 temp0Vector3 = new Vector3();
+    public static final Vector3 temp1Vector3 = new Vector3();
 }
