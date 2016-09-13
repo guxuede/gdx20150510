@@ -1,7 +1,6 @@
 package com.guxuede.game.actor;
 
 import com.badlogic.gdx.math.MathUtils;
-import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.guxuede.game.StageWorld;
 import com.guxuede.game.libgdx.ResourceManager;
@@ -14,53 +13,47 @@ public class ActorFactory {
 
     public static AnimationActor createActor(String name, StageWorld world) {
         AnimationHolder animationHolder = ResourceManager.getAnimationHolder(name);
-        ActorAnimationPlayer actorAnimationPlayer = new ActorAnimationPlayer(animationHolder);
+        ActorAnimationPlayer actorAnimationPlayer = new ActorAnimationPlayer(world,animationHolder);
         AnimationActor animationActor = new AnimationActor(actorAnimationPlayer,world);
         return animationActor;
     }
-    public static AnimationActor createActor(String name, StageWorld world, InputListener l) {
+    public static EffectsEntity createEffectsActor(String name, StageWorld world) {
         AnimationHolder animationHolder = ResourceManager.getAnimationHolder(name);
-        ActorAnimationPlayer actorAnimationPlayer = new ActorAnimationPlayer(animationHolder);
-        AnimationActor animationActor = new AnimationActor(actorAnimationPlayer,world,l);
+        ActorAnimationPlayer actorAnimationPlayer = new ActorAnimationPlayer(world,animationHolder);
+        EffectsEntity animationActor = new EffectsEntity(actorAnimationPlayer,world);
         return animationActor;
     }
-    public static EffectsEntity createEffectsActor(String name, StageWorld world, InputListener l) {
+    public static AnimationProjection createProjectionActor(String name, StageWorld world) {
         AnimationHolder animationHolder = ResourceManager.getAnimationHolder(name);
-        ActorAnimationPlayer actorAnimationPlayer = new ActorAnimationPlayer(animationHolder);
-        EffectsEntity animationActor = new EffectsEntity(actorAnimationPlayer,world,l);
+        ActorAnimationPlayer actorAnimationPlayer = new ActorAnimationPlayer(world,animationHolder);
+        AnimationProjection animationActor = new AnimationProjection(actorAnimationPlayer,world);
         return animationActor;
     }
-    public static AnimationProjection createProjectionActor(String name, StageWorld world, InputListener l) {
+    public static LightningEntity createLightningEntity(String name, StageWorld world) {
         AnimationHolder animationHolder = ResourceManager.getAnimationHolder(name);
-        ActorAnimationPlayer actorAnimationPlayer = new ActorAnimationPlayer(animationHolder);
-        AnimationProjection animationActor = new AnimationProjection(actorAnimationPlayer,world,l);
-        return animationActor;
-    }
-    public static LightningEntity createLightningEntity(String name, StageWorld world, InputListener l) {
-        AnimationHolder animationHolder = ResourceManager.getAnimationHolder(name);
-        ActorAnimationPlayer actorAnimationPlayer = new ActorAnimationPlayer(animationHolder);
-        LightningEntity animationActor = new LightningEntity(actorAnimationPlayer,world,l);
+        ActorAnimationPlayer actorAnimationPlayer = new ActorAnimationPlayer(world,animationHolder);
+        LightningEntity animationActor = new LightningEntity(actorAnimationPlayer,world);
         return animationActor;
     }
 
-    public static AnimationDoor creatDoor(String name, StageWorld world, InputListener l) {
+    public static AnimationDoor creatDoor(String name, StageWorld world) {
         AnimationHolder animationHolder = ResourceManager.getAnimationHolder(name);
-        ActorAnimationPlayer actorAnimationPlayer = new ActorAnimationPlayer(animationHolder);
-        AnimationDoor animationActor = new AnimationDoor(actorAnimationPlayer,world,l);
+        ActorAnimationPlayer actorAnimationPlayer = new ActorAnimationPlayer(world,animationHolder);
+        AnimationDoor animationActor = new AnimationDoor(actorAnimationPlayer,world);
         return animationActor;
     }
 
     public static  void createRandomDoor(StageWorld world, Stage stage){
-        for(int i = 0;i<5;i++){
-            AnimationDoor door = ActorFactory.creatDoor("wind2",world,null);
+        for(int i = 0;i<1;i++){
+            AnimationDoor door = ActorFactory.creatDoor("wind2",world);
             door.setPosition(MathUtils.random(-100,1000),MathUtils.random(-100,1000));
             stage.addActor(door);
         }
     }
 
-    public static  void createRandomActor(StageWorld world, Stage stage, InputListener l){
+    public static  void createRandomActor(StageWorld world, Stage stage){
         for(int i = 0;i<10;i++){
-            AnimationActor actor = ActorFactory.createActor(ResourceManager.ANIMATION_HOLDER_LIST.get(MathUtils.random(0,ResourceManager.ANIMATION_HOLDER_LIST.size()-1)).name,world,l);
+            AnimationActor actor = ActorFactory.createActor(ResourceManager.ANIMATION_HOLDER_LIST.get(MathUtils.random(0,ResourceManager.ANIMATION_HOLDER_LIST.size()-1)).name,world);
             actor.setPosition(MathUtils.random(0,200),MathUtils.random(-0,200));
             stage.addActor(actor);
         }

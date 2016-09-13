@@ -38,6 +38,18 @@ public class SoundHolder {
         sound.setLooping(soundId,isLoop);
     }
 
+    public void pause(){
+        if(soundId!=-1){
+            sound.pause(soundId);
+        }
+    }
+
+    public void resume(){
+        if(soundId!=-1){
+            sound.resume(soundId);
+        }
+    }
+
     public void stop(){
         if(soundId!=-1){
             if(isLoop){

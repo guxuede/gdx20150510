@@ -48,6 +48,7 @@ public class AttackState extends StandState {
     public void exit(AnimationEntity entity) {
         stateTime = 0;
         animationDuration = 0;
+        animationEffect.end();
         entity.removeAction(animationEffect);
         animationEffect = null;
     }

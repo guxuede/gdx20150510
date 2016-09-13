@@ -4,6 +4,7 @@ import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.guxuede.game.StageWorld;
 import com.guxuede.game.actor.ActorEventListener;
 import com.guxuede.game.actor.AnimationActor;
 import com.guxuede.game.actor.AnimationEntity;
@@ -16,7 +17,7 @@ public class ActorAnimationPlayer implements ActorEventListener{
 
     public AnimationHolder animationHolder;
     public Animation currentAnimation;
-
+    public StageWorld stageWorld;
     //********************************************************
     //
     //********************************************************
@@ -29,8 +30,9 @@ public class ActorAnimationPlayer implements ActorEventListener{
     public String lastAnimationName;
     protected SoundHolder sound;
 
-	public ActorAnimationPlayer(AnimationHolder animationHolder) {
+	public ActorAnimationPlayer(StageWorld stageWorld,AnimationHolder animationHolder) {
         this.animationHolder = animationHolder;
+        this.stageWorld = stageWorld;
         this.width = this.animationHolder.width;
         this.height = this.animationHolder.height;
         this.stateTime = 0f;
@@ -143,18 +145,21 @@ public class ActorAnimationPlayer implements ActorEventListener{
     protected void onAnimationChange(Animation oldAnimation,Animation newAnimation,String animationName){
         if(sound!=null){
             sound.stop();
+            stageWorld.getSoundManager().unRegisterSound(sound);
         }
 
         SoundHolder sound = animationHolder.getAnimationSound(animationName);
         if(sound!=null){
             this.sound =sound;
             sound.play();
+            stageWorld.getSoundManager().registerSound(sound);
         }
     }
 
     public void onDispose(){
         if(sound!=null){
             sound.stop();
+            stageWorld.getSoundManager().unRegisterSound(sound);
         }
     }
 }

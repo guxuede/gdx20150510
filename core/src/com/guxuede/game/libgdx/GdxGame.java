@@ -2,6 +2,7 @@ package com.guxuede.game.libgdx;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.math.Vector2;
 import com.guxuede.game.actor.AnimationEntity;
 
@@ -19,4 +20,8 @@ public abstract class GdxGame extends Game {
         }
     }
 
+    @Override
+    public void setScreen(Screen screen) {
+        super.setScreen(screen);
+    }
 }

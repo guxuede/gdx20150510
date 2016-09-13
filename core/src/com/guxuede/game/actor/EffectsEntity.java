@@ -9,11 +9,6 @@ import com.guxuede.game.resource.ActorAnimationPlayer;
  */
 public class EffectsEntity extends AnimationEntity {
 
-    public EffectsEntity(ActorAnimationPlayer animationPlayer, StageWorld world, InputListener l) {
-        super(animationPlayer, world, l);
-        init();
-    }
-
     public EffectsEntity(ActorAnimationPlayer animationPlayer, StageWorld world) {
         super(animationPlayer, world);
         init();

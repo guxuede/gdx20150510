@@ -88,7 +88,7 @@ public class ActorThrowProjectionAction extends Action {
      */
     public void throwProjection(float fx,float fy,float dx,float dy){
         AnimationEntity animationEntity = (AnimationEntity) getActor();
-        AnimationProjection projection = ActorFactory.createProjectionActor("bullet1", animationEntity.getWorld(), null);
+        AnimationProjection projection = ActorFactory.createProjectionActor("bullet1", animationEntity.getWorld());
         projection.sourceActor = animationEntity;
         projection.setCenterPosition(fx, fy);
         //projection.turnDirection(animationEntity.degrees);
@@ -114,7 +114,7 @@ public class ActorThrowProjectionAction extends Action {
      */
     public void throwProjection1(float fx,float fy,float dx,float dy){
         AnimationEntity animationEntity = (AnimationEntity) getActor();
-        AnimationProjection projection = ActorFactory.createProjectionActor("bullet1", animationEntity.getWorld(), null);
+        AnimationProjection projection = ActorFactory.createProjectionActor("bullet1", animationEntity.getWorld());
         projection.sourceActor = animationEntity;
         projection.setCenterPosition(fx, fy);
         //projection.turnDirection(animationEntity.degrees);

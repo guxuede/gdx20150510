@@ -4,6 +4,7 @@ import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.guxuede.game.libgdx.GdxGame;
 import com.guxuede.game.physics.PhysicsManager;
+import com.guxuede.game.sound.SoundManager;
 
 /**
  * Created by guxuede on 2016/9/10 .
@@ -15,6 +16,7 @@ public abstract class StageWorld {
     public abstract Stage getStage();
     public abstract Camera getCamera();
     public abstract GdxGame getGame();
+    public abstract SoundManager getSoundManager();
 
     public abstract boolean isNotPause();
     public abstract boolean isVisible();

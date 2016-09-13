@@ -12,14 +12,20 @@ import com.test.game.TitleMapStage;
  */
 public class ActorSwitchStageAction extends Action {
 
-    private int step = 0 ;
+    private String stageName ;
+    private Vector2 point;
 
+
+    public ActorSwitchStageAction(String stageName, Vector2 point) {
+        this.stageName = stageName;
+        this.point = point;
+    }
 
     @Override
     public boolean act(float delta) {
         if(target instanceof AnimationEntity){
             AnimationEntity entity = (AnimationEntity) target;
-            entity.getWorld().getGame().transferActorToStage(entity,MathUtils.randomBoolean()?"desert1.tmx":"desert.tmx",new Vector2(MathUtils.random(-100,1000),MathUtils.random(-100,1000)));
+            entity.getWorld().getGame().transferActorToStage(entity,stageName,point);
         }
         return true;
     }

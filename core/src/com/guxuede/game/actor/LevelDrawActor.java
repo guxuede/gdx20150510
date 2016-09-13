@@ -14,11 +14,12 @@ import com.guxuede.game.libgdx.GdxEffect;
 /**
  * Created by guxuede on 2016/5/31 .
  */
-public class LevelDrawActor extends Actor {
+public abstract class LevelDrawActor extends Actor {
 
     public static final int DRAW_LEVEL_FOOT = 0;
     public static final int DRAW_LEVEL_BODY = 1;
     public static final int DRAW_LEVEL_HEAD = 2;
+    public int drawZIndex = 0;
     public int drawLevel;
     public float stateTime;
     public boolean isInScreen = true;//是否在视野中
@@ -152,5 +153,7 @@ public class LevelDrawActor extends Actor {
         }
     }
 
-
+    public void setDrawZIndex(int drawZIndex) {
+        this.drawZIndex = drawZIndex;
+    }
 }

@@ -52,11 +52,6 @@ public abstract class AnimationEntity extends LevelDrawActor implements Poolable
     private PhysicsPlayer physicsPlayer;
     /******************bellow attribute not share with other stage end *****************/
 
-    public AnimationEntity(ActorAnimationPlayer animationPlayer, StageWorld world, InputListener l) {
-        this(animationPlayer, world);
-        if(l!=null)addListener(l);
-    }
-
     public AnimationEntity(ActorAnimationPlayer animationPlayer,StageWorld world) {
         id = ID++;
         this.animationPlayer = animationPlayer;
@@ -290,19 +285,22 @@ public abstract class AnimationEntity extends LevelDrawActor implements Poolable
 
     /**************************************state control**************************************************/
     ActorState actorState = new StandState(0);
-    public void handleInput(InputEvent event){
+    public boolean handleInput(InputEvent event){
         if(actorState!=null){
             ActorState newState = actorState.handleInput(this,event);
-            processNewState(newState,event);
+            return processNewState(newState,event);
         }
+        return false;
     }
 
-    private void processNewState(ActorState newState,InputEvent event){
+    private boolean processNewState(ActorState newState,InputEvent event){
         if(newState!=null){
             actorState.exit(this);
             actorState = newState;
             actorState.enter(this,event);
+            return true;
         }
+        return false;
     }
 
 

@@ -13,12 +13,6 @@ public class AnimationProjection extends AnimationEntity {
 
     protected boolean trunDirectionWhenMove = true;
 
-
-    public AnimationProjection(ActorAnimationPlayer animationPlayer, StageWorld world, InputListener l) {
-        super(animationPlayer, world, l);
-        init();
-    }
-
     public AnimationProjection(ActorAnimationPlayer animationPlayer, StageWorld world) {
         super(animationPlayer, world);
         init();
@@ -29,7 +23,7 @@ public class AnimationProjection extends AnimationEntity {
     public void init(){
 		this.scaleBy(1);
 		speed = 50000000;
-        setZIndex(2);
+        setDrawZIndex(2);
         this.isSensor = true;
 	}
 

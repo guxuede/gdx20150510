@@ -14,10 +14,6 @@ public class LightningEntity extends AnimationProjection {
 
     public AnimationEntity targetAnimation;
 
-    public LightningEntity(ActorAnimationPlayer animationPlayer, StageWorld world, InputListener l) {
-        super(animationPlayer, world, l);
-    }
-
     public LightningEntity(ActorAnimationPlayer animationPlayer, StageWorld world) {
         super(animationPlayer, world);
     }

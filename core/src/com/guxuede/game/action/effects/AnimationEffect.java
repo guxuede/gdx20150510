@@ -14,6 +14,7 @@ import com.guxuede.game.resource.SoundHolder;
  */
 public class AnimationEffect extends GdxEffect {
 
+    public String animationName;
     public Animation effectAnimation;
     public SoundHolder sound;
 
@@ -22,9 +23,9 @@ public class AnimationEffect extends GdxEffect {
     }
 
     public AnimationEffect(String animationName){
+        this.animationName = animationName;
         AnimationHolder animationHolder = ResourceManager.getAnimationHolder(animationName);
         Animation effectAnimation = animationHolder.getStopDownAnimation();
-        sound = animationHolder.getAnimationSound(AnimationHolder.STOP_DOWN_ANIMATION);
         setEffectAnimation(effectAnimation);
     }
 
@@ -45,8 +46,13 @@ public class AnimationEffect extends GdxEffect {
 
     @Override
     public void begin() {
-        if(sound!=null){
-            sound.play();
+        if(animationName!=null){
+            AnimationHolder animationHolder = ResourceManager.getAnimationHolder(animationName);
+            sound = animationHolder.getAnimationSound(AnimationHolder.STOP_DOWN_ANIMATION);
+            if(sound!=null){
+                ((AnimationEntity)target).getWorld().getSoundManager().registerSound(sound);
+                sound.play();
+            }
         }
     }
 
@@ -54,6 +60,7 @@ public class AnimationEffect extends GdxEffect {
     public void end() {
         if(sound!=null){
             sound.stop();
+            ((AnimationEntity)target).getWorld().getSoundManager().unRegisterSound(sound);
         }
     }
 
@@ -75,5 +82,10 @@ public class AnimationEffect extends GdxEffect {
     public void reset() {
         super.reset();
         effectAnimation = null;
+        if(sound!=null){
+            sound.stop();
+            ((AnimationEntity)target).getWorld().getSoundManager().unRegisterSound(sound);
+            sound = null;
+        }
     }
 }

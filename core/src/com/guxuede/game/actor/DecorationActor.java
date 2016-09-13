@@ -9,10 +9,6 @@ import com.guxuede.game.resource.ActorAnimationPlayer;
  */
 public class DecorationActor extends AnimationEntity {
 
-    public DecorationActor(ActorAnimationPlayer animationPlayer, StageWorld world, InputListener l) {
-        super(animationPlayer, world, l);
-    }
-
     public DecorationActor(ActorAnimationPlayer animationPlayer, StageWorld world) {
         super(animationPlayer, world);
     }

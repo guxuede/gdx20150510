@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.maps.tiled.TiledMap;
@@ -25,6 +26,7 @@ import com.guxuede.game.actor.LevelDrawActor;
 import com.guxuede.game.libgdx.*;
 import com.guxuede.game.light.DefaultLightManager;
 import com.guxuede.game.light.LightManager;
+import com.guxuede.game.map.MapManager;
 import com.guxuede.game.tools.TempObjects;
 
 import java.util.Comparator;
@@ -54,28 +56,28 @@ public class TitleMapStage extends Stage implements GdxScreen {
         this.lightManager = new DefaultLightManager(world);
         this.lightManager.onMapLoad(map);
         this.world.getPhysicsManager().onMapLoad(map);
-        this.addListener(new ClickListener() {
+        new MapManager(world).onMapLoad(map);
+        this.addListener(new InputListener() {
+            @Override
+            public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+                Actor actor = event.getTarget();
+                if(actor !=null && actor instanceof  AnimationActor && actor != viewActor){
+                    viewActor = (AnimationEntity) actor;
+                    return true;
+                }
+                return false;
+            }
+        });
+        this.addListener(new InputListener() {
             @Override
             public boolean handle(Event e) {
-                //System.out.println("TitleMapStage ClickListener:"+e);
-                if (!(e instanceof InputEvent)) return false;
-                InputEvent event = (InputEvent) e;
-                if (viewActor != null) {
-                    viewActor.handleInput(event);
-                    return true;
+                if(viewActor != null && e instanceof InputEvent){
+                    return viewActor.handleInput((InputEvent) e);
                 }
                 return super.handle(e);
             }
         });
-        InputListener focusListener = new InputListener() {
-			@Override
-			public boolean touchDown(InputEvent event, float x, float y,int pointer, int button) {
-				viewActor = (AnimationEntity) event.getListenerActor();
-				//System.out.println("Switch viewActor.");
-				return super.touchDown(event, x, y, pointer, button);
-			}
-		} ;
-        AnimationActor actor = ActorFactory.createActor("Undead",world,focusListener);
+        AnimationActor actor = ActorFactory.createActor("Undead",world);
 		actor.setPosition(200, 400);
         DoubleImageEffect doubleImageEffect = new DoubleImageEffect();
         doubleImageEffect.setDuration(50);
@@ -83,7 +85,7 @@ public class TitleMapStage extends Stage implements GdxScreen {
         actor.addAction(new AnimationEffect("3aaa",100));
         addActor(actor);
 
-        AnimationActor actor1 = ActorFactory.createActor("Undead", world, focusListener);
+        AnimationActor actor1 = ActorFactory.createActor("Undead", world);
         actor1.setPosition(100, 150);
         ActorChangeAppearanceAction actorChangeAppearanceAction = new ActorChangeAppearanceAction();
         actorChangeAppearanceAction.setDuration(5f);
@@ -98,9 +100,11 @@ public class TitleMapStage extends Stage implements GdxScreen {
         actor1.addAction(effect);
         addActor(actor1);
 
-        ActorFactory.createRandomActor(world,this,focusListener);
-        ActorFactory.createRandomDoor(world,this);
+        //ActorFactory.createRandomActor(world,this,focusListener);
+        //ActorFactory.createRandomDoor(world,this);
     }
+
+    private Texture bg = ResourceManager.getTexture("World");
 
     /**
      * 覆盖其父类的方法，因为我们需要画各种层级DRAW_LEVEL_FOOT，DRAW_LEVEL_BODY，DRAW_LEVEL_HEAD
@@ -130,10 +134,19 @@ public class TitleMapStage extends Stage implements GdxScreen {
         getActors().sort(new Comparator<Actor>() {
             @Override
             public int compare(Actor o1, Actor o2) {
-                if(o1.getZIndex() == o2.getZIndex()){
-                    return Float.compare(o2.getY(), o1.getY());
-                }else{
+                if(o1 instanceof  LevelDrawActor && !(o2 instanceof  LevelDrawActor)){
+                    return -1;
+                }if(!(o1 instanceof  LevelDrawActor) && (o2 instanceof  LevelDrawActor)){
+                    return 1;
+                }else if(!(o1 instanceof  LevelDrawActor) && !(o2 instanceof  LevelDrawActor)){
                     return Float.compare(o1.getZIndex(), o2.getZIndex());
+                }else{
+                    int z = ((LevelDrawActor) o1).drawZIndex - ((LevelDrawActor) o2).drawZIndex;
+                    if(z == 0){
+                        return Float.compare(o2.getY(), o1.getY());
+                    }else{
+                        return z;
+                    }
                 }
             }
         });
@@ -197,12 +210,18 @@ public class TitleMapStage extends Stage implements GdxScreen {
         throw new RuntimeException("Please call render");
     }
 
+    public static final float MapWidth = 1000;
+    public static final float MapHeight = 1000;
+
     @Override
     public void render(float delta) {
         this.act(delta);
         if(world.isVisible()){
             OrthographicCamera camera = (OrthographicCamera) getCamera();
             camera.update();
+            getBatch().begin();
+            getBatch().draw(bg, (float) (-MapWidth/2+camera.position.x*0.2), (float) (-MapHeight/2+camera.position.y*0.2),MapWidth,MapHeight);
+            getBatch().end();
             tileMapRenderer.setView(camera);
             tileMapRenderer.renderLayer1();
             tileMapRenderer.renderLayer2();
@@ -216,6 +235,7 @@ public class TitleMapStage extends Stage implements GdxScreen {
                 camera.position.x= viewActor.getCenterX();
                 camera.position.y= viewActor.getCenterY();
             }
+
         }
         //if (debug) drawDebug();
     }
