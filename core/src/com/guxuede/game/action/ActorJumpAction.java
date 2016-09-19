@@ -19,7 +19,7 @@ public class ActorJumpAction extends TemporalAction {
 		startX = actor.getCenterX();
 		startY = actor.getCenterY();
 		this.setDuration(duration);
-		actor.addAction(ActionsFactory.sequence(ActionsFactory.scaleBy(0.2f, 0.2f, duration / 2), ActionsFactory.scaleBy(-0.2f, -0.2f, duration / 2)));
+		//actor.addAction(ActionsFactory.sequence(ActionsFactory.scaleBy(0.2f, 0.2f, duration / 2), ActionsFactory.scaleBy(-0.2f, -0.2f, duration / 2)));
 		
 		double d = MathUtils.getAngle(startX,startY,endX,endY);
 		

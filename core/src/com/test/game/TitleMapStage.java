@@ -85,7 +85,7 @@ public class TitleMapStage extends Stage implements GdxScreen {
         actor.addAction(new AnimationEffect("3aaa",100));
         addActor(actor);
 
-        AnimationActor actor1 = ActorFactory.createActor("Undead", world);
+        AnimationActor actor1 = ActorFactory.createActor("Aquatic", world);
         actor1.setPosition(100, 150);
         ActorChangeAppearanceAction actorChangeAppearanceAction = new ActorChangeAppearanceAction();
         actorChangeAppearanceAction.setDuration(5f);

@@ -111,93 +111,35 @@
     "animations":[
       {
         "name":"walkDownAnimation",
-        "frameDuration":0.1,
-        "frames":[
-          [0,0,96,96],
-          [96,0,96,96],
-          [192,0,96,96],
-          [288,0,96,96]
-        ]
+        "frames":[0,1,2,3]
       },
       {
         "name":"walkLeftAnimation",
-        "frameDuration":0.1,
-        "frames":[
-          [0,96,96,96],
-          [96,96,96,96],
-          [192,96,96,96],
-          [288,96,96,96]
-        ]
+        "frames":[4,5,6,7]
       },
       {
         "name":"walkRightAnimation",
-        "frameDuration":0.1,
-        "frames":[
-          [0,192,96,96],
-          [96,192,96,96],
-          [192,192,96,96],
-          [288,192,96,96]
-        ]
+        "frames":[8,9,10,11]
       },
       {
         "name":"walkUpAnimation",
-        "frameDuration":0.1,
-        "frames":[
-          [0,288,96,96],
-          [96,288,96,96],
-          [192,288,96,96],
-          [288,288,96,96]
-        ]
+        "frames":[12,13,14,15]
       },
       {
         "name":"stopDownAnimation",
-        "frameDuration":0.1,
-        "frames":[
-          [0,0,96,96],
-          [96,0,96,96],
-          [192,0,96,96],
-          [288,0,96,96]
-        ]
+        "frames":[1,2]
       },
       {
         "name":"stopLeftAnimation",
-        "frameDuration":0.1,
-        "frames":[
-          [0,96,96,96],
-          [96,96,96,96],
-          [192,96,96,96],
-          [288,96,96,96]
-        ]
+        "frames":[5,6]
       },
       {
         "name":"stopRightAnimation",
-        "frameDuration":0.1,
-        "frames":[
-          [0,192,96,96],
-          [96,192,96,96],
-          [192,192,96,96],
-          [288,192,96,96]
-        ]
+        "frames":[9,10]
       },
       {
         "name":"stopUpAnimation",
-        "frameDuration":0.1,
-        "frames":[
-          [0,288,96,96],
-          [96,288,96,96],
-          [192,288,96,96],
-          [288,288,96,96]
-        ]
-      },
-      {
-        "name":"deathAnimation",
-        "frameDuration":0.1,
-        "frames":[
-          [0,96,96,96],
-          [0,96,96,96],
-          [0,192,96,96],
-          [0,256,96,96]
-        ]
+        "frames":[13,14]
       }
     ]
   },
@@ -883,43 +825,43 @@
   ]
   },
   {
-    "name" : "lvbu",
-    "width":48,
-    "height":64,
-    "texture":"lvbu",
+    "name" : "Aquatic",
+    "width":96,
+    "height":96,
+    "texture":"Aquatic",
     "frameDuration":0.1,
     "animations":[
       {
         "name":"walkDownAnimation",
-        "frames":[0,1,2]
+        "frames":[0,1,2,3]
       },
       {
         "name":"walkLeftAnimation",
-        "frames":[3,4,5]
+        "frames":[4,5,6,7]
       },
       {
         "name":"walkRightAnimation",
-        "frames":[6,7,8]
+        "frames":[8,9,10,11]
       },
       {
         "name":"walkUpAnimation",
-        "frames":[9,10,11]
+        "frames":[12,13,14,15]
       },
       {
         "name":"stopDownAnimation",
-        "frames":[4]
+        "frames":[1,2]
       },
       {
         "name":"stopLeftAnimation",
-        "frames":[7]
+        "frames":[5,6]
       },
       {
         "name":"stopRightAnimation",
-        "frames":[8]
+        "frames":[9,10]
       },
       {
         "name":"stopUpAnimation",
-        "frames":[10]
+        "frames":[13,14]
       }
     ],
     "sounds":[
@@ -927,6 +869,39 @@
         "name":"walkDownAnimation,walkLeftAnimation,walkRightAnimation,walkUpAnimation",
         "sound":"step1.ogg",
         "loop":"true"
+      }
+    ]
+  },
+  {
+    "name" : "Blow2",
+    "width":192,
+    "height":192,
+    "texture":"Blow2",
+    "animations":[
+      {
+        "name":"walkDownAnimation,walkLeftAnimation,walkRightAnimation,walkUpAnimation,stopDownAnimation,stopLeftAnimation,stopRightAnimation,stopUpAnimation,deathAnimation",
+        "frameDuration":0.1,
+        "frames":[6,7,8,9,10,11]
+      }
+    ],
+    "sounds":[
+      {
+        "name":"walkDownAnimation,walkLeftAnimation,walkRightAnimation,walkUpAnimation,stopDownAnimation,stopLeftAnimation,stopRightAnimation,stopUpAnimation,deathAnimation",
+        "sound":"fire_spell.ogg",
+        "loop":"true"
+      }
+    ]
+  },
+  {
+    "name" : "BTNGhoulFrenzy",
+    "width":64,
+    "height":64,
+    "texture":"BTNGhoulFrenzy",
+    "animations":[
+      {
+        "name":"walkDownAnimation,walkLeftAnimation,walkRightAnimation,walkUpAnimation,stopDownAnimation,stopLeftAnimation,stopRightAnimation,stopUpAnimation,deathAnimation",
+        "frameDuration":0.1,
+        "frames":[0,0,0,0,0]
       }
     ]
   }

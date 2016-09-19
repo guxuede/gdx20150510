@@ -2,6 +2,7 @@ package com.guxuede.game.action.effects;
 
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Batch;
+import com.guxuede.game.action.TracksFormula;
 import com.guxuede.game.actor.AnimationEntity;
 import com.guxuede.game.libgdx.GdxEffect;
 import com.guxuede.game.libgdx.GdxSprite;
@@ -13,6 +14,9 @@ import com.guxuede.game.resource.SoundHolder;
  * Created by guxuede on 2016/6/2 .
  */
 public class AnimationEffect extends GdxEffect {
+
+    public float drawOffSetX,drawOffSetY;
+    public TracksFormula tracksFormula;
 
     public String animationName;
     public Animation effectAnimation;
@@ -39,8 +43,18 @@ public class AnimationEffect extends GdxEffect {
         if(effectAnimation!=null){
             AnimationEntity animationActor = getAnimationEntity();
             GdxSprite sprite = (GdxSprite) effectAnimation.getKeyFrame(animationActor.stateTime, true);
-            sprite.setPosition(animationActor.getCenterX(),animationActor.getCenterY());
+            sprite.setPosition(animationActor.getCenterX() + drawOffSetX,animationActor.getCenterY() + drawOffSetY);
+            sprite.setRotation(animationActor.degrees);
             sprite.draw(batch, parentAlpha);
+        }
+    }
+
+    @Override
+    protected void update(float percent) {
+        super.update(percent);
+        if(tracksFormula!=null){
+            drawOffSetX = tracksFormula.getX(percent);
+            drawOffSetY = tracksFormula.getY(percent);
         }
     }
 

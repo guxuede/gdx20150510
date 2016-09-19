@@ -21,7 +21,7 @@ public class AnimationProjection extends AnimationEntity {
 
 
     public void init(){
-		this.scaleBy(1);
+		//this.scaleBy(1);
 		speed = 50000000;
         setDrawZIndex(2);
         this.isSensor = true;
@@ -67,7 +67,7 @@ public class AnimationProjection extends AnimationEntity {
                         )
                 );
                 AnimationEffect effect = new AnimationEffect();
-                effect.setEffectAnimation(ResourceManager.getAnimationHolder("attack1").getStopDownAnimation());
+                effect.setEffectAnimation(ResourceManager.getAnimationHolder("Blow2").getStopDownAnimation());
                 entity.addAction(effect);
             }
         }

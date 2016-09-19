@@ -27,7 +27,8 @@ public class ActorThrowProjectionAction extends Action {
 
     @Override
     public boolean act(float delta) {
-        throwProjection();
+        throwHacking();
+        //throwProjection();
         //throwLightProjection();
         //throwLightProjectionMutilPoint();
         //throwLightProjectionMutilActor();
@@ -48,6 +49,16 @@ public class ActorThrowProjectionAction extends Action {
     public void throwProjectionToMouse(){
         AnimationEntity animationEntity = (AnimationEntity) getActor();
         throwProjection(animationEntity.degrees);
+    }
+
+    public void throwHacking(){
+        AnimationEntity animationEntity = (AnimationEntity) getActor();
+        float degrees = animationEntity.degrees;
+        float l = 30;
+        double radians = (float) (2*Math.PI * degrees / 360);
+        float dx=(float) (animationEntity.getCenterX()+l*Math.cos(radians));
+        float dy=(float) (animationEntity.getCenterY()+l*Math.sin(radians));
+        throwHackingProjection(animationEntity.getCenterX(),animationEntity.getCenterY(),dx,dy);
     }
 
     /**
@@ -98,6 +109,39 @@ public class ActorThrowProjectionAction extends Action {
                         ActionsFactory.scaleBy(-5, -5, 0.1f),
                         actorMoveToAction
                         , ActionsFactory.actorDeathAnimation()
+                ));
+        //projection.moveToPoint(dx,dy);
+
+        //projection.moveToTarget();
+        animationEntity.getStage().addActor(projection);
+    }
+    /**
+     * 从指定位置抛射一个子弹发射到目标位置
+     * @param fx
+     * @param fy
+     * @param dx
+     * @param dy
+     */
+    public void throwHackingProjection(float fx,float fy,float dx,float dy){
+        AnimationEntity animationEntity = (AnimationEntity) getActor();
+        AnimationProjection projection = ActorFactory.createProjectionActor("BTNGhoulFrenzy", animationEntity.getWorld());
+        projection.sourceActor = animationEntity;
+        projection.setCenterPosition(fx, fy);
+        //ActorJumpAction jumpAction = ActionsFactory.actorJumpAction(dx,dy);
+        ActorXXXTracksAction jumpAction = new ActorXXXTracksAction();
+        float duration = 1;
+        jumpAction.setDuration(duration);
+        jumpAction.degree = animationEntity.degrees;
+        projection.addAction(
+                ActionsFactory.parallel(
+                        ActionsFactory.sequence(
+                                ActionsFactory.scaleTo(0.4f,0.4f),
+                                ActionsFactory.scaleTo(1f,1f, duration/2),
+                                ActionsFactory.scaleTo(0f, 0f, duration/2)
+                        ),
+                        ActionsFactory.sequence(
+                                jumpAction,
+                                ActionsFactory.actorDeathAnimation())
                 ));
         //projection.moveToPoint(dx,dy);
 

@@ -24,9 +24,9 @@ public class AttackState extends StandState {
         entity.stop();
         //entity.animationPlayer.doAttackAnimation();
         //animationDuration = entity.animationPlayer.currentAnimation.getAnimationDuration();
-        animationEffect = new AnimationEffect("lightningSpell");
-        entity.addAction(animationEffect);
-        animationDuration =animationEffect.getDuration();
+        //animationEffect = new AnimationEffect("BTNGhoulFrenzy");
+        //entity.addAction(animationEffect);
+        //animationDuration =animationEffect.getDuration();
     }
 
 //    @Override
@@ -48,8 +48,10 @@ public class AttackState extends StandState {
     public void exit(AnimationEntity entity) {
         stateTime = 0;
         animationDuration = 0;
-        animationEffect.end();
-        entity.removeAction(animationEffect);
+        if(animationEffect!=null){
+            animationEffect.end();
+            entity.removeAction(animationEffect);
+        }
         animationEffect = null;
     }
 }
