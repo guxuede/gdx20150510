@@ -8,7 +8,6 @@ import com.badlogic.gdx.utils.JsonReader;
 import com.badlogic.gdx.utils.JsonValue;
 import com.guxuede.game.libgdx.MultiInOneSprite;
 import com.guxuede.game.libgdx.GdxSprite;
-import com.guxuede.game.libgdx.ResourceManager;
 
 import java.util.ArrayList;
 import java.util.List;

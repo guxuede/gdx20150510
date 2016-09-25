@@ -127,7 +127,6 @@ public class ActorThrowProjectionAction extends Action {
         AnimationProjection projection = ActorFactory.createProjectionActor("BTNGhoulFrenzy", animationEntity.getWorld());
         projection.sourceActor = animationEntity;
         projection.setCenterPosition(fx, fy);
-        //ActorJumpAction jumpAction = ActionsFactory.actorJumpAction(dx,dy);
         ActorXXXTracksAction jumpAction = new ActorXXXTracksAction();
         float duration = 1;
         jumpAction.setDuration(duration);
@@ -143,9 +142,6 @@ public class ActorThrowProjectionAction extends Action {
                                 jumpAction,
                                 ActionsFactory.actorDeathAnimation())
                 ));
-        //projection.moveToPoint(dx,dy);
-
-        //projection.moveToTarget();
         animationEntity.getStage().addActor(projection);
     }
 

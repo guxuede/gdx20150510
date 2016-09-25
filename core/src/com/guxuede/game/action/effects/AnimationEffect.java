@@ -6,7 +6,7 @@ import com.guxuede.game.action.TracksFormula;
 import com.guxuede.game.actor.AnimationEntity;
 import com.guxuede.game.libgdx.GdxEffect;
 import com.guxuede.game.libgdx.GdxSprite;
-import com.guxuede.game.libgdx.ResourceManager;
+import com.guxuede.game.resource.ResourceManager;
 import com.guxuede.game.resource.AnimationHolder;
 import com.guxuede.game.resource.SoundHolder;
 

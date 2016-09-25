@@ -13,7 +13,7 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.Array;
 import com.guxuede.game.StageWorld;
 import com.guxuede.game.actor.AnimationEntity;
-import com.guxuede.game.libgdx.ResourceManager;
+import com.guxuede.game.resource.ResourceManager;
 import com.guxuede.game.tools.TempObjects;
 
 /**

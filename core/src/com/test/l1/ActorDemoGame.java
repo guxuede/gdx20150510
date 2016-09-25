@@ -27,7 +27,10 @@ public class ActorDemoGame implements ApplicationListener {
         stage = new Stage(new ScreenViewport(new OrthographicCamera(Gdx.graphics.getWidth(), Gdx.graphics.getHeight()))); 
         Gdx.input.setInputProcessor(stage); 
         //一些资源初始化
-        BitmapFont font = new FreeTypeFontGenerator(Gdx.files.internal("font.ttf")).generateFont(13,"你好确定取消",false);
+        FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
+        parameter.size = 13;
+        parameter.characters = "你好确定取消";
+        BitmapFont font = new FreeTypeFontGenerator(Gdx.files.internal("font.ttf")).generateFont(parameter);
 		 Texture but=new Texture(Gdx.files.internal("imgbut.PNG"));
 		 TextureRegion region_up=new TextureRegion(but, 0,0,65,19);
 		 TextureRegion region_down=new TextureRegion(but, 0,19,65,19);

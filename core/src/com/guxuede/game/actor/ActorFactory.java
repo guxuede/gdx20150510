@@ -3,7 +3,7 @@ package com.guxuede.game.actor;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.guxuede.game.StageWorld;
-import com.guxuede.game.libgdx.ResourceManager;
+import com.guxuede.game.resource.ResourceManager;
 import com.guxuede.game.resource.*;
 
 /**

@@ -1,12 +1,12 @@
 package com.guxuede.game.actor;
 
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
-import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Pool.Poolable;
 import com.guxuede.game.StageWorld;
@@ -18,7 +18,7 @@ import com.guxuede.game.action.move.ActorMoveToAction;
 import com.guxuede.game.action.move.ActorMoveToActorAction;
 import com.guxuede.game.action.move.ActorMoveToPointAction;
 import com.guxuede.game.libgdx.GdxSprite;
-import com.guxuede.game.libgdx.ResourceManager;
+import com.guxuede.game.resource.ResourceManager;
 import com.guxuede.game.physics.PhysicsPlayer;
 import com.guxuede.game.resource.ActorAnimationPlayer;
 
@@ -45,7 +45,7 @@ public abstract class AnimationEntity extends LevelDrawActor implements Poolable
     public Color  primaryColor;
     public int lifeStatus = LIFE_STATUS_CREATE;
     public boolean isSensor = false;
-
+    public boolean isHover = false;
     public ActorAnimationPlayer animationPlayer;
     /******************bellow attribute not share with other stage *****************/
     public StageWorld stageWorld;
@@ -141,11 +141,19 @@ public abstract class AnimationEntity extends LevelDrawActor implements Poolable
     public void drawFoot(Batch batch, float parentAlpha){
         batch.draw(ResourceManager.humanShadow,this.getCenterX() - this.getWidth()/2,this.getCenterY()-50,this.getWidth(),ResourceManager.humanShadow.getRegionHeight());
     }
+
     public void drawBody(Batch batch, float parentAlpha) {
         if(lifeStatus != LIFE_STATUS_DESTORY){
             GdxSprite sprite = (GdxSprite) animationPlayer.getKeyFrame();
             if (sprite != null) {
                 sprite.setPosition(this.getCenterX() + drawOffSetX, this.getCenterY() + drawOffSetY);
+                if(isHover){
+                    int oldSrcFunc = batch.getBlendSrcFunc();
+                    int oldDescFunc = batch.getBlendDstFunc();
+                    batch.setBlendFunction(GL20.GL_BLEND_SRC_RGB, GL20.GL_ONE);
+                    sprite.draw(batch, 1, getRotation(), getScaleX()+0.05f, getScaleY()+0.05f, Color.RED);
+                    batch.setBlendFunction(oldSrcFunc,oldDescFunc);
+                }
                 sprite.draw(batch, parentAlpha, getRotation(), getScaleX(), getScaleY(), getColor());
             }
         }

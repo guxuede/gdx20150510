@@ -36,7 +36,7 @@
 //import com.guxuede.game.actor.DebugButton;
 //import com.guxuede.game.libgdx.InputProcessorLine;
 //import com.guxuede.game.libgdx.MovebleOrthographicCamera;
-//import com.guxuede.game.libgdx.ResourceManager;
+//import com.guxuede.game.resource.ResourceManager;
 //
 //import org.jsoup.select.Elements;
 //import org.mozilla.javascript.Context;

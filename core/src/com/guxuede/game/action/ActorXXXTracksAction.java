@@ -9,8 +9,8 @@ import com.guxuede.game.actor.AnimationEntity;
  */
 public class ActorXXXTracksAction extends TemporalAction {
 
-    public static final float shortShaft = 25;
-    public static final float longShaft = 25;
+    public static final float shortShaft = 30;
+    public static final float longShaft = 30;
     public float degree = 0;
 
     @Override

@@ -1,13 +1,16 @@
-package com.guxuede.game.libgdx;
+package com.guxuede.game.resource;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.files.FileHandle;
+import com.badlogic.gdx.graphics.Cursor;
+import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.*;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton.TextButtonStyle;
 import com.badlogic.gdx.scenes.scene2d.utils.NinePatchDrawable;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
+import com.guxuede.game.libgdx.Skin;
 import com.guxuede.game.resource.ActorJsonParse;
 import com.guxuede.game.resource.AnimationHolder;
 
@@ -32,7 +35,10 @@ public class ResourceManager {
     public static NinePatchDrawable up= new NinePatchDrawable(new NinePatch(region_up,5,5,5,5));
     public static NinePatchDrawable down= new NinePatchDrawable(new NinePatch(region_down,5,5,5,5));
 
-	 //添加一个button用来测试对比该
+    public static Cursor customCursor = Gdx.graphics.newCursor(new Pixmap(Gdx.files.internal("cursor_1.gif")), 0, 0);
+
+
+    //添加一个button用来测试对比该
     public static TextButtonStyle bs=new TextButtonStyle(up,down,null,font);
 
     public static TextureRegion humanShadow= getTextureRegion("180-Switch03",96,96,32,32);

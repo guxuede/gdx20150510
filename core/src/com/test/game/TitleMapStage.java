@@ -1,6 +1,7 @@
 package com.test.game;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -10,7 +11,6 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.scenes.scene2d.*;
-import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.guxuede.game.DefaultWorld;
 import com.guxuede.game.StageWorld;
@@ -27,6 +27,7 @@ import com.guxuede.game.libgdx.*;
 import com.guxuede.game.light.DefaultLightManager;
 import com.guxuede.game.light.LightManager;
 import com.guxuede.game.map.MapManager;
+import com.guxuede.game.resource.ResourceManager;
 import com.guxuede.game.tools.TempObjects;
 
 import java.util.Comparator;
@@ -61,11 +62,27 @@ public class TitleMapStage extends Stage implements GdxScreen {
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
                 Actor actor = event.getTarget();
-                if(actor !=null && actor instanceof  AnimationActor && actor != viewActor){
+                if(actor !=null && actor instanceof  AnimationActor && actor != viewActor && Gdx.input.isKeyPressed(Input.Keys.SHIFT_LEFT)){
                     viewActor = (AnimationEntity) actor;
                     return true;
                 }
                 return false;
+            }
+
+            @Override
+            public void enter(InputEvent event, float x, float y, int pointer, Actor fromActor) {
+                Actor actor = event.getTarget();
+                if(actor !=null && actor instanceof  AnimationActor && actor != viewActor){
+                   ((AnimationActor) actor).isHover = true;
+
+                }
+            }
+            @Override
+            public void exit(InputEvent event, float x, float y, int pointer, Actor fromActor) {
+                Actor actor = event.getTarget();
+                if(actor !=null && actor instanceof  AnimationActor){
+                    ((AnimationActor) actor).isHover = false;
+                }
             }
         });
         this.addListener(new InputListener() {
