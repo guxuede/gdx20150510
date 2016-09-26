@@ -46,6 +46,7 @@ public abstract class AnimationEntity extends LevelDrawActor implements Poolable
     public int lifeStatus = LIFE_STATUS_CREATE;
     public boolean isSensor = false;
     public boolean isHover = false;
+    public float collisionSize = 0;
     public ActorAnimationPlayer animationPlayer;
     /******************bellow attribute not share with other stage *****************/
     public StageWorld stageWorld;
@@ -57,9 +58,10 @@ public abstract class AnimationEntity extends LevelDrawActor implements Poolable
         this.animationPlayer = animationPlayer;
         int actorWidth= animationPlayer.width;
         int actorHeight= animationPlayer.height;
+        this.collisionSize = actorWidth/4;
         this.setSize(actorWidth, actorHeight);
         this.setOrigin(Align.center);
-        this.setVisible(false);
+        this.setVisible(true);
         this.lifeStatus = LIFE_STATUS_CREATE;
         this.addAction(new ActorAlwayMoveAction());
         this.visualRadius = actorWidth * 4;

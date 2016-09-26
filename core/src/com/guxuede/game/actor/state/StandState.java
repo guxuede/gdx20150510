@@ -2,6 +2,7 @@ package com.guxuede.game.actor.state;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.guxuede.game.actor.AnimationEntity;
 
@@ -37,7 +38,16 @@ public class StandState extends ActorState {
                 return new AttackState(direction);
             }
         }else if(event.getType() == InputEvent.Type.touchDown){
-            return new MoveState(AnimationEntity.DOWN);
+            Actor tactor = event.getTarget();
+            if(tactor!=null && tactor instanceof AnimationEntity && tactor!=entity){
+                if(!(this instanceof AttackState) ){
+                    AttackState as = new AttackState(direction);
+                    as.targetEntity = (AnimationEntity) tactor;
+                    return as;
+                }
+            }else{
+                return new MoveState(AnimationEntity.DOWN);
+            }
         }
         return null;
     }

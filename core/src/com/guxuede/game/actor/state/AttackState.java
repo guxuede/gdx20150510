@@ -10,6 +10,7 @@ import com.guxuede.game.action.effects.AnimationEffect;
  */
 public class AttackState extends StandState {
 
+    AnimationEntity targetEntity;
 
     public AttackState(int direction){
         super(direction);
@@ -22,11 +23,9 @@ public class AttackState extends StandState {
     @Override
     public void enter(AnimationEntity entity, InputEvent event) {
         entity.stop();
-        //entity.animationPlayer.doAttackAnimation();
-        //animationDuration = entity.animationPlayer.currentAnimation.getAnimationDuration();
-        //animationEffect = new AnimationEffect("BTNGhoulFrenzy");
-        //entity.addAction(animationEffect);
-        //animationDuration =animationEffect.getDuration();
+        animationEffect = new AnimationEffect("lightningSpell");
+        entity.addAction(animationEffect);
+        animationDuration =animationEffect.getDuration();
     }
 
 //    @Override
@@ -38,7 +37,9 @@ public class AttackState extends StandState {
     public ActorState update(AnimationEntity entity,float delta) {
         stateTime += delta;
         if(stateTime >= animationDuration){
-            entity.addAction(new ActorThrowProjectionAction());
+            ActorThrowProjectionAction ta = new ActorThrowProjectionAction();
+            ta.targetEntity = targetEntity;
+            entity.addAction(ta);
             return new StandState(direction);
         }
         return null;
@@ -47,6 +48,7 @@ public class AttackState extends StandState {
     @Override
     public void exit(AnimationEntity entity) {
         stateTime = 0;
+        targetEntity = null;
         animationDuration = 0;
         if(animationEffect!=null){
             animationEffect.end();

@@ -21,4 +21,21 @@ public class ActorMoveToPointAction extends ActorMoveToAction {
     public Vector2 getTargetPoint() {
         return targetPoint;
     }
+
+    @Override
+    protected boolean isArrive() {
+        boolean is= super.isArrive();
+        if(is){
+            onArrived();
+        }
+        return is;
+    }
+
+    @Override
+    public void onArrived() {
+        if(actorMoveListener!=null){
+            actorMoveListener.onArrived(getTargetPoint(),null);
+        }
+    }
+
 }

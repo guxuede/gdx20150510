@@ -193,7 +193,7 @@ public class TitleMapStage extends Stage implements GdxScreen {
         if(entity.lifeStatus == AnimationEntity.LIFE_STATUS_CREATE){
             entity.lifeStatus = AnimationEntity.LIFE_STATUS_BORN;
             entity.getPhysicsPlayer().init(entity);
-            entity.setVisible(true);
+            //entity.setVisible(true); //TODO 初始化时是否要隐藏掉单位？
         }else if(entity.lifeStatus == AnimationEntity.LIFE_STATUS_BORN){
             entity.lifeStatus = AnimationEntity.LIFE_STATUS_LIVE;
         }else if(entity.lifeStatus == AnimationEntity.LIFE_STATUS_DESTORY){

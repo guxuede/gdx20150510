@@ -78,7 +78,7 @@ public class DefaultLightManager implements LightManager {
     public void drawEntryLight(){
         final Vector2 tVector2 = TempObjects.temp1Vector2;
         for(Actor actor : stage.getActors()){
-            if(actor instanceof AnimationEntity){
+            if(actor.isVisible() && actor instanceof AnimationEntity){
                 AnimationEntity entity = (AnimationEntity) actor;
                 if(!entity.isInScreen)continue;
                 batch.setColor(entity.primaryColor);

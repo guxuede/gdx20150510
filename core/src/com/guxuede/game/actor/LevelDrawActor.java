@@ -47,7 +47,7 @@ public abstract class LevelDrawActor extends Actor {
     @Override
     public void draw(Batch batch, float parentAlpha) {
         isInScreen = isInScreen();
-        if(isInScreen){
+        if(isInScreen && isVisible()){
             if(drawLevel == 0){
                 drawFoot(batch,parentAlpha);
                 drawFootEffect(batch,parentAlpha);

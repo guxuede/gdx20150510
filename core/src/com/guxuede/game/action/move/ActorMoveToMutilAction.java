@@ -15,11 +15,21 @@ public abstract class ActorMoveToMutilAction  extends ActorMoveToAction{
     @Override
     protected boolean isArrive() {
         boolean isArrive = super.isArrive();
+        if(isArrive){
+            onArrived();
+        }
         if(isArrive && haveNextTarget()){
             moveToNextTarget();
             isArrive = false;
         }
         return isArrive;
+    }
+
+    @Override
+    public void onArrived() {
+        if(actorMoveListener!=null){
+            actorMoveListener.onArrived(getCurrentTarget(),null);
+        }
     }
 
     @Override

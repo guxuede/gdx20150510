@@ -34,18 +34,15 @@ public class AnimationProjection extends AnimationEntity {
         }
 	}
 
-    @Override
-    public void act(float delta) {
-        super.act(delta);
-    }
-
     /**
      * 撞击
      * @param entity 撞击对象
      * @param position 撞击位置
      */
     public void hit(AnimationEntity entity,Vector2 position){
-        doShowDamageEffect(entity,position);
+        if(collisionSize != 0){
+            doShowDamageEffect(entity,position);
+        }
     }
 
 

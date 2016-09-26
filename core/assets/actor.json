@@ -904,5 +904,18 @@
         "frames":[0,0,0,0,0]
       }
     ]
+  },
+  {
+    "name" : "BLANK",
+    "width":1,
+    "height":1,
+    "texture":"FF4D00-0",
+    "animations":[
+      {
+        "name":"walkDownAnimation,walkLeftAnimation,walkRightAnimation,walkUpAnimation,stopDownAnimation,stopLeftAnimation,stopRightAnimation,stopUpAnimation,deathAnimation",
+        "frameDuration":0.1,
+        "frames":[0]
+      }
+    ]
   }
 ]

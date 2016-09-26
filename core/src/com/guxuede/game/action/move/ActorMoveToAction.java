@@ -2,6 +2,7 @@ package com.guxuede.game.action.move;
 
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Action;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.guxuede.game.actor.AnimationEntity;
 import com.guxuede.game.tools.MathUtils;
 
@@ -10,6 +11,7 @@ import com.guxuede.game.tools.MathUtils;
  */
 public abstract class ActorMoveToAction extends Action {
     public static final int IS_ARRIVE_RADIO = 10;
+    public ActorMoveListener actorMoveListener;
 
     protected boolean isArrive() {
         final AnimationEntity entity = (AnimationEntity) getTarget();
@@ -36,6 +38,14 @@ public abstract class ActorMoveToAction extends Action {
         return true;
     }
 
+    public void onArrived(){
+
+    }
+
 
     public abstract Vector2 getTargetPoint();
+
+    public static interface ActorMoveListener{
+        void onArrived(Vector2 target,Actor actor);
+    }
 }

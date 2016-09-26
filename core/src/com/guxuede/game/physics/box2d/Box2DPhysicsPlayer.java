@@ -26,7 +26,7 @@ public class Box2DPhysicsPlayer implements PhysicsPlayer {
 
         CircleShape c=new CircleShape();
 
-        c.setRadius(animationEntity.getWidth()/4);
+        c.setRadius(animationEntity.collisionSize);
         FixtureDef ballShapeDef = new FixtureDef();
         ballShapeDef.density = 0.0f;//密度
         ballShapeDef.friction = 1f;////摩擦粗糙程度

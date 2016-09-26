@@ -2,6 +2,8 @@ package com.guxuede.game.action;
 
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Action;
+import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.guxuede.game.action.move.ActorMoveToActorAction;
 import com.guxuede.game.actor.ActorFactory;
 import com.guxuede.game.actor.AnimationEntity;
 import com.guxuede.game.actor.AnimationProjection;
@@ -13,6 +15,7 @@ import com.guxuede.game.action.effects.LightningEffect;
 import com.guxuede.game.action.effects.LightningEffectMutilActor;
 import com.guxuede.game.action.effects.LightningEffectMutilPoint;
 import com.guxuede.game.tools.MathUtils;
+import com.guxuede.game.tools.TempObjects;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -24,10 +27,16 @@ import java.util.List;
 public class ActorThrowProjectionAction extends Action {
 
     public static final int DEFAULT_PROJECT_RANGE = 400;
+    public AnimationEntity targetEntity;
 
     @Override
     public boolean act(float delta) {
-        throwHacking();
+        //throwHacking();
+        if(targetEntity!=null){
+            throwHackingProjection(targetEntity);
+        }else{
+            throwProjection();
+        }
         //throwProjection();
         //throwLightProjection();
         //throwLightProjectionMutilPoint();
@@ -75,8 +84,15 @@ public class ActorThrowProjectionAction extends Action {
         AnimationEntity animationEntity = (AnimationEntity) getActor();
         float l = DEFAULT_PROJECT_RANGE;
         double radians = (float) (2*Math.PI * degrees / 360);
-        float dx=(float) (animationEntity.getCenterX()+l*Math.cos(radians));
-        float dy=(float) (animationEntity.getCenterY()+l*Math.sin(radians));
+        float dx;
+        float dy;
+        if(targetEntity==null){
+            dx = (float) (animationEntity.getCenterX()+l*Math.cos(radians));
+            dy = (float) (animationEntity.getCenterY()+l*Math.sin(radians));
+        }else {
+            dy = targetEntity.getCenterY();
+            dx = targetEntity.getCenterX();
+        }
         throwProjection(dx,dy);
     }
 
@@ -115,6 +131,10 @@ public class ActorThrowProjectionAction extends Action {
         //projection.moveToTarget();
         animationEntity.getStage().addActor(projection);
     }
+    public void throwProjection(AnimationEntity target){
+
+    }
+
     /**
      * 从指定位置抛射一个子弹发射到目标位置
      * @param fx
@@ -144,6 +164,31 @@ public class ActorThrowProjectionAction extends Action {
                 ));
         animationEntity.getStage().addActor(projection);
     }
+    public void throwHackingProjection(AnimationEntity targetEntity){
+        {
+            AnimationEntity animationEntity = (AnimationEntity) getActor();
+            float degree = MathUtils.getAngle(animationEntity.getCenterX(),animationEntity.getCenterY(),targetEntity.getCenterX(),targetEntity.getCenterY());
+            animationEntity.turnDirection(degree);
+            final AnimationProjection projection = ActorFactory.createProjectionActor("BLANK", animationEntity.getWorld());
+            projection.collisionSize = 0;
+            projection.sourceActor = animationEntity;
+            projection.setVisible(false);
+            projection.setCenterPosition(animationEntity.getCenterX(), animationEntity.getCenterY());
+            ActorMoveToActorAction actorMoveToAction = new ActorMoveToActorAction(targetEntity);
+            projection.addAction(ActionsFactory.sequence(
+                    actorMoveToAction,
+                    ActionsFactory.actorDeathAnimation()));
+            actorMoveToAction.actorMoveListener = new ActorMoveToAction.ActorMoveListener() {
+                @Override
+                public void onArrived(Vector2 target, Actor actor) {
+                    AnimationEntity targe = (AnimationEntity) actor;
+                    projection.doShowDamageEffect(targe,TempObjects.temp1Vector2.set(targe.getX(),targe.getY()));
+                }
+            };
+            animationEntity.getStage().addActor(projection);
+        }
+    }
+
 
     /**
      * 在多个单位来回多次的的子弹

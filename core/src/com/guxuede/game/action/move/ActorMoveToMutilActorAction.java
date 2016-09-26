@@ -30,6 +30,13 @@ public class ActorMoveToMutilActorAction extends ActorMoveToMutilAction{
     }
 
     @Override
+    public void onArrived() {
+        if(actorMoveListener!=null){
+            actorMoveListener.onArrived(null,currentEntity);
+        }
+    }
+
+    @Override
     public Vector2 getCurrentTarget() {
         return currentEntity==null?null:new Vector2(currentEntity.getCenterX(),currentEntity.getCenterY());
     }
