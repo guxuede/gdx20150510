@@ -252,6 +252,9 @@ public abstract class AnimationEntity extends LevelDrawActor implements Poolable
 		}else if(degrees > 325 || degrees < 45){
 			direction = AnimationEntity.RIGHT;
 		}
+        if(!isMoving){
+            animationPlayer.doIdelAnimation(direction);
+        }
         //if Direction not change,no need to re do Animation
         if(!isMoving && oldDirection == this.direction){
             return;

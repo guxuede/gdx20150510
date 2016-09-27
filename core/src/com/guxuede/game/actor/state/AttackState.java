@@ -4,28 +4,32 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.guxuede.game.actor.AnimationEntity;
 import com.guxuede.game.action.ActorThrowProjectionAction;
 import com.guxuede.game.action.effects.AnimationEffect;
+import com.guxuede.game.actor.ability.skill.HackSkill;
+import com.guxuede.game.actor.ability.skill.MagicSkill;
+import com.guxuede.game.actor.ability.skill.Skill;
 
 /**
  * Created by guxuede on 2016/6/16 .
  */
 public class AttackState extends StandState {
 
-    AnimationEntity targetEntity;
+    AnimationEntity target;
+    Skill skill;
 
     public AttackState(int direction){
         super(direction);
     }
 
-    public float animationDuration;
-    public float stateTime;
-    AnimationEffect animationEffect;
-
     @Override
     public void enter(AnimationEntity entity, InputEvent event) {
         entity.stop();
-        animationEffect = new AnimationEffect("lightningSpell");
-        entity.addAction(animationEffect);
-        animationDuration =animationEffect.getDuration();
+        if(target==null){
+            skill = new MagicSkill();
+        }else{
+            skill = new HackSkill();
+            ((HackSkill)skill).target = target;
+        }
+        skill.owner = entity;
     }
 
 //    @Override
@@ -35,11 +39,8 @@ public class AttackState extends StandState {
 
     @Override
     public ActorState update(AnimationEntity entity,float delta) {
-        stateTime += delta;
-        if(stateTime >= animationDuration){
-            ActorThrowProjectionAction ta = new ActorThrowProjectionAction();
-            ta.targetEntity = targetEntity;
-            entity.addAction(ta);
+        boolean result = skill.update(delta);
+        if(result){
             return new StandState(direction);
         }
         return null;
@@ -47,13 +48,6 @@ public class AttackState extends StandState {
 
     @Override
     public void exit(AnimationEntity entity) {
-        stateTime = 0;
-        targetEntity = null;
-        animationDuration = 0;
-        if(animationEffect!=null){
-            animationEffect.end();
-            entity.removeAction(animationEffect);
-        }
-        animationEffect = null;
+        skill.exit();
     }
 }

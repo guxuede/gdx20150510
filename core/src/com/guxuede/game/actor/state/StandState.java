@@ -42,7 +42,7 @@ public class StandState extends ActorState {
             if(tactor!=null && tactor instanceof AnimationEntity && tactor!=entity){
                 if(!(this instanceof AttackState) ){
                     AttackState as = new AttackState(direction);
-                    as.targetEntity = (AnimationEntity) tactor;
+                    as.target = (AnimationEntity) tactor;
                     return as;
                 }
             }else{
