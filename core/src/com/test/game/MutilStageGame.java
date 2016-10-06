@@ -7,8 +7,10 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Cursor;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.Array;
+import com.guxuede.game.StageWorld;
 import com.guxuede.game.actor.AnimationEntity;
 import com.guxuede.game.libgdx.GdxGame;
 import com.guxuede.game.resource.ResourceManager;
@@ -72,6 +74,7 @@ public class MutilStageGame extends GdxGame {
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         super.render();
+        //just for debug below
         if(this.CurFPS != Gdx.graphics.getFramesPerSecond()) {
             Gdx.graphics.setTitle("FPS:"+String.valueOf(Gdx.graphics.getFramesPerSecond()));
             this.CurFPS = Gdx.graphics.getFramesPerSecond();

@@ -1,5 +1,6 @@
 package com.guxuede.game.actor.ability.skill;
 
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.guxuede.game.action.ActionsFactory;
@@ -16,13 +17,20 @@ import com.guxuede.game.tools.TempObjects;
  */
 public class HackSkill extends Skill {
 
-    public AnimationEntity target;
     int step = 0;
+
+    public int getHotKey(){
+        return Input.Keys.A;
+    }
+
+    public int getTargetType(){
+        return TARGET_TYPE_TARGET;
+    }
 
     @Override
     public boolean update(float delta) {
         stateTime += delta;
-        if(stateTime > 1 && step == 0){
+        if(stateTime > 0 && step == 0){
             step ++;
             float degree = MathUtils.getAngle(owner.getCenterX(),owner.getCenterY(),target.getCenterX(),target.getCenterY());
             owner.turnDirection(degree);

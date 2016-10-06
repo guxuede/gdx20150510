@@ -17,6 +17,7 @@ public abstract class StageWorld {
     public abstract Camera getCamera();
     public abstract GdxGame getGame();
     public abstract SoundManager getSoundManager();
+    public abstract MouseManager getMouseManager();
 
     public abstract boolean isNotPause();
     public abstract boolean isVisible();

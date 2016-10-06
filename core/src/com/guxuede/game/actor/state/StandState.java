@@ -1,10 +1,12 @@
 package com.guxuede.game.actor.state;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.guxuede.game.MouseManager;
 import com.guxuede.game.actor.AnimationEntity;
+import com.guxuede.game.actor.ability.skill.Skill;
 
 /**
  * Created by guxuede on 2016/6/15 .
@@ -24,7 +26,7 @@ public class StandState extends ActorState {
     }
 
     @Override
-    public ActorState handleInput(AnimationEntity entity, InputEvent event) {
+    public ActorState handleInput(final AnimationEntity entity, InputEvent event) {
         if(InputEvent.Type.keyDown == event.getType()){
             if (Input.Keys.RIGHT == event.getKeyCode()){
                 return new MoveState(AnimationEntity.RIGHT);
@@ -36,6 +38,30 @@ public class StandState extends ActorState {
                 return new MoveState(AnimationEntity.LEFT);
             }else if(Input.Keys.SPACE == event.getKeyCode()){
                 return new AttackState(direction);
+            }
+            for (final Skill skill : entity.skills) {
+                if (skill.getHotKey() == event.getKeyCode()) {
+                    MouseManager.MouseIndicatorLinsner linsner = new MouseManager.MouseIndicatorLinsner() {
+                        @Override
+                        public boolean onHoner(AnimationEntity animationEntity, Vector2 center, float r) {
+                            return true;
+                        }
+                        @Override
+                        public void onActive(AnimationEntity animationEntity, Vector2 center, float r) {
+                            skill.target = animationEntity;
+                            skill.owner = entity;
+                            AttackState actorState = new AttackState(direction);
+                            actorState.skill = skill;
+                            entity.goingToNewState(actorState,null);
+                        }
+                    };
+                    if (skill.getTargetType() == Skill.TARGET_TYPE_AREA) {
+                        entity.getWorld().getMouseManager().enterToAreaChoiceStatus(100, linsner);
+                    } else {
+                        entity.getWorld().getMouseManager().enterToTargetChoiceStatus(linsner);
+                    }
+                    break;
+                }
             }
         }else if(event.getType() == InputEvent.Type.touchDown){
             Actor tactor = event.getTarget();

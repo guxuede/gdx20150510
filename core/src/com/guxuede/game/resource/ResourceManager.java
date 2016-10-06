@@ -10,6 +10,7 @@ import com.badlogic.gdx.graphics.g2d.*;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton.TextButtonStyle;
 import com.badlogic.gdx.scenes.scene2d.utils.NinePatchDrawable;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
+import com.guxuede.game.libgdx.GdxSprite;
 import com.guxuede.game.libgdx.Skin;
 import com.guxuede.game.resource.ActorJsonParse;
 import com.guxuede.game.resource.AnimationHolder;
@@ -34,6 +35,12 @@ public class ResourceManager {
     public static TextureRegion region_down=getTextureRegion("imgbut", 0,19,65,19);
     public static NinePatchDrawable up= new NinePatchDrawable(new NinePatch(region_up,5,5,5,5));
     public static NinePatchDrawable down= new NinePatchDrawable(new NinePatch(region_down,5,5,5,5));
+    public static Sprite mouseAreaIndicator=new GdxSprite(getTextureRegion("Gun2", 0, 0, 192, 192));
+    public static Sprite mouseTargetIndicator=new GdxSprite(getTextureRegion("Gun2", 84, 107, 107-84, 107-84));
+    static {
+        mouseAreaIndicator.setOriginCenter();
+        mouseTargetIndicator.setOriginCenter();
+    }
 
     public static Cursor customCursor = Gdx.graphics.newCursor(new Pixmap(Gdx.files.internal("cursor_1.gif")), 0, 0);
 

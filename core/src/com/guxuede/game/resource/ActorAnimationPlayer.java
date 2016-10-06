@@ -121,8 +121,21 @@ public class ActorAnimationPlayer implements ActorEventListener{
 			break;
 		}
 	}
-	
-	public void doDeathAnimation() {
+
+    public void doMoveAnimation(int direction){
+        if(direction == AnimationEntity.LEFT){
+            doMoveLeftAnimation();
+        }else if(direction == AnimationEntity.RIGHT){
+            doMoveRightAnimation();
+        }else if(direction == AnimationEntity.DOWN){
+            doMoveDownAnimation();
+        }else if(direction == AnimationEntity.UP){
+            doMoveUpAnimation();
+        }
+    }
+
+
+    public void doDeathAnimation() {
         doAnimation(AnimationHolder.DEATH_ANIMATION);
 	}
 

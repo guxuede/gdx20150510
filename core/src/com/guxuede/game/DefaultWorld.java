@@ -20,13 +20,16 @@ public class DefaultWorld extends StageWorld {
     private Stage stage;
     private Camera camera;
     private SoundManager soundManager;
+    private MouseManager mouseManager;
 
     public DefaultWorld(Stage stage,GdxGame gdxGame) {
         this.gdxGame = gdxGame;
         this.physicsManager = new Box2DPhysicsManager(this);
         this.soundManager =new SoundManager();
+        this.mouseManager = new MouseManager();
         this.stage = stage;
         this.camera = stage.getCamera();
+        this.mouseManager.stageWorld = this;
     }
 
     public PhysicsManager getPhysicsManager() {
@@ -36,6 +39,11 @@ public class DefaultWorld extends StageWorld {
     @Override
     public SoundManager getSoundManager() {
         return soundManager;
+    }
+
+    @Override
+    public MouseManager getMouseManager() {
+        return mouseManager;
     }
 
     @Override

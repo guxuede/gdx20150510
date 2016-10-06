@@ -14,7 +14,7 @@ import com.guxuede.game.actor.ability.skill.Skill;
 public class AttackState extends StandState {
 
     AnimationEntity target;
-    Skill skill;
+    public Skill skill;
 
     public AttackState(int direction){
         super(direction);
@@ -23,13 +23,13 @@ public class AttackState extends StandState {
     @Override
     public void enter(AnimationEntity entity, InputEvent event) {
         entity.stop();
-        if(target==null){
-            skill = new MagicSkill();
-        }else{
-            skill = new HackSkill();
-            ((HackSkill)skill).target = target;
-        }
-        skill.owner = entity;
+//        if(target==null){
+//            skill = new MagicSkill();
+//        }else{
+//            skill = new HackSkill();
+//            ((HackSkill)skill).target = target;
+//        }
+//        skill.owner = entity;
     }
 
 //    @Override
@@ -39,7 +39,7 @@ public class AttackState extends StandState {
 
     @Override
     public ActorState update(AnimationEntity entity,float delta) {
-        boolean result = skill.update(delta);
+        boolean result = skill ==null?true:skill.update(delta);
         if(result){
             return new StandState(direction);
         }
@@ -48,6 +48,9 @@ public class AttackState extends StandState {
 
     @Override
     public void exit(AnimationEntity entity) {
-        skill.exit();
+        if(skill!=null){
+            skill.exit();
+            skill = null;
+        }
     }
 }

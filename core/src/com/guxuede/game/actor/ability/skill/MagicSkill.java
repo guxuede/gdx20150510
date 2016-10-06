@@ -1,5 +1,6 @@
 package com.guxuede.game.actor.ability.skill;
 
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.utils.Pool;
 import com.guxuede.game.action.ActorThrowProjectionAction;
 import com.guxuede.game.action.effects.AnimationEffect;
@@ -11,11 +12,18 @@ import com.guxuede.game.tools.MathUtils;
  */
 public class MagicSkill extends Skill{
 
-    AnimationEntity target;
     public float animationDuration;
     AnimationEffect animationEffect;
 
     int step = 0;
+
+    public int getHotKey(){
+        return Input.Keys.B;
+    }
+
+    public int getTargetType(){
+        return TARGET_TYPE_TARGET;
+    }
 
 
     @Override

@@ -58,6 +58,7 @@ public class TitleMapStage extends Stage implements GdxScreen {
         this.lightManager.onMapLoad(map);
         this.world.getPhysicsManager().onMapLoad(map);
         new MapManager(world).onMapLoad(map);
+        this.addListener(world.getMouseManager());
         this.addListener(new InputListener() {
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
@@ -247,7 +248,7 @@ public class TitleMapStage extends Stage implements GdxScreen {
 
             world.getPhysicsManager().render();
             lightManager.render();
-
+            world.getMouseManager().render();
             if(viewActor !=null){
                 camera.position.x= viewActor.getCenterX();
                 camera.position.y= viewActor.getCenterY();

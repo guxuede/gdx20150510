@@ -10,6 +10,9 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Pool.Poolable;
 import com.guxuede.game.StageWorld;
+import com.guxuede.game.actor.ability.skill.HackSkill;
+import com.guxuede.game.actor.ability.skill.MagicSkill;
+import com.guxuede.game.actor.ability.skill.Skill;
 import com.guxuede.game.actor.state.ActorState;
 import com.guxuede.game.actor.state.StandState;
 import com.guxuede.game.action.ActionsFactory;
@@ -22,6 +25,7 @@ import com.guxuede.game.resource.ResourceManager;
 import com.guxuede.game.physics.PhysicsPlayer;
 import com.guxuede.game.resource.ActorAnimationPlayer;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public abstract class AnimationEntity extends LevelDrawActor implements Poolable{
@@ -47,11 +51,14 @@ public abstract class AnimationEntity extends LevelDrawActor implements Poolable
     public boolean isSensor = false;
     public boolean isHover = false;
     public float collisionSize = 0;
+    public float hitPoint = 100;
     public ActorAnimationPlayer animationPlayer;
     /******************bellow attribute not share with other stage *****************/
     public StageWorld stageWorld;
     private PhysicsPlayer physicsPlayer;
     /******************bellow attribute not share with other stage end *****************/
+
+    public List<Skill> skills = new ArrayList<Skill>();
 
     public AnimationEntity(ActorAnimationPlayer animationPlayer,StageWorld world) {
         id = ID++;
@@ -68,6 +75,8 @@ public abstract class AnimationEntity extends LevelDrawActor implements Poolable
         this.primaryColor = new Color(MathUtils.random(), MathUtils.random(), MathUtils.random(), 1);
         this.physicsPlayer = world.getPhysicsManager().createPositionPlayer();
         this.stageWorld = world;
+        skills.add(new HackSkill());
+        skills.add(new MagicSkill());
     }
 
     //=============================================Position Control========================================================================
@@ -127,7 +136,7 @@ public abstract class AnimationEntity extends LevelDrawActor implements Poolable
             animationPlayer.act(delta,this);
             if(actorState!=null){
                 ActorState newState =  actorState.update(this, delta);
-                processNewState(newState,null);
+                goingToNewState(newState,null);
             }
 		}
 	}
@@ -252,30 +261,19 @@ public abstract class AnimationEntity extends LevelDrawActor implements Poolable
 		}else if(degrees > 325 || degrees < 45){
 			direction = AnimationEntity.RIGHT;
 		}
+        //TODO if Direction not change,no need to re do Animation
         if(!isMoving){
             animationPlayer.doIdelAnimation(direction);
+        }else{
+            animationPlayer.doMoveAnimation(direction);
         }
-        //if Direction not change,no need to re do Animation
-        if(!isMoving && oldDirection == this.direction){
-            return;
-        }
-        doMoveAnimation();
 	}
-
     public void doMoveAnimation(){
-        if(direction == AnimationEntity.LEFT){
-            animationPlayer.doMoveLeftAnimation();
-        }else if(direction == AnimationEntity.RIGHT){
-            animationPlayer.doMoveRightAnimation();
-        }else if(direction == AnimationEntity.DOWN){
-            animationPlayer.doMoveDownAnimation();
-        }else if(direction == AnimationEntity.UP){
-            animationPlayer.doMoveUpAnimation();
-        }
+        animationPlayer.doMoveAnimation(this.direction);
     }
 
     public void setDirection(int direction) {
-        this.direction = direction;
+        float degrees = 0;
         if(direction == LEFT){
             degrees = 180;
         }else if(direction == RIGHT){
@@ -287,6 +285,7 @@ public abstract class AnimationEntity extends LevelDrawActor implements Poolable
         }else{
             degrees = 0;
         }
+        turnDirection(degrees);
     }
     //让对象去死
     public void dead(){
@@ -298,15 +297,15 @@ public abstract class AnimationEntity extends LevelDrawActor implements Poolable
 
     /**************************************state control**************************************************/
     ActorState actorState = new StandState(0);
-    public boolean handleInput(InputEvent event){
+    public boolean handleInput(final InputEvent event){
         if(actorState!=null){
             ActorState newState = actorState.handleInput(this,event);
-            return processNewState(newState,event);
+            return goingToNewState(newState,event);
         }
         return false;
     }
 
-    private boolean processNewState(ActorState newState,InputEvent event){
+    public boolean goingToNewState(ActorState newState, InputEvent event){
         if(newState!=null){
             actorState.exit(this);
             actorState = newState;
