@@ -9,9 +9,9 @@ import com.guxuede.game.actor.AnimationEntity;
 public interface PhysicsPlayer {
 
 
-    @Deprecated
+
     public float getX();
-    @Deprecated
+
     public float getY();
 
     /**

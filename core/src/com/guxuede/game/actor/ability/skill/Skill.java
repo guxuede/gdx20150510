@@ -1,6 +1,7 @@
 package com.guxuede.game.actor.ability.skill;
 
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Pool;
 import com.guxuede.game.action.ActorThrowProjectionAction;
 import com.guxuede.game.actor.AnimationEntity;
@@ -18,6 +19,7 @@ public abstract class Skill implements Pool.Poolable{
     public static final int TARGET_TYPE_TARGET =0,TARGET_TYPE_AREA = 1;
 
     public AnimationEntity target;
+    public Vector2 targetPos;
 
     public int getHotKey(){
         return Input.Keys.A;
@@ -37,11 +39,13 @@ public abstract class Skill implements Pool.Poolable{
     }
 
     public void exit() {
-
+        reset();
     }
 
     @Override
     public void reset() {
-
+        target = null;
+        targetPos = null;
+        stateTime = 0;
     }
 }

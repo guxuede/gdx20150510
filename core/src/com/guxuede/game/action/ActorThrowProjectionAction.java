@@ -28,12 +28,14 @@ public class ActorThrowProjectionAction extends Action {
 
     public static final int DEFAULT_PROJECT_RANGE = 400;
     public AnimationEntity targetEntity;
+    public Vector2 targetPos;
 
     @Override
     public boolean act(float delta) {
-        //throwHacking();
         if(targetEntity!=null){
-            throwHackingProjection(targetEntity);
+            throwProjectionToTarget(targetEntity);
+        }else if(targetPos != null){
+            throwProjection(targetPos.x,targetPos.y);
         }else{
             throwProjection();
         }
@@ -58,16 +60,6 @@ public class ActorThrowProjectionAction extends Action {
     public void throwProjectionToMouse(){
         AnimationEntity animationEntity = (AnimationEntity) getActor();
         throwProjection(animationEntity.degrees);
-    }
-
-    public void throwHacking(){
-        AnimationEntity animationEntity = (AnimationEntity) getActor();
-        float degrees = animationEntity.degrees;
-        float l = 30;
-        double radians = (float) (2*Math.PI * degrees / 360);
-        float dx=(float) (animationEntity.getCenterX()+l*Math.cos(radians));
-        float dy=(float) (animationEntity.getCenterY()+l*Math.sin(radians));
-        throwHackingProjection(animationEntity.getCenterX(),animationEntity.getCenterY(),dx,dy);
     }
 
     /**
@@ -131,64 +123,32 @@ public class ActorThrowProjectionAction extends Action {
         //projection.moveToTarget();
         animationEntity.getStage().addActor(projection);
     }
-    public void throwProjection(AnimationEntity target){
-
-    }
 
     /**
-     * 从指定位置抛射一个子弹发射到目标位置
-     * @param fx
-     * @param fy
-     * @param dx
-     * @param dy
+     * 发射抛射物到目标单位，有追踪效果
+     * @param target
      */
-    public void throwHackingProjection(float fx,float fy,float dx,float dy){
-        AnimationEntity animationEntity = (AnimationEntity) getActor();
-        AnimationProjection projection = ActorFactory.createProjectionActor("BTNGhoulFrenzy", animationEntity.getWorld());
-        projection.sourceActor = animationEntity;
-        projection.setCenterPosition(fx, fy);
-        ActorXXXTracksAction jumpAction = new ActorXXXTracksAction();
-        float duration = 1;
-        jumpAction.setDuration(duration);
-        jumpAction.degree = animationEntity.degrees;
-        projection.addAction(
-                ActionsFactory.parallel(
-                        ActionsFactory.sequence(
-                                ActionsFactory.scaleTo(0.4f,0.4f),
-                                ActionsFactory.scaleTo(1f,1f, duration/2),
-                                ActionsFactory.scaleTo(0f, 0f, duration/2)
-                        ),
-                        ActionsFactory.sequence(
-                                jumpAction,
-                                ActionsFactory.actorDeathAnimation())
-                ));
-        animationEntity.getStage().addActor(projection);
+    public void throwProjectionToTarget(AnimationEntity target){
+        AnimationEntity owner = (AnimationEntity) getActor();
+        float degree = MathUtils.getAngle(owner.getCenterX(),owner.getCenterY(),target.getCenterX(),target.getCenterY());
+        owner.turnDirection(degree);
+        final AnimationProjection projection = ActorFactory.createProjectionActor("bullet1", owner.getWorld());
+        projection.collisionSize = 0;
+        projection.sourceActor = owner;
+        projection.setCenterPosition(owner.getCenterX(), owner.getCenterY());
+        ActorMoveToActorAction actorMoveToAction = new ActorMoveToActorAction(target);
+        projection.addAction(ActionsFactory.sequence(
+                actorMoveToAction,
+                ActionsFactory.actorDeathAnimation()));
+        actorMoveToAction.actorMoveListener = new ActorMoveToAction.ActorMoveListener() {
+            @Override
+            public void onArrived(Vector2 target, Actor actor) {
+                AnimationEntity targe = (AnimationEntity) actor;
+                projection.doShowDamageEffect(targe, TempObjects.temp1Vector2.set(targe.getX(),targe.getY()));
+            }
+        };
+        owner.getStage().addActor(projection);
     }
-    public void throwHackingProjection(AnimationEntity targetEntity){
-        {
-            AnimationEntity animationEntity = (AnimationEntity) getActor();
-            float degree = MathUtils.getAngle(animationEntity.getCenterX(),animationEntity.getCenterY(),targetEntity.getCenterX(),targetEntity.getCenterY());
-            animationEntity.turnDirection(degree);
-            final AnimationProjection projection = ActorFactory.createProjectionActor("BLANK", animationEntity.getWorld());
-            projection.collisionSize = 0;
-            projection.sourceActor = animationEntity;
-            projection.setVisible(false);
-            projection.setCenterPosition(animationEntity.getCenterX(), animationEntity.getCenterY());
-            ActorMoveToActorAction actorMoveToAction = new ActorMoveToActorAction(targetEntity);
-            projection.addAction(ActionsFactory.sequence(
-                    actorMoveToAction,
-                    ActionsFactory.actorDeathAnimation()));
-            actorMoveToAction.actorMoveListener = new ActorMoveToAction.ActorMoveListener() {
-                @Override
-                public void onArrived(Vector2 target, Actor actor) {
-                    AnimationEntity targe = (AnimationEntity) actor;
-                    projection.doShowDamageEffect(targe,TempObjects.temp1Vector2.set(targe.getX(),targe.getY()));
-                }
-            };
-            animationEntity.getStage().addActor(projection);
-        }
-    }
-
 
     /**
      * 在多个单位来回多次的的子弹
@@ -240,4 +200,10 @@ public class ActorThrowProjectionAction extends Action {
         //targetEntity.addAction(new AnimationEffect("lightningAttacked"));
     }
 
+    @Override
+    public void reset() {
+        super.reset();
+        targetEntity = null;
+        targetPos = null;
+    }
 }

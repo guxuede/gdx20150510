@@ -2,9 +2,12 @@ package com.guxuede.game.actor.ability.skill;
 
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.utils.Pool;
+import com.guxuede.game.action.ActionsFactory;
 import com.guxuede.game.action.ActorThrowProjectionAction;
 import com.guxuede.game.action.effects.AnimationEffect;
+import com.guxuede.game.actor.ActorFactory;
 import com.guxuede.game.actor.AnimationEntity;
+import com.guxuede.game.actor.EffectsEntity;
 import com.guxuede.game.tools.MathUtils;
 
 /**
@@ -22,7 +25,7 @@ public class MagicSkill extends Skill{
     }
 
     public int getTargetType(){
-        return TARGET_TYPE_TARGET;
+        return TARGET_TYPE_AREA;
     }
 
 
@@ -41,7 +44,15 @@ public class MagicSkill extends Skill{
         }else if(stateTime >= animationDuration && step == 1){
             step ++;
             ActorThrowProjectionAction ta = new ActorThrowProjectionAction();
+            ta.targetEntity = target;
+            ta.targetPos = targetPos==null?null:targetPos.cpy();
             owner.addAction(ta);
+            if(targetPos!=null){
+                EffectsEntity effectsEntity = ActorFactory.createEffectsActor("wind2",owner.getWorld());
+                effectsEntity.setCenterPosition(targetPos.x,targetPos.y);
+                effectsEntity.addAction(ActionsFactory.delay(2f,ActionsFactory.removeActor()));
+                owner.getWorld().getStage().addActor(effectsEntity);
+            }
             return true;
         }
         return false;
@@ -49,16 +60,15 @@ public class MagicSkill extends Skill{
 
     @Override
     public void reset() {
-        target = null;
+        super.reset();
         animationDuration = 0;
         animationEffect = null;
     }
 
     @Override
     public void exit() {
+        super.exit();
         step = 0;
-        stateTime = 0;
-        target = null;
         animationDuration = 0;
         if(animationEffect!=null){
             animationEffect.end();

@@ -73,8 +73,8 @@ public class ActionsFactory extends Actions{
 	static public ActorJumpAction actorJumpAction (float x, float y,Interpolation interpolation) {
 		ActorJumpAction action = action(ActorJumpAction.class);
 		action.setPosition(x, y);
-		action.setDuration(0);
-		action.setInterpolation(interpolation);
+		//action.setDuration(0);
+		//action.setInterpolation(interpolation);
 		return action;
 	}
 

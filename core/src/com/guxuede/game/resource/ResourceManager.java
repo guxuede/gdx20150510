@@ -36,7 +36,7 @@ public class ResourceManager {
     public static NinePatchDrawable up= new NinePatchDrawable(new NinePatch(region_up,5,5,5,5));
     public static NinePatchDrawable down= new NinePatchDrawable(new NinePatch(region_down,5,5,5,5));
     public static Sprite mouseAreaIndicator=new GdxSprite(getTextureRegion("Gun2", 0, 0, 192, 192));
-    public static Sprite mouseTargetIndicator=new GdxSprite(getTextureRegion("Gun2", 84, 107, 107-84, 107-84));
+    public static Sprite mouseTargetIndicator=new GdxSprite(getTextureRegion("Gun2", 84, 84, 24, 24));
     static {
         mouseAreaIndicator.setOriginCenter();
         mouseTargetIndicator.setOriginCenter();

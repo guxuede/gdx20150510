@@ -41,7 +41,7 @@ public class StandState extends ActorState {
             }
             for (final Skill skill : entity.skills) {
                 if (skill.getHotKey() == event.getKeyCode()) {
-                    MouseManager.MouseIndicatorLinsner linsner = new MouseManager.MouseIndicatorLinsner() {
+                    MouseManager.MouseIndicatorListener listener = new MouseManager.MouseIndicatorListener() {
                         @Override
                         public boolean onHoner(AnimationEntity animationEntity, Vector2 center, float r) {
                             return true;
@@ -50,15 +50,16 @@ public class StandState extends ActorState {
                         public void onActive(AnimationEntity animationEntity, Vector2 center, float r) {
                             skill.target = animationEntity;
                             skill.owner = entity;
+                            skill.targetPos = center==null?null:center.cpy();
                             AttackState actorState = new AttackState(direction);
                             actorState.skill = skill;
                             entity.goingToNewState(actorState,null);
                         }
                     };
                     if (skill.getTargetType() == Skill.TARGET_TYPE_AREA) {
-                        entity.getWorld().getMouseManager().enterToAreaChoiceStatus(100, linsner);
+                        entity.getWorld().getMouseManager().enterToAreaChoiceStatus(100, listener);
                     } else {
-                        entity.getWorld().getMouseManager().enterToTargetChoiceStatus(linsner);
+                        entity.getWorld().getMouseManager().enterToTargetChoiceStatus(listener);
                     }
                     break;
                 }

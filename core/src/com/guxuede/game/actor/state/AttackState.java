@@ -23,19 +23,7 @@ public class AttackState extends StandState {
     @Override
     public void enter(AnimationEntity entity, InputEvent event) {
         entity.stop();
-//        if(target==null){
-//            skill = new MagicSkill();
-//        }else{
-//            skill = new HackSkill();
-//            ((HackSkill)skill).target = target;
-//        }
-//        skill.owner = entity;
     }
-
-//    @Override
-//    public ActorState handleInput(AnimationEntity entity, InputEvent event){
-//        return super.handleInput(entity,event);
-//    }
 
     @Override
     public ActorState update(AnimationEntity entity,float delta) {

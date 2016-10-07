@@ -58,8 +58,9 @@ public class TitleMapStage extends Stage implements GdxScreen {
         this.lightManager.onMapLoad(map);
         this.world.getPhysicsManager().onMapLoad(map);
         new MapManager(world).onMapLoad(map);
-        this.addListener(world.getMouseManager());
-        this.addListener(new InputListener() {
+        InputListenerMultiplexer inputListenerMultiplexer = new InputListenerMultiplexer();
+        inputListenerMultiplexer.addListener(world.getMouseManager());
+        inputListenerMultiplexer.addListener(new InputListener() {
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
                 Actor actor = event.getTarget();
@@ -86,7 +87,7 @@ public class TitleMapStage extends Stage implements GdxScreen {
                 }
             }
         });
-        this.addListener(new InputListener() {
+        inputListenerMultiplexer.addListener(new InputListener() {
             @Override
             public boolean handle(Event e) {
                 if(viewActor != null && e instanceof InputEvent){
@@ -95,8 +96,9 @@ public class TitleMapStage extends Stage implements GdxScreen {
                 return super.handle(e);
             }
         });
+        this.addListener(inputListenerMultiplexer);
         AnimationActor actor = ActorFactory.createActor("Undead",world);
-		actor.setPosition(200, 400);
+		actor.setCenterPosition(200, 400);
         DoubleImageEffect doubleImageEffect = new DoubleImageEffect();
         doubleImageEffect.setDuration(50);
         actor.addAction(doubleImageEffect);
@@ -104,7 +106,7 @@ public class TitleMapStage extends Stage implements GdxScreen {
         addActor(actor);
 
         AnimationActor actor1 = ActorFactory.createActor("Aquatic", world);
-        actor1.setPosition(100, 150);
+        actor1.setCenterPosition(100, 150);
         ActorChangeAppearanceAction actorChangeAppearanceAction = new ActorChangeAppearanceAction();
         actorChangeAppearanceAction.setDuration(5f);
         actor1.addAction(actorChangeAppearanceAction);
@@ -248,7 +250,7 @@ public class TitleMapStage extends Stage implements GdxScreen {
 
             world.getPhysicsManager().render();
             lightManager.render();
-            world.getMouseManager().render();
+            world.getMouseManager().render(getBatch(),delta);
             if(viewActor !=null){
                 camera.position.x= viewActor.getCenterX();
                 camera.position.y= viewActor.getCenterY();
@@ -264,10 +266,12 @@ public class TitleMapStage extends Stage implements GdxScreen {
         OrthographicCamera camera = (OrthographicCamera) getCamera();
         TempObjects.temp0Vector3.set(camera.position);
         //getViewport().setScreenSize(width,height);
+        getViewport().setWorldSize(width,height);
         getViewport().update(width,height);
         camera.setToOrtho(false, width, height);
         camera.position.set(TempObjects.temp0Vector3);
         camera.update();
+        getBatch().setProjectionMatrix(camera.combined);
     }
 
     @Override

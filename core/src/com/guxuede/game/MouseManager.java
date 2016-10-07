@@ -1,12 +1,11 @@
 package com.guxuede.game;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.guxuede.game.actor.AnimationEntity;
@@ -23,43 +22,42 @@ public class MouseManager extends InputListener {
 
     public StageWorld stageWorld;
     public Batch batch;
-    public Sprite textureRegion;
+    public Sprite mouseSprite;
     public float r;
-    public MouseIndicatorLinsner linsner;
+    public MouseIndicatorListener listener;
 
     public MouseManager(){
         batch = new SpriteBatch();
-        enterToAreaChoiceStatus(100f,null);
-        //enterToTargetChoiceStatus(null);
+        cancelIfNeed();
     }
 
     public void setDefaultCursor(){
         Gdx.graphics.setCursor(ResourceManager.customCursor);
-        textureRegion = null;
+        mouseSprite = null;
     }
 
     public void setAreaCursor(){
         setDefaultCursor();
-        textureRegion = ResourceManager.mouseAreaIndicator;
+        mouseSprite = ResourceManager.mouseAreaIndicator;
     }
 
     public void setTargetCursor(){
         Gdx.graphics.setCursor(ResourceManager.customCursor);
-        textureRegion = ResourceManager.mouseTargetIndicator;
+        mouseSprite = ResourceManager.mouseTargetIndicator;
     }
 
 
-    public void enterToAreaChoiceStatus(float r,MouseIndicatorLinsner linsner){
+    public void enterToAreaChoiceStatus(float r,MouseIndicatorListener listener){
         cancelIfNeed();
-        this.linsner = linsner;
+        this.listener = listener;
         this.r = r;
         status = MOUSE_STTUS_AREA_Indicator;
         setAreaCursor();
     }
 
-    public void enterToTargetChoiceStatus(MouseIndicatorLinsner linsner){
+    public void enterToTargetChoiceStatus(MouseIndicatorListener listener){
         cancelIfNeed();
-        this.linsner = linsner;
+        this.listener = listener;
         this.r = 0;
         status = MOUSE_STTUS_TARGET_Indicator;
         setTargetCursor();
@@ -68,9 +66,9 @@ public class MouseManager extends InputListener {
 
     public void cancelIfNeed(){
         cancel();
-        if(linsner!=null){
-            linsner.onCancel();
-            linsner = null;
+        if(listener !=null){
+            listener.onCancel();
+            listener = null;
         }
     }
 
@@ -87,15 +85,17 @@ public class MouseManager extends InputListener {
                 cancelIfNeed();
                 return true;
             }else if (button == 0){
+                AnimationEntity animationTarget = event.getTarget() instanceof AnimationEntity? (AnimationEntity) event.getTarget() :null;
+                TempObjects.temp0Vector2.set(x,y);
                 if(status == MOUSE_STTUS_AREA_Indicator){
-                    if(linsner !=null && linsner.onHoner(null,TempObjects.temp0Vector2.set(x,y),r)){
-                        linsner.onActive(null, TempObjects.temp0Vector2.set(x,y),r);
+                    if(listener !=null && listener.onHoner(animationTarget,TempObjects.temp0Vector2,r)){
+                        listener.onActive(animationTarget, TempObjects.temp0Vector2 ,r);
                         cancel();
                         return true;
                     }
                 }else if(status == MOUSE_STTUS_TARGET_Indicator){
-                    if(linsner!=null && event.getTarget()!=null && event.getTarget() instanceof AnimationEntity && linsner.onHoner((AnimationEntity)event.getTarget(),null,r)){
-                        linsner.onActive((AnimationEntity)event.getTarget(),null,r);
+                    if(listener !=null && listener.onHoner(animationTarget,null,r)){
+                        listener.onActive(animationTarget,TempObjects.temp0Vector2,r);
                         cancel();
                         return true;
                     }
@@ -105,17 +105,27 @@ public class MouseManager extends InputListener {
         return false;
     }
 
+    @Override
+    public boolean keyDown(InputEvent event, int keycode) {
+        if(status!= MOUSE_STTUS_NORMAL && Input.Keys.ESCAPE == keycode){
+            cancelIfNeed();
+            return true;
+        }
+        return false;
+    }
 
-    public void render(){
-        if(textureRegion!=null){
+    public void render(Batch batch,float delta){
+        if(mouseSprite !=null){
             batch.begin();
             stageWorld.getStage().screenToStageCoordinates(TempObjects.temp1Vector2.set(Gdx.input.getX(),Gdx.input.getY()));
-            batch.draw(textureRegion,TempObjects.temp1Vector2.x-textureRegion.getOriginX(),TempObjects.temp1Vector2.y-textureRegion.getOriginY());
+            mouseSprite.setPosition(TempObjects.temp1Vector2.x,TempObjects.temp1Vector2.y);
+            mouseSprite.rotate(1f);
+            mouseSprite.draw(batch);
             batch.end();
         }
     }
 
-    public static class MouseIndicatorLinsner{
+    public static class MouseIndicatorListener {
         public boolean onHoner(AnimationEntity animationEntity, Vector2 center , float r){
             return false;
         }

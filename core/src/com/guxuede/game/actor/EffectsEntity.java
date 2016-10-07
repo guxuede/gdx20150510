@@ -1,5 +1,6 @@
 package com.guxuede.game.actor;
 
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.guxuede.game.StageWorld;
 import com.guxuede.game.resource.ActorAnimationPlayer;
@@ -16,5 +17,10 @@ public class EffectsEntity extends AnimationEntity {
 
     public void init(){
         isSensor = true;
+    }
+
+    @Override
+    public boolean handleInput(InputEvent event) {
+        return false;
     }
 }

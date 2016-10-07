@@ -4,6 +4,7 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.guxuede.game.action.ActionsFactory;
+import com.guxuede.game.action.ActorXXXTracksAction;
 import com.guxuede.game.action.move.ActorMoveToAction;
 import com.guxuede.game.action.move.ActorMoveToActorAction;
 import com.guxuede.game.actor.ActorFactory;
@@ -29,6 +30,8 @@ public class HackSkill extends Skill {
 
     @Override
     public boolean update(float delta) {
+        if(target == null)return true;
+
         stateTime += delta;
         if(stateTime > 0 && step == 0){
             step ++;
@@ -64,10 +67,40 @@ public class HackSkill extends Skill {
             };
             owner.getStage().addActor(projection);
     }
+    /**
+     * 从指定位置抛射一个子弹发射到目标位置
+     * @param fx
+     * @param fy
+     * @param dx
+     * @param dy
+     */
+    public void throwHackingProjection(float fx,float fy,float dx,float dy){
+        AnimationEntity animationEntity = owner;
+        AnimationProjection projection = ActorFactory.createProjectionActor("BTNGhoulFrenzy", animationEntity.getWorld());
+        projection.sourceActor = animationEntity;
+        projection.setCenterPosition(fx, fy);
+        ActorXXXTracksAction jumpAction = new ActorXXXTracksAction();
+        float duration = 1;
+        jumpAction.setDuration(duration);
+        jumpAction.degree = animationEntity.degrees;
+        projection.addAction(
+                ActionsFactory.parallel(
+                        ActionsFactory.sequence(
+                                ActionsFactory.scaleTo(0.4f,0.4f),
+                                ActionsFactory.scaleTo(1f,1f, duration/2),
+                                ActionsFactory.scaleTo(0f, 0f, duration/2)
+                        ),
+                        ActionsFactory.sequence(
+                                jumpAction,
+                                ActionsFactory.actorDeathAnimation())
+                ));
+        animationEntity.getStage().addActor(projection);
+    }
 
     @Override
     public void exit() {
         reset();
+        super.exit();
     }
 
     @Override

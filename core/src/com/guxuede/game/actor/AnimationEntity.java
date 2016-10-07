@@ -11,6 +11,7 @@ import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Pool.Poolable;
 import com.guxuede.game.StageWorld;
 import com.guxuede.game.actor.ability.skill.HackSkill;
+import com.guxuede.game.actor.ability.skill.JumpSkill;
 import com.guxuede.game.actor.ability.skill.MagicSkill;
 import com.guxuede.game.actor.ability.skill.Skill;
 import com.guxuede.game.actor.state.ActorState;
@@ -77,6 +78,7 @@ public abstract class AnimationEntity extends LevelDrawActor implements Poolable
         this.stageWorld = world;
         skills.add(new HackSkill());
         skills.add(new MagicSkill());
+        skills.add(new JumpSkill());
     }
 
     //=============================================Position Control========================================================================
