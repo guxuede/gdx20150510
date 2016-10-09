@@ -84,17 +84,20 @@ public abstract class AnimationEntity extends LevelDrawActor implements Poolable
     //=============================================Position Control========================================================================
 
     /**
-     * 一下两个方法不要再改单位初始化时调用
+     * 一下三个方法不要再改单位初始化时调用
      * @param actorLinearVelocity
      */
     public void setLinearVelocity(Vector2 actorLinearVelocity) {
         this.physicsPlayer.setLinearVelocity(actorLinearVelocity);
     }
 
-    public void setEntityPosition(float x,float y){
+    public void setPhysicsPosition(float x, float y){
         this.physicsPlayer.setXY(x,y);
     }
-
+    /*得到物理位置*/
+    public Vector2 getPhysicsPosition(){
+        return physicsPlayer.getXY();
+    }
 	@Override
 	public void moveBy(float x, float y) {
 		if (x != 0 || y != 0) {
@@ -106,7 +109,7 @@ public abstract class AnimationEntity extends LevelDrawActor implements Poolable
     /**
      * 禁止！在外面调用下面三个方法。这些方法被内部位置系统positionPlayer无数次的调用用来同步actor位置，外部调用无用。
      * 仅初始状态可调用来调整位置.
-     * 如需实时改变位置请使用 setEntityPosition。
+     * 如需实时改变位置请使用 setPhysicsPosition。
      *  @see AnimationEntity setCenterPosition
      *  @see PhysicsPlayer act()
      * @param x

@@ -33,6 +33,9 @@ public class Box2DPhysicsManager implements PhysicsManager {
             public boolean shouldCollide(Fixture fixtureA, Fixture fixtureB) {
                 AnimationEntity actorA = (AnimationEntity) fixtureA.getBody().getUserData();
                 AnimationEntity actorB = (AnimationEntity) fixtureB.getBody().getUserData();
+                if(actorA!=null && actorA.collisionSize== 0 || actorB!=null && actorB.collisionSize == 0){
+                    return false;
+                }
                 return Box2DPhysicsManager.this.shouldCollide(actorA,actorB);
             }
         });

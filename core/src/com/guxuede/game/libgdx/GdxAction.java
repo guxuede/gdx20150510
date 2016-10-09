@@ -42,6 +42,8 @@ abstract public class GdxAction extends Action {
 
     public void reset () {
         super.reset();
+        began = false;
+        complete = false;
     }
 
 

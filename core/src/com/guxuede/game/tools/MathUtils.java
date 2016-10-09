@@ -100,7 +100,25 @@ public class MathUtils {
         }
     }
 
-    
+    public static final float EPSILON = 0.1f;
+    public static boolean isBetween11(Vector2 a,Vector2 b,Vector2 c){
+
+        float crossproduct = (c.y - a.y) * (b.x - a.x) - (c.x - a.x) * (b.y - a.y);
+        return false;
+        //return -epsilon < crossproduct < epsilon && min(a.x, b.x) <= c.x <= max(a.x, b.x) && min(a.y, b.y) <= c.y <= max(a.y, b.y)
+    }
+    /**
+     * 判断点c是否落在【点a和点b】的直线段上
+     * @param a
+     * @param c
+     * @param b
+     * @return
+     */
+    public static boolean isBetween(Vector2 a,Vector2 c,Vector2 b){
+        float cc = a.dst(c) + c.dst(b) - a.dst(b);
+        return -EPSILON < cc && cc < EPSILON;
+    }
+
     public static void main(String[] args) {
 //		System.err.println(distance(0, 0, -1, -1));
     	System.err.println(Math.cos(2*Math.PI * 60 / 360));

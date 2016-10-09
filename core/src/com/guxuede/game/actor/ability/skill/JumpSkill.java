@@ -14,7 +14,7 @@ public class JumpSkill extends Skill {
     }
 
     public int getTargetType(){
-        return TARGET_TYPE_AREA;
+        return TARGET_TYPE_TARGET;
     }
 
 

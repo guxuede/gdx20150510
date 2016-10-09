@@ -75,22 +75,22 @@ public class Box2DPhysicsPlayer implements PhysicsPlayer {
 
     @Override
     public void setX(float x) {
-        body.setTransform(x,body.getPosition().y ,99);
+        body.setTransform(x,body.getPosition().y ,body.getAngle());
     }
 
     @Override
     public void setY(float y) {
-        body.setTransform(body.getPosition().x ,y,99);
+        body.setTransform(body.getPosition().x ,y,body.getAngle());
     }
 
     @Override
     public void setXY(float x, float y) {
-        body.setTransform(x ,y,99);
+        body.setTransform(x ,y,body.getAngle());
     }
 
     @Override
     public void setXY(Vector2 vector2) {
-        body.setTransform(vector2.x ,vector2.y,99);
+        body.setTransform(vector2,body.getAngle());
     }
 
     @Override

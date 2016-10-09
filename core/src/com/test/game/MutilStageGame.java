@@ -4,13 +4,10 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.graphics.Cursor;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.Array;
-import com.guxuede.game.StageWorld;
 import com.guxuede.game.actor.AnimationEntity;
 import com.guxuede.game.libgdx.GdxGame;
 import com.guxuede.game.resource.ResourceManager;
@@ -55,7 +52,7 @@ public class MutilStageGame extends GdxGame {
             }
         }
         newTitleMapStage.attachActor(actor);
-        actor.setEntityPosition(pos.x,pos.y);
+        actor.setPhysicsPosition(pos.x,pos.y);
         if(actor.equals(oldTitleMapStage.viewActor)){
             oldTitleMapStage.viewActor = null;
             newTitleMapStage.viewActor = actor;
