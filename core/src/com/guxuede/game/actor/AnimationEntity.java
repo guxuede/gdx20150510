@@ -25,6 +25,7 @@ import com.guxuede.game.libgdx.GdxSprite;
 import com.guxuede.game.resource.ResourceManager;
 import com.guxuede.game.physics.PhysicsPlayer;
 import com.guxuede.game.resource.ActorAnimationPlayer;
+import com.guxuede.game.tools.TempObjects;
 
 import java.util.ArrayList;
 import java.util.List;

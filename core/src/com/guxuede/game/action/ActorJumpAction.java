@@ -7,33 +7,41 @@ import com.guxuede.game.libgdx.GdxAction;
 import com.guxuede.game.tools.MathUtils;
 import com.guxuede.game.tools.TempObjects;
 
-import static java.lang.Float.min;
 import static java.lang.Math.max;
 
 /**
  * 无视物理，直接改变位置
  */
 public class ActorJumpAction extends GdxAction {
-    public static final int IS_ARRIVE_RADIO = 10;
-    public static final float JUMP_SPEED = 10F;
-	private Vector2 targetPoint = new Vector2();
+    public static final float SCALE = 0.5F;
+    public static final float HEIGHT = 100F;
 
-	private static final float duration = 5f;
-    private Vector2 oldPoint = new Vector2();
+    public static final int IS_ARRIVE_RADIO = 10;
+    public static final float JUMP_SPEED = 100F;
+    public static final double RISE_DURATION = 0.8;
+    public static final double DOWN_DURATION = 1-RISE_DURATION;
+    private Vector2 targetPoint = new Vector2();
+    private Vector2 oldPoint = new Vector2();//记录起点位置
+    private float totalLen = 0;//记录总长度
+    private float lastPercent;
+    private float lastPlusPercent = 0;
+    private float totalScale;
+    private float totalHight;
+
 
     @Override
     protected void begin() {
+        lastPercent = 0;
         AnimationEntity actor = ((AnimationEntity)target);
         actor.collisionSize = 0;
-        actor.addAction(ActionsFactory.sequence(ActionsFactory.scaleBy(0.2f, 0.2f, duration / 2), ActionsFactory.scaleBy(-0.2f, -0.2f, duration / 2)));
-
         float degrees = MathUtils.getAngle(actor.getCenterX(),actor.getCenterY(),targetPoint.x,targetPoint.y);
         actor.turnDirection(degrees);
         oldPoint.set(actor.getPhysicsPosition());
+        totalLen = oldPoint.dst2(targetPoint);
     }
 
     @Override
-    protected boolean update(float time) {
+    protected boolean update(float delta) {
         final AnimationEntity entity = (AnimationEntity) getTarget();
         if(!isArrive()){
             entity.doMoveAnimation();
@@ -41,23 +49,61 @@ public class ActorJumpAction extends GdxAction {
             Vector2 entityP = entity.getPhysicsPosition();
             Vector2 newP = targetP.sub(entityP)//得到实体到目标的向量
                     .nor()//归一化
-                    .scl(20f)//增加速度
+                    .scl(JUMP_SPEED*delta)//增加速度
                     .add(entityP);//得到最终位置
-            entity.setPhysicsPosition(newP.x,newP.y);
-            //速度太快可能穿过，做一次检查
+            //速度太快可能穿过，做一次检查,如穿过则直接设置到目的地
             if(MathUtils.isBetween(oldPoint,targetPoint,newP)){
+                newP.set(targetPoint.x,targetPoint.y);
+                updateRelative(1-newP.dst2(targetPoint)/totalLen);
+                entity.setPhysicsPosition(newP.x,newP.y);
                 return true;
             }
+            updateRelative(1-newP.dst2(targetPoint)/totalLen);
+            entity.setPhysicsPosition(newP.x,newP.y);
             return false;
         }
         return true;
     }
 
+
+    protected void updateRelative (float percent) {
+        final AnimationEntity entity = (AnimationEntity) getTarget();
+        if(percent < RISE_DURATION){
+            float percentDelta = percent - lastPercent;
+            float height = HEIGHT * percentDelta;
+            float scale = SCALE * percentDelta;
+            totalScale = totalScale+ scale;
+            totalHight = totalHight+ height;
+            entity.drawOffSetY = entity.drawOffSetY+ height;
+            target.scaleBy(scale);
+            lastPercent = percent;
+        }else{
+            float newPercent = (float) ((percent-RISE_DURATION)/DOWN_DURATION);
+            float newPercentDelta = newPercent - lastPlusPercent;
+            entity.drawOffSetY = entity.drawOffSetY - totalHight* (newPercentDelta);
+            target.scaleBy(-totalScale * (newPercentDelta));
+            lastPlusPercent = newPercent;
+        }
+    }
+
+    /**
+     * 0.7
+     * 0.8  10
+     *
+     * 0.9
+     */
+
     @Override
     protected void end() {
         final AnimationEntity entity = (AnimationEntity) getTarget();
+        updateRelative(1);//确保执行完毕
         entity.stop();
         entity.collisionSize = 99;
+        lastPercent = 0;
+        lastPlusPercent = 0;
+        totalScale = 0;
+        totalHight = 0;
+        //System.out.println("Current Scale:"+entity.getScaleX());//执行多次Scale会变化，虽然变化极小,误差是会累计
     }
 
     protected boolean isArrive() {

@@ -11,6 +11,7 @@ import java.util.List;
 public class MathUtils {
 
     /**
+     * 总是返回游戏中正值的角度0~360
      * Compute the angle between two points
      * return p1 and p2 angle (degree)
      * @param startX
@@ -30,6 +31,16 @@ public class MathUtils {
 		}
 		return (float) d;
 	}
+
+    /**
+     * 总是返回游戏中正值的角度0~360
+     * @param p1
+     * @param p2
+     * @return
+     */
+    public static float getAngle(Vector2 p1,Vector2 p2){
+        return getAngle(p1.x,p1.y,p2.x,p2.y);
+    }
 	
     /**
      * 返回从此 Point2D 到指定点的距离的平方

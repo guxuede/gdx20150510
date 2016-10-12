@@ -5,8 +5,8 @@ import com.badlogic.gdx.scenes.scene2d.Action;
 import com.badlogic.gdx.utils.Pool;
 
 abstract public class GdxAction extends Action {
-    private float time;
-    private boolean began, complete;
+    protected float time;
+    protected boolean began, complete;
 
     public GdxAction() {
     }
@@ -21,7 +21,7 @@ abstract public class GdxAction extends Action {
                 began = true;
             }
             time += delta;
-            complete = update(time);
+            complete = update(delta);
             if (complete) end();
             return complete;
         } finally {
@@ -38,7 +38,7 @@ abstract public class GdxAction extends Action {
     protected void end () {
     }
 
-    abstract protected boolean update (float time);
+    abstract protected boolean update (float delta);
 
     public void reset () {
         super.reset();
