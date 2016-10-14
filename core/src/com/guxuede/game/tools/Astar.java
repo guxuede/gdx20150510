@@ -9,8 +9,6 @@ import com.badlogic.gdx.utils.IntArray;
 
 /** @author Nathan Sweet */
 public class Astar {
-    //是否走对角线，我们关闭,防止角色从两个斜角阻碍物中间穿越。
-    private boolean walkDiagonals = false;
     private final int width, height;
     private final BinaryHeap<PathNode> open;
     private final PathNode[] nodes;
@@ -71,17 +69,13 @@ public class Astar {
             int y = node.y;
             if (x < lastColumn) {
                 addNode(node, x + 1, y, 10);
-                if(walkDiagonals){
-                    if (y < lastRow) addNode(node, x + 1, y + 1, 14); // Diagonals cost more, roughly equivalent to sqrt(2).
-                    if (y > 0) addNode(node, x + 1, y - 1, 14);
-                }
+                if (y < lastRow && isValid(x+1,y) && isValid(x,y+1)) addNode(node, x + 1, y + 1, 14); // Diagonals cost more, roughly equivalent to sqrt(2).
+                if (y > 0  && isValid(x+1,y) && isValid(x,y-1)) addNode(node, x + 1, y - 1, 14);
             }
             if (x > 0) {
                 addNode(node, x - 1, y, 10);
-                if(walkDiagonals){
-                    if (y < lastRow) addNode(node, x - 1, y + 1, 14);
-                    if (y > 0) addNode(node, x - 1, y - 1, 14);
-                }
+                if (y < lastRow  && isValid(x,y+1) && isValid(x-1,y)) addNode(node, x - 1, y + 1, 14);
+                if (y > 0 && isValid(x,y-1) && isValid(x-1,y)) addNode(node, x - 1, y - 1, 14);
             }
             if (y < lastRow) addNode(node, x, y + 1, 10);
             if (y > 0) addNode(node, x, y - 1, 10);
