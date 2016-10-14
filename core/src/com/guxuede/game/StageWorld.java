@@ -11,6 +11,9 @@ import com.guxuede.game.sound.SoundManager;
  */
 public abstract class StageWorld {
     public static boolean isDebug = false;
+    public static float MAP_CELL_W = 32;
+    public static float MAP_CELL_H = 32;
+
     public abstract void act(float delta);
     public abstract PhysicsManager getPhysicsManager();
     public abstract Stage getStage();

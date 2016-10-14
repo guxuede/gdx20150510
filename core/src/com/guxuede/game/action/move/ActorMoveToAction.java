@@ -64,7 +64,7 @@ public abstract class ActorMoveToAction extends GdxAction {
         if(target == null){
             return true;
         }else{
-            float dist = target.dst2(entity.getPhysicsPosition());
+            float dist = target.dst(entity.getPhysicsPosition());
             return dist < IS_ARRIVE_RADIO;
         }
     }

@@ -7,14 +7,20 @@ import com.badlogic.gdx.maps.tiled.TiledMapTile;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
+import com.badlogic.gdx.utils.IntArray;
 import com.guxuede.game.StageWorld;
 import com.guxuede.game.actor.AnimationActor;
 import com.guxuede.game.actor.AnimationDoor;
 import com.guxuede.game.actor.AnimationEntity;
 import com.guxuede.game.actor.AnimationProjection;
+import com.guxuede.game.map.MapManager;
 import com.guxuede.game.physics.PhysicsPlayer;
 import com.guxuede.game.physics.PhysicsManager;
+import com.guxuede.game.tools.Astar;
 import com.guxuede.game.tools.TempObjects;
+
+import static com.guxuede.game.StageWorld.MAP_CELL_H;
+import static com.guxuede.game.StageWorld.MAP_CELL_W;
 
 /**
  * Created by guxuede on 2016/9/10 .
@@ -23,6 +29,9 @@ public class Box2DPhysicsManager implements PhysicsManager {
     protected World world;
     private Box2DDebugRenderer debugRenderer;
     private StageWorld stageWorld;
+
+    private TiledMap map;
+    private Astar astar;
 
     public Box2DPhysicsManager(StageWorld stageWorld) {
         this.stageWorld = stageWorld;
@@ -138,7 +147,19 @@ public class Box2DPhysicsManager implements PhysicsManager {
 
     @Override
     public void onMapLoad(TiledMap map) {
+        this.map = map;
         createABoack(map);
+        final TiledMapTileLayer layer = (TiledMapTileLayer) map.getLayers().get(1);//我们使用第二层做碰撞层
+        final int layerWidth = layer.getWidth();
+        final int layerHeight = layer.getHeight();
+        astar = new Astar(layerWidth,layerHeight){
+            @Override
+            protected boolean isValid(int x, int y) {
+                TiledMapTileLayer.Cell cell = layer.getCell(x,y);
+                return cell==null || cell.getTile()==null;
+            }
+        };
+
     }
 
     @Override
@@ -237,5 +258,18 @@ public class Box2DPhysicsManager implements PhysicsManager {
             }
             y -= layerTileHeight;
         }
+    }
+
+    @Override
+    public IntArray getAstarPath(Vector2 start,Vector2 target) {
+        IntArray path = astar.getPathClone((int)(start.x/MAP_CELL_W),(int)(start.y/MAP_CELL_H),(int)(target.x/MAP_CELL_W),(int)(target.y/MAP_CELL_H));
+        return path;
+    }
+
+    @Override
+    public boolean pointIsClear(Vector2 point) {
+        final TiledMapTileLayer layer = (TiledMapTileLayer) map.getLayers().get(1);
+        TiledMapTileLayer.Cell cell = layer.getCell((int)(point.x/MAP_CELL_W),(int)(point.y/MAP_CELL_H));
+        return cell==null || cell.getTile()==null;
     }
 }

@@ -21,8 +21,10 @@ public class JumpSkill extends Skill {
     @Override
     public boolean update(float delta) {
         if(targetPos == null)return true;
-
-        owner.addAction(ActionsFactory.actorJumpAction(targetPos.x,targetPos.y));
+        boolean targetIsClear = owner.getWorld().getPhysicsManager().pointIsClear(targetPos);
+        if(targetIsClear){
+            owner.addAction(ActionsFactory.actorJumpAction(targetPos.x,targetPos.y));
+        }
         return true;
     }
 }

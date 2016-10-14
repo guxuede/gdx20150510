@@ -8,8 +8,10 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.utils.Align;
+import com.badlogic.gdx.utils.IntArray;
 import com.badlogic.gdx.utils.Pool.Poolable;
 import com.guxuede.game.StageWorld;
+import com.guxuede.game.action.move.ActorMoveToPathAction;
 import com.guxuede.game.actor.ability.skill.HackSkill;
 import com.guxuede.game.actor.ability.skill.JumpSkill;
 import com.guxuede.game.actor.ability.skill.MagicSkill;
@@ -20,12 +22,10 @@ import com.guxuede.game.action.ActionsFactory;
 import com.guxuede.game.action.ActorAlwayMoveAction;
 import com.guxuede.game.action.move.ActorMoveToAction;
 import com.guxuede.game.action.move.ActorMoveToActorAction;
-import com.guxuede.game.action.move.ActorMoveToPointAction;
 import com.guxuede.game.libgdx.GdxSprite;
 import com.guxuede.game.resource.ResourceManager;
 import com.guxuede.game.physics.PhysicsPlayer;
 import com.guxuede.game.resource.ActorAnimationPlayer;
-import com.guxuede.game.tools.TempObjects;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -67,7 +67,7 @@ public abstract class AnimationEntity extends LevelDrawActor implements Poolable
         this.animationPlayer = animationPlayer;
         int actorWidth= animationPlayer.width;
         int actorHeight= animationPlayer.height;
-        this.collisionSize = actorWidth/4;
+        this.collisionSize = 14;//actorWidth/4;
         this.setSize(actorWidth, actorHeight);
         this.setOrigin(Align.center);
         this.setVisible(true);
@@ -226,7 +226,8 @@ public abstract class AnimationEntity extends LevelDrawActor implements Poolable
 
     public void moveToPoint(float x, float y){
         stop();
-        actorMoveToAction = new ActorMoveToPointAction(x,y);
+        IntArray path = getWorld().getPhysicsManager().getAstarPath(new Vector2(this.getPhysicsPosition()),new Vector2(x,y));
+        actorMoveToAction = new ActorMoveToPathAction(path);
         addAction(actorMoveToAction);
     }
     public void moveToTarget(AnimationEntity target){

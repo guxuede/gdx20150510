@@ -28,7 +28,7 @@ public abstract class Skill implements Pool.Poolable{
     public int getTargetType(){
         return TARGET_TYPE_TARGET;
     }
-
+    /**技能拥有者*/
     public AnimationEntity owner;
     public float stateTime;
 

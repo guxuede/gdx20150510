@@ -2,15 +2,21 @@ package com.guxuede.game;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.Sprite;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
+import com.badlogic.gdx.utils.IntArray;
+import com.guxuede.game.action.move.ActorMoveToPathAction;
 import com.guxuede.game.actor.AnimationEntity;
 import com.guxuede.game.resource.ResourceManager;
 import com.guxuede.game.tools.TempObjects;
+
+import static com.guxuede.game.StageWorld.MAP_CELL_H;
+import static com.guxuede.game.StageWorld.MAP_CELL_W;
 
 /**
  * Created by guxuede on 2016/10/6 .
@@ -21,13 +27,14 @@ public class MouseManager extends InputListener {
     public int status = MOUSE_STTUS_NORMAL;
 
     public StageWorld stageWorld;
-    public Batch batch;
     public Sprite mouseSprite;
     public float r;
     public MouseIndicatorListener listener;
+    ShapeRenderer shapes;
 
     public MouseManager(){
-        batch = new SpriteBatch();
+        shapes = new ShapeRenderer();
+        shapes.setColor(Color.GREEN);
         cancelIfNeed();
     }
 
@@ -115,14 +122,27 @@ public class MouseManager extends InputListener {
     }
 
     public void render(Batch batch,float delta){
+        Vector2 pos = stageWorld.getStage().screenToStageCoordinates(TempObjects.temp1Vector2.set(Gdx.input.getX(),Gdx.input.getY()));
         if(mouseSprite !=null){
             batch.begin();
-            stageWorld.getStage().screenToStageCoordinates(TempObjects.temp1Vector2.set(Gdx.input.getX(),Gdx.input.getY()));
-            mouseSprite.setPosition(TempObjects.temp1Vector2.x,TempObjects.temp1Vector2.y);
+            mouseSprite.setPosition(pos.x,pos.y);
             mouseSprite.rotate(1f);
             mouseSprite.draw(batch);
             batch.end();
         }
+
+        shapes.setProjectionMatrix(batch.getProjectionMatrix());
+        shapes.begin(ShapeRenderer.ShapeType.Line);
+        shapes.rect((int)(pos.x/MAP_CELL_W) * MAP_CELL_W, (int)(pos.y/MAP_CELL_H) * MAP_CELL_H, MAP_CELL_W, MAP_CELL_H);
+//        if(ActorMoveToPathAction.path!=null){
+//            IntArray path = ActorMoveToPathAction.path;
+//            for (int i = 0, n = path.size; i < n; i += 2) {
+//                int x = path.get(i);
+//                int y = path.get(i + 1);
+//                shapes.rect(x, y, MAP_CELL_W, MAP_CELL_H);
+//            }
+//        }
+        shapes.end();
     }
 
     public static class MouseIndicatorListener {
