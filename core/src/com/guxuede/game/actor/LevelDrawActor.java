@@ -10,6 +10,7 @@ import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.guxuede.game.libgdx.GdxEffect;
+import com.guxuede.game.tools.TempObjects;
 
 /**
  * Created by guxuede on 2016/5/31 .
@@ -30,6 +31,10 @@ public abstract class LevelDrawActor extends Actor {
 
     public float getCenterY() {
         return super.getY(Align.center);
+    }
+
+    public Vector2 getTopPosition(){
+        return TempObjects.temp3Vector2.set(getX(Align.topLeft),getY(Align.topLeft));
     }
 
     /**

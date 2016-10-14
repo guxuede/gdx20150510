@@ -1,6 +1,7 @@
 package com.guxuede.game.actor;
 
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.guxuede.game.StageWorld;
 import com.guxuede.game.action.ActionsFactory;
@@ -47,7 +48,8 @@ public class AnimationProjection extends AnimationEntity {
 
 
     public void doShowDamageEffect(AnimationEntity entity,Vector2 position) {
-        BarrageTip tip = new BarrageTip("-1", position.x, position.y);
+        int hitP = MathUtils.random(1,10);
+        BarrageTip tip = new BarrageTip("-"+hitP, position.x, position.y);
         tip.setZIndex(Integer.MAX_VALUE);
         getStage().addActor(tip);
 
@@ -62,6 +64,7 @@ public class AnimationProjection extends AnimationEntity {
                                 ActionsFactory.color(new Color(1, 1, 1, 1), 0.1f)
                         )
                 );
+                entity.currentHitPoint = entity.currentHitPoint - hitP;
                 AnimationEffect effect = new AnimationEffect();
                 effect.setEffectAnimation(ResourceManager.getAnimationHolder("Blow2").getStopDownAnimation());
                 entity.addAction(effect);

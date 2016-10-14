@@ -28,6 +28,7 @@ import com.guxuede.game.light.DefaultLightManager;
 import com.guxuede.game.light.LightManager;
 import com.guxuede.game.map.MapManager;
 import com.guxuede.game.resource.ResourceManager;
+import com.guxuede.game.tools.ActorBloodRender;
 import com.guxuede.game.tools.TempObjects;
 
 import java.util.Comparator;
@@ -39,7 +40,7 @@ public class TitleMapStage extends Stage implements GdxScreen {
     public StageWorld world;
 	public AnimationEntity viewActor;
     private LightManager lightManager;
-
+    private ActorBloodRender actorBloodRender;
     public String stageName;
 
 	public TitleMapStage(String stageName, GdxGame gdxGame) {
@@ -58,6 +59,7 @@ public class TitleMapStage extends Stage implements GdxScreen {
         this.lightManager.onMapLoad(map);
         this.world.getPhysicsManager().onMapLoad(map);
         new MapManager(world).onMapLoad(map);
+        this.actorBloodRender = new ActorBloodRender(getCamera());
         InputListenerMultiplexer inputListenerMultiplexer = new InputListenerMultiplexer();
         inputListenerMultiplexer.addListener(world.getMouseManager());
         inputListenerMultiplexer.addListener(new InputListener() {
@@ -250,6 +252,7 @@ public class TitleMapStage extends Stage implements GdxScreen {
 
             world.getPhysicsManager().render();
             lightManager.render();
+            actorBloodRender.render(getActors(),getBatch());
             world.getMouseManager().render(getBatch(),delta);
             if(viewActor !=null){
                 camera.position.x= viewActor.getCenterX();

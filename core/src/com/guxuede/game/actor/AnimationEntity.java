@@ -54,6 +54,7 @@ public abstract class AnimationEntity extends LevelDrawActor implements Poolable
     public boolean isHover = false;
     public float collisionSize = 0;
     public float hitPoint = 100;
+    public float currentHitPoint = 100;
     public ActorAnimationPlayer animationPlayer;
     /******************bellow attribute not share with other stage *****************/
     public StageWorld stageWorld;
