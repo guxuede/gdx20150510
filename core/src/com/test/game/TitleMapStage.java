@@ -59,7 +59,7 @@ public class TitleMapStage extends Stage implements GdxScreen {
         this.lightManager.onMapLoad(map);
         this.world.getPhysicsManager().onMapLoad(map);
         new MapManager(world).onMapLoad(map);
-        this.actorBloodRender = new ActorBloodRender(getCamera());
+        this.actorBloodRender = new ActorBloodRender();
         InputListenerMultiplexer inputListenerMultiplexer = new InputListenerMultiplexer();
         inputListenerMultiplexer.addListener(world.getMouseManager());
         inputListenerMultiplexer.addListener(new InputListener() {

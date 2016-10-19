@@ -2,6 +2,7 @@ package com.guxuede.game.action.effects;
 
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Batch;
+import com.guxuede.game.action.TracksEllipseFormula;
 import com.guxuede.game.action.TracksFormula;
 import com.guxuede.game.actor.AnimationEntity;
 import com.guxuede.game.libgdx.GdxEffect;
@@ -31,6 +32,7 @@ public class AnimationEffect extends GdxEffect {
         AnimationHolder animationHolder = ResourceManager.getAnimationHolder(animationName);
         Animation effectAnimation = animationHolder.getStopDownAnimation();
         setEffectAnimation(effectAnimation);
+        tracksFormula = new TracksEllipseFormula();
     }
 
     public AnimationEffect(String animationName,float duration){
@@ -44,7 +46,7 @@ public class AnimationEffect extends GdxEffect {
             AnimationEntity animationActor = getAnimationEntity();
             GdxSprite sprite = (GdxSprite) effectAnimation.getKeyFrame(animationActor.stateTime, true);
             sprite.setPosition(animationActor.getCenterX() + drawOffSetX,animationActor.getCenterY() + drawOffSetY);
-            sprite.setRotation(animationActor.degrees);
+            sprite.setRotation(animationActor.getRotation());
             sprite.draw(batch, parentAlpha);
         }
     }

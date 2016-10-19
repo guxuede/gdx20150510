@@ -258,7 +258,6 @@ public abstract class AnimationEntity extends LevelDrawActor implements Poolable
     }
 
     public void turnDirection(float degrees){
-        final int oldDirection = this.direction;
 		this.degrees = degrees;
 		if(degrees > 45 && degrees < 135){
 			direction = AnimationEntity.UP;
@@ -269,12 +268,6 @@ public abstract class AnimationEntity extends LevelDrawActor implements Poolable
 		}else if(degrees > 325 || degrees < 45){
 			direction = AnimationEntity.RIGHT;
 		}
-        //TODO if Direction not change,no need to re do Animation
-        if(!isMoving){
-            animationPlayer.doIdelAnimation(direction);
-        }else{
-            animationPlayer.doMoveAnimation(direction);
-        }
 	}
     public void doMoveAnimation(){
         animationPlayer.doMoveAnimation(this.direction);

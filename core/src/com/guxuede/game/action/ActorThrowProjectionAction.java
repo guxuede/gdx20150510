@@ -4,12 +4,12 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Action;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.guxuede.game.action.move.ActorMoveToActorAction;
+import com.guxuede.game.action.move.ActorPathMoveAction;
 import com.guxuede.game.actor.ActorFactory;
 import com.guxuede.game.actor.AnimationEntity;
 import com.guxuede.game.actor.AnimationProjection;
 import com.guxuede.game.action.move.ActorMoveToAction;
 import com.guxuede.game.action.move.ActorMoveToMutilActorRandomAction;
-import com.guxuede.game.action.move.ActorMoveToMutilPointAction;
 import com.guxuede.game.action.effects.AnimationEffect;
 import com.guxuede.game.action.effects.LightningEffect;
 import com.guxuede.game.action.effects.LightningEffectMutilActor;
@@ -111,11 +111,12 @@ public class ActorThrowProjectionAction extends Action {
         projection.sourceActor = animationEntity;
         projection.setCenterPosition(fx, fy);
         //projection.turnDirection(animationEntity.degrees);
-        ActorMoveToAction actorMoveToAction = new ActorMoveToMutilPointAction(Arrays.asList(new Vector2(dx,dy)));
+        //ActorMoveToAction actorMoveToAction = new ActorMoveToMutilPointAction(Arrays.asList(new Vector2(dx,dy)));
+        ActorPathMoveAction actorJumpAction1 = new ActorPathMoveAction(dx,dy);
         projection.addAction(
                 ActionsFactory.sequence(ActionsFactory.scaleBy(5, 5, 0.1f),
                         ActionsFactory.scaleBy(-5, -5, 0.1f),
-                        actorMoveToAction
+                        actorJumpAction1
                         , ActionsFactory.actorDeathAnimation()
                 ));
         //projection.moveToPoint(dx,dy);

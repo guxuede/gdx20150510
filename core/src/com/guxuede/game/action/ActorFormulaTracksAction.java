@@ -13,7 +13,6 @@ public class ActorFormulaTracksAction extends TemporalAction {
     @Override
     protected void update(float percent) {
         AnimationEntity actor = ((AnimationEntity)target);
-        System.out.println(360*percent);
 
         float z= 100*percent*10;
         if(z > 200)z=200;

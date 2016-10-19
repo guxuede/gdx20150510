@@ -33,8 +33,9 @@ public abstract class ActorMoveToAction extends GdxAction {
             final Vector2 target = getTargetPoint();
             final Vector2 entryPos = entity.getPhysicsPosition();
             final float degrees = MathUtils.getAngle(entryPos,target);
-            entity.turnDirection(degrees);
             entity.isMoving = true;
+            entity.turnDirection(degrees);
+            entity.doMoveAnimation();
 //            entity.doMoveAnimation();
 //            Vector2 targetP = TempObjects.temp0Vector2.set(target);
 //            Vector2 entityP = entity.getPhysicsPosition();

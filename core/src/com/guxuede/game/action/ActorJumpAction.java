@@ -2,6 +2,7 @@
 package com.guxuede.game.action;
 
 import com.badlogic.gdx.math.Vector2;
+import com.guxuede.game.action.effects.AnimationEffect;
 import com.guxuede.game.actor.AnimationEntity;
 import com.guxuede.game.libgdx.GdxAction;
 import com.guxuede.game.tools.MathUtils;
@@ -28,6 +29,12 @@ public class ActorJumpAction extends GdxAction {
     private float totalScale;
     private float totalHight;
 
+    public ActorJumpAction(){
+    }
+
+    public ActorJumpAction(float x,float y){
+        targetPoint.set(x,y);
+    }
 
     @Override
     protected void begin() {
@@ -65,7 +72,7 @@ public class ActorJumpAction extends GdxAction {
         return true;
     }
 
-
+    private boolean isDonw = false;
     protected void updateRelative (float percent) {
         final AnimationEntity entity = (AnimationEntity) getTarget();
         if(percent < RISE_DURATION){
@@ -78,6 +85,10 @@ public class ActorJumpAction extends GdxAction {
             target.scaleBy(scale);
             lastPercent = percent;
         }else{
+            if(!isDonw){
+                isDonw = true;
+                entity.addAction(new AnimationEffect("heal7"));
+            }
             float newPercent = (float) ((percent-RISE_DURATION)/DOWN_DURATION);
             float newPercentDelta = newPercent - lastPlusPercent;
             entity.drawOffSetY = entity.drawOffSetY - totalHight* (newPercentDelta);
@@ -103,6 +114,7 @@ public class ActorJumpAction extends GdxAction {
         lastPlusPercent = 0;
         totalScale = 0;
         totalHight = 0;
+        isDonw = false;
         //System.out.println("Current Scale:"+entity.getScaleX());//执行多次Scale会变化，虽然变化极小,误差是会累计
     }
 

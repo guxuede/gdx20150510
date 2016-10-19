@@ -34,7 +34,7 @@ public abstract class LevelDrawActor extends Actor {
     }
 
     public Vector2 getTopPosition(){
-        return TempObjects.temp3Vector2.set(getX(Align.topLeft),getY(Align.topLeft));
+        return TempObjects.temp3Vector2.set(getX(Align.top),getY(Align.top));
     }
 
     /**
