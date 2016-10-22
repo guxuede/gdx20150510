@@ -2,11 +2,16 @@ package com.guxuede.game.physics.box2d;
 
 
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.maps.MapLayer;
+import com.badlogic.gdx.maps.MapObject;
+import com.badlogic.gdx.maps.MapObjects;
+import com.badlogic.gdx.maps.objects.*;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapTile;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
-import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.math.*;
 import com.badlogic.gdx.physics.box2d.*;
+import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.IntArray;
 import com.guxuede.game.StageWorld;
 import com.guxuede.game.actor.AnimationActor;
@@ -26,6 +31,7 @@ import static com.guxuede.game.StageWorld.MAP_CELL_W;
  * Created by guxuede on 2016/9/10 .
  */
 public class Box2DPhysicsManager implements PhysicsManager {
+    public static final String collisiob_LAYERS = "对象层 1";
     protected World world;
     private Box2DDebugRenderer debugRenderer;
     private StageWorld stageWorld;
@@ -148,15 +154,19 @@ public class Box2DPhysicsManager implements PhysicsManager {
     @Override
     public void onMapLoad(TiledMap map) {
         this.map = map;
-        createABoack(map);
+        //createABoack(map);
+        MapLayer collisionLayer = map.getLayers().get(collisiob_LAYERS);
+        if(collisionLayer!=null){
+            createLayer(collisionLayer.getObjects(), (short) 0,1,"");
+        }
+
         final TiledMapTileLayer layer = (TiledMapTileLayer) map.getLayers().get(1);//我们使用第二层做碰撞层
         final int layerWidth = layer.getWidth();
         final int layerHeight = layer.getHeight();
         astar = new Astar(layerWidth,layerHeight){
             @Override
             protected boolean isValid(int x, int y) {
-                TiledMapTileLayer.Cell cell = layer.getCell(x,y);
-                return cell==null || cell.getTile()==null;
+                return pointIsClear(TempObjects.temp0Vector2.set(x*MAP_CELL_W,y*MAP_CELL_H));
             }
         };
 
@@ -169,94 +179,91 @@ public class Box2DPhysicsManager implements PhysicsManager {
         }
     }
 
-    //
-    private void createABoack(TiledMap map) {
-        {
-            BodyDef bd;
-            bd = new BodyDef();
-            bd.type = BodyDef.BodyType.KinematicBody;
-            bd.position.set(100, 200);
-            CircleShape c = new CircleShape();
-            c.setRadius(200 / 3);
-            FixtureDef ballShapeDef = new FixtureDef();
-            ballShapeDef.density = 1.0f;//密度
-            ballShapeDef.friction = 1f;////摩擦粗糙程度
-            ballShapeDef.restitution = 0.0f;//碰撞后，恢复原状后的力量,力度返回程度（弹性）
-            ballShapeDef.shape = c;//形状
-            //ballShapeDef.isSensor=
-            Body positionPlayer = world.createBody(bd);
-            positionPlayer.createFixture(ballShapeDef);
-            //physicsPlayer.setFixedRotation(true);//纰版挒鏃�鏄惁鏃嬭浆
-            positionPlayer.setLinearDamping(100);//阻尼
-            positionPlayer.setAngularDamping(100);//瑙掗樆灏�鎽╂摝?
-            positionPlayer.setUserData(null);
-            c.dispose();
-        }
-        TiledMapTileLayer layer = (TiledMapTileLayer) map.getLayers().get(1);
-        float unitScale = 1;
-        final int layerWidth = layer.getWidth();
-        final int layerHeight = layer.getHeight();
+    Array<Shape2D> collisionObject;
+    public static final float PPM=1;
+    public void createLayer(MapObjects objects, short bits, float tileSize, String layerName){
+        collisionObject = new Array<Shape2D>();
+        Body body;
+        BodyDef bdef=new BodyDef();
+        FixtureDef fdef=new FixtureDef();
+        bdef.type= BodyDef.BodyType.StaticBody;
+        fdef.friction=0.4f;
+        fdef.filter.categoryBits=bits;
+        fdef.filter.maskBits=-1;
+        fdef.isSensor=false;
 
-        final float layerTileWidth = layer.getTileWidth() * unitScale;
-        final float layerTileHeight = layer.getTileHeight() * unitScale;
+        for(MapObject object:objects){
+            if(object instanceof RectangleMapObject){
+                Rectangle rect=((RectangleMapObject) object).getRectangle();
+                bdef.position.set(rect.x/PPM+rect.width/2/PPM,rect.y/PPM+rect.height/2);
+                PolygonShape shape=((PolygonShape)new PolygonShape());
+                shape.setAsBox(rect.width/2/PPM, rect.height/2);
+                fdef.shape=shape;
+                body=world.createBody(bdef);
+                body.createFixture(fdef).setUserData(layerName);
+                shape.dispose();
+                collisionObject.add(new Rectangle(rect));
+            }else if(object instanceof CircleMapObject){
+                //get circle shape and set position:
+                Circle circ=((CircleMapObject) object).getCircle();
+                bdef.position.set(circ.x,circ.y);
 
-        final int col1 = 0;
-        final int col2 = layerWidth;
+                //set circle shape:
+                CircleShape shape=new CircleShape();
+                shape.setRadius(circ.radius);
+                fdef.shape=shape;
 
-        final int row1 = 0;
-        final int row2 = layerHeight;
+                //create body with this polygon
+                body=world.createBody(bdef);
+                body.createFixture(fdef).setUserData(layerName);
+                shape.dispose();
+                throw new RuntimeException("current not support CircleMapObject");
+            }else if(object instanceof PolygonMapObject){
+                //get polygon shape and set position:
+                Polygon poly=((PolygonMapObject) object).getPolygon();
+                bdef.position.set(poly.getX()/PPM,poly.getY()/PPM);
 
-        float y = row2 * layerTileHeight;
-        float xStart = col1 * layerTileWidth;
+                //set polygon shape:
+                PolygonShape shape=new PolygonShape();
+                float[] polyVertices=poly.getVertices();
+                for(int i=0;i<polyVertices.length;i++) polyVertices[i]=polyVertices[i]/PPM; // scale it down
+                shape.set(poly.getVertices()); fdef.shape=shape;
 
-        for (int row = row2; row >= row1; row--) {
-            float x = xStart;
-            for (int col = col1; col < col2; col++) {
-                final TiledMapTileLayer.Cell cell = layer.getCell(col, row);
-                if (cell == null) {
-                    x += layerTileWidth;
-                    continue;
-                }
-                final TiledMapTile tile = cell.getTile();
+                //create body with this polygon
+                body=world.createBody(bdef);
+                body.createFixture(fdef).setUserData(layerName);
+                shape.dispose();
+                collisionObject.add(poly);
+            }else if(object instanceof PolylineMapObject){
+                //get polyline shape and set position:
+                Polyline poly=((PolylineMapObject) object).getPolyline();
+                bdef.position.set(poly.getX()/PPM,poly.getY()/PPM);
 
-                if (tile != null) {
-                    final boolean flipX = cell.getFlipHorizontally();
-                    final boolean flipY = cell.getFlipVertically();
-                    final int rotations = cell.getRotation();
+                //set polyline shape:
+                ChainShape shape=new ChainShape();
+                float[] polyVertices=poly.getVertices();
+                for(int i=0;i<polyVertices.length;i++) polyVertices[i]=polyVertices[i]/PPM; // scale it down
+                shape.createChain(poly.getVertices()); fdef.shape=shape;
 
-                    TextureRegion region = tile.getTextureRegion();
-
-                    float x1 = x + tile.getOffsetX() * unitScale;
-                    float y1 = y + tile.getOffsetY() * unitScale;
-                    float x2 = x1 + region.getRegionWidth() * unitScale;
-                    float y2 = y1 + region.getRegionHeight() * unitScale;
-
-                    //batch.draw(region.getTexture(), vertices, 0, NUM_VERTICES);BodyDef  bd = new  BodyDef ();
-                    BodyDef bd = new BodyDef();
-                    bd.type = BodyDef.BodyType.KinematicBody;
-                    bd.position.set(x1 + 16, y1 + 16);
-
-                    PolygonShape c = new PolygonShape();
-                    c.setAsBox(16, 16);
-                    FixtureDef ballShapeDef = new FixtureDef();
-                    ballShapeDef.density = 1.0f;//密度
-                    ballShapeDef.friction = 1f;////摩擦粗糙程度
-                    ballShapeDef.restitution = 0.0f;//碰撞后，恢复原状后的力量,力度返回程度（弹性）
-                    ballShapeDef.shape = c;//形状
-                    //ballShapeDef.isSensor=
-                    Body positionPlayer = world.createBody(bd);
-                    positionPlayer.createFixture(ballShapeDef);
-                    //physicsPlayer.setFixedRotation(true);//纰版挒鏃�鏄惁鏃嬭浆
-                    positionPlayer.setLinearDamping(100);//阻尼
-                    positionPlayer.setAngularDamping(100);//瑙掗樆灏�鎽╂摝?
-                    positionPlayer.setUserData(null);
-                    c.dispose();
-
-
-                }
-                x += layerTileWidth;
+                //create body with this polyline
+                body=world.createBody(bdef);
+                body.createFixture(fdef).setUserData(layerName);
+                shape.dispose();
+                collisionObject.add(poly);
+            }else if(object instanceof EllipseMapObject){
+                //get ellipse shape and set position:
+                Ellipse elli=((EllipseMapObject) object).getEllipse();
+                bdef.position.set(elli.x/PPM+elli.width/2,elli.y/PPM+elli.height/2);
+                //set ellipse shape:
+                CircleShape shape=new CircleShape();
+                shape.setRadius(elli.width/2/PPM);
+                fdef.shape=shape;
+                //create body with this ellipse
+                body=world.createBody(bdef);
+                body.createFixture(fdef).setUserData(layerName);
+                shape.dispose();
+                collisionObject.add(elli);
             }
-            y -= layerTileHeight;
         }
     }
 
@@ -268,8 +275,14 @@ public class Box2DPhysicsManager implements PhysicsManager {
 
     @Override
     public boolean pointIsClear(Vector2 point) {
-        final TiledMapTileLayer layer = (TiledMapTileLayer) map.getLayers().get(1);
-        TiledMapTileLayer.Cell cell = layer.getCell((int)(point.x/MAP_CELL_W),(int)(point.y/MAP_CELL_H));
-        return cell==null || cell.getTile()==null;
+        TempObjects.temp1Vector2.set((int)(point.x/MAP_CELL_W) * MAP_CELL_W+MAP_CELL_W/2, (int)(point.y/MAP_CELL_H) * MAP_CELL_H+MAP_CELL_H/2);
+        for(Shape2D block : collisionObject){
+            if(block.contains(TempObjects.temp1Vector2)){
+                return false;
+            }
+        }
+        return true;
+        //TiledMapTileLayer.Cell cell = layer.getCell((int)(point.x/MAP_CELL_W),(int)(point.y/MAP_CELL_H));
+        //return cell==null || cell.getTile()==null;
     }
 }

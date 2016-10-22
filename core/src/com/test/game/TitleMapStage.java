@@ -23,6 +23,7 @@ import com.guxuede.game.actor.ActorFactory;
 import com.guxuede.game.actor.AnimationActor;
 import com.guxuede.game.actor.AnimationEntity;
 import com.guxuede.game.actor.LevelDrawActor;
+import com.guxuede.game.actor.ability.buffer.PoisonBuffer;
 import com.guxuede.game.libgdx.*;
 import com.guxuede.game.light.DefaultLightManager;
 import com.guxuede.game.light.LightManager;
@@ -105,6 +106,10 @@ public class TitleMapStage extends Stage implements GdxScreen {
         doubleImageEffect.setDuration(50);
         actor.addAction(doubleImageEffect);
         actor.addAction(new AnimationEffect("3aaa",100));
+        PoisonBuffer poisonBuffer =  new PoisonBuffer();
+        poisonBuffer.setDuration(13);
+        actor.addAction(poisonBuffer);
+        actor.addAction(new AnimationEffect("poison2",13));
         addActor(actor);
 
         AnimationActor actor1 = ActorFactory.createActor("Aquatic", world);
@@ -121,6 +126,7 @@ public class TitleMapStage extends Stage implements GdxScreen {
         effect.setEffectAnimation(ResourceManager.getAnimationHolder("wind2").getStopDownAnimation());
         actor1.addAction(effect);
         addActor(actor1);
+
 
         //ActorFactory.createRandomActor(world,this,focusListener);
         //ActorFactory.createRandomDoor(world,this);
@@ -249,7 +255,7 @@ public class TitleMapStage extends Stage implements GdxScreen {
             tileMapRenderer.renderLayer2();
             drawThisStage(camera);
             tileMapRenderer.renderLayer3();
-
+            tileMapRenderer.render(new int[]{3});
             world.getPhysicsManager().render();
             lightManager.render();
             actorBloodRender.render(getActors(),getBatch());

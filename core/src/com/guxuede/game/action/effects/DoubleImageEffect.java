@@ -1,6 +1,7 @@
 package com.guxuede.game.action.effects;
 
 import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.utils.Array;
 import com.guxuede.game.actor.AnimationEntity;
 import com.guxuede.game.libgdx.GdxEffect;
 import com.guxuede.game.libgdx.GdxSprite;

@@ -10,7 +10,7 @@ import com.guxuede.game.sound.SoundManager;
  * Created by guxuede on 2016/9/10 .
  */
 public abstract class StageWorld {
-    public static boolean isDebug = false;
+    public static boolean isDebug = true;
     public static float MAP_CELL_W = 32;
     public static float MAP_CELL_H = 32;
 

@@ -134,6 +134,7 @@ public class MouseManager extends InputListener {
         shapes.setProjectionMatrix(batch.getProjectionMatrix());
         shapes.begin(ShapeRenderer.ShapeType.Line);
         shapes.rect((int)(pos.x/MAP_CELL_W) * MAP_CELL_W, (int)(pos.y/MAP_CELL_H) * MAP_CELL_H, MAP_CELL_W, MAP_CELL_H);
+        shapes.end();
 //        if(ActorMoveToPathAction.path!=null){
 //            IntArray path = ActorMoveToPathAction.path;
 //            for (int i = 0, n = path.size; i < n; i += 2) {
@@ -142,7 +143,6 @@ public class MouseManager extends InputListener {
 //                shapes.rect(x, y, MAP_CELL_W, MAP_CELL_H);
 //            }
 //        }
-        shapes.end();
     }
 
     public static class MouseIndicatorListener {

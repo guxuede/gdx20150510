@@ -26,7 +26,7 @@ public class MutilStageGame extends GdxGame {
         inputMultiplexer = new InputMultiplexer();
         Gdx.input.setInputProcessor(inputMultiplexer); //InputMultiplexer
         mapStages = new Array<TitleMapStage>();
-        //mapStages.add(new TitleMapStage("dilao1.tmx",this));
+        mapStages.add(new TitleMapStage("yewai1.tmx",this));
         mapStages.add(new TitleMapStage("desert1.tmx",this));
         mapStages.add(new TitleMapStage("desert.tmx",this));
         setScreen(mapStages.get(0));

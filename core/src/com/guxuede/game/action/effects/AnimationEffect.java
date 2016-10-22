@@ -32,7 +32,7 @@ public class AnimationEffect extends GdxEffect {
         AnimationHolder animationHolder = ResourceManager.getAnimationHolder(animationName);
         Animation effectAnimation = animationHolder.getStopDownAnimation();
         setEffectAnimation(effectAnimation);
-        tracksFormula = new TracksEllipseFormula();
+        //tracksFormula = new TracksEllipseFormula();
     }
 
     public AnimationEffect(String animationName,float duration){
