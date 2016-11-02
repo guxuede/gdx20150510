@@ -11,6 +11,7 @@ import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.IntArray;
 import com.badlogic.gdx.utils.Pool.Poolable;
 import com.guxuede.game.StageWorld;
+import com.guxuede.game.action.ActorJumpAction;
 import com.guxuede.game.action.move.ActorMoveToPathAction;
 import com.guxuede.game.actor.ability.skill.HackSkill;
 import com.guxuede.game.actor.ability.skill.JumpSkill;
@@ -33,12 +34,15 @@ import java.util.List;
 public abstract class AnimationEntity extends LevelDrawActor implements Poolable{
 
 	public static final int STOP=0, DOWN=1,LEFT=2,RIGHT=3,UP=4;
-	public static final int         //实体状态
-            LIFE_STATUS_CREATE=0, //实体处于创建创建状态，还没有进入世界，系统将不久后初始化它，并进入LIFE_STATUS_BORN
-            LIFE_STATUS_BORN=1,//实体处于诞生状态，进入世界，诞生状态的实体，无敌不可攻击，并有诞生动画，诞生完成后进入LIFE_STATUS_LIVE
-            LIFE_STATUS_LIVE=2,//实体处于正常活动状态，参与世界的任何事件，可以被控制，可以被攻击
-            LIFE_STATUS_DEAD=3,//实体处于死亡状态，无敌不可攻击不可控制，并有死亡动画，死亡完成后进入LIFE_STATUS_DESTORY
-            LIFE_STATUS_DESTORY=-1;//实体处于摧毁状态，退出世界之外，系统将不久销毁它，内存空间将清理
+    public boolean LS(int permission){
+        return (lifeStatus & permission) == lifeStatus;
+    }
+    public static final int         //实体状态
+            LIFE_STATUS_CREATE=0x01, //实体处于创建创建状态，还没有进入世界，系统将不久后初始化它，并进入LIFE_STATUS_BORN
+            LIFE_STATUS_BORN=0x02,//实体处于诞生状态，进入世界，诞生状态的实体，无敌不可攻击，并有诞生动画，诞生完成后进入LIFE_STATUS_LIVE
+            LIFE_STATUS_LIVE=0x04,//实体处于正常活动状态，参与世界的任何事件，可以被控制，可以被攻击
+            LIFE_STATUS_DEAD=0x08,//实体处于死亡状态，无敌不可攻击不可控制，并有死亡动画，死亡完成后进入LIFE_STATUS_DESTORY
+            LIFE_STATUS_DESTROY =0x10;//实体处于摧毁状态，退出世界之外，系统将不久销毁它，内存空间将清理
 
 	public static long ID = 1000000000001L;
     public AnimationEntity sourceActor;//源单位，此单位可能是宠物，寄主，生产者
@@ -149,7 +153,7 @@ public abstract class AnimationEntity extends LevelDrawActor implements Poolable
 	}
 	
 	protected boolean canAct() {
-		return lifeStatus == LIFE_STATUS_LIVE || lifeStatus == LIFE_STATUS_DEAD;
+		return LS(LIFE_STATUS_BORN | LIFE_STATUS_LIVE | LIFE_STATUS_DEAD);
 	}
 
     /**************************************draw control**************************************************/
@@ -157,11 +161,14 @@ public abstract class AnimationEntity extends LevelDrawActor implements Poolable
     public float drawOffSetX,drawOffSetY;
 
     public void drawFoot(Batch batch, float parentAlpha){
-        batch.draw(ResourceManager.humanShadow,this.getCenterX() - this.getWidth()/2,this.getCenterY()-50,this.getWidth(),ResourceManager.humanShadow.getRegionHeight());
+        Vector2 b = getBottomPosition();
+        ResourceManager.shadow.setCenter(b.x,b.y + StageWorld.ACTOR_FOOT_OFFSET);
+        ResourceManager.shadow.setScale(2- (drawOffSetY/ActorJumpAction.HEIGHT)*1);
+        ResourceManager.shadow.draw(batch,0.7f);
     }
 
     public void drawBody(Batch batch, float parentAlpha) {
-        if(lifeStatus != LIFE_STATUS_DESTORY){
+        if(LS(LIFE_STATUS_BORN | LIFE_STATUS_LIVE | LIFE_STATUS_DEAD)){
             GdxSprite sprite = (GdxSprite) animationPlayer.getKeyFrame();
             if (sprite != null) {
                 sprite.setPosition(this.getCenterX() + drawOffSetX, this.getCenterY() + drawOffSetY);
@@ -176,11 +183,6 @@ public abstract class AnimationEntity extends LevelDrawActor implements Poolable
             }
         }
     }
-
-//    @Override
-//    public void drawHead(Batch batch, float parentAlpha) {
-//        super.drawHead(batch, parentAlpha);
-//    }
 
 
     /**************************************move control**************************************************/
@@ -325,7 +327,7 @@ public abstract class AnimationEntity extends LevelDrawActor implements Poolable
 	
 
 	public void dispose(){
-		lifeStatus = LIFE_STATUS_DESTORY;
+		lifeStatus = LIFE_STATUS_DESTROY;
         animationPlayer.onDispose();
 	}
 

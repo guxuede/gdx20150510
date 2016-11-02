@@ -51,6 +51,7 @@ public class TitleMapStage extends Stage implements GdxScreen {
                                 new MovebleOrthographicCamera(Gdx.graphics.getWidth(), Gdx.graphics.getHeight())
                 )
                 , new SpriteBatch());
+        this.setDebugAll(true);
         this.stageName = stageName;
         this.setDebugAll(StageWorld.isDebug);
 		this.world = new DefaultWorld(this,gdxGame);
@@ -207,7 +208,7 @@ public class TitleMapStage extends Stage implements GdxScreen {
             //entity.setVisible(true); //TODO 初始化时是否要隐藏掉单位？
         }else if(entity.lifeStatus == AnimationEntity.LIFE_STATUS_BORN){
             entity.lifeStatus = AnimationEntity.LIFE_STATUS_LIVE;
-        }else if(entity.lifeStatus == AnimationEntity.LIFE_STATUS_DESTORY){
+        }else if(entity.lifeStatus == AnimationEntity.LIFE_STATUS_DESTROY){
             entity.getPhysicsPlayer().destroy(entity);
             entity.remove();//TODO 也许不应该在这里remove掉
         }
@@ -255,7 +256,7 @@ public class TitleMapStage extends Stage implements GdxScreen {
             tileMapRenderer.renderLayer2();
             drawThisStage(camera);
             tileMapRenderer.renderLayer3();
-            tileMapRenderer.render(new int[]{3});
+            //tileMapRenderer.render(new int[]{3});
             world.getPhysicsManager().render();
             lightManager.render();
             actorBloodRender.render(getActors(),getBatch());
@@ -266,7 +267,9 @@ public class TitleMapStage extends Stage implements GdxScreen {
             }
 
         }
-        //if (debug) drawDebug();
+        if(StageWorld.isDebug){
+            super.draw();
+        }
     }
 
     @Override

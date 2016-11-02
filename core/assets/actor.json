@@ -483,7 +483,6 @@
     "width":192,
     "height":192,
     "texture":"Wind2",
-    "scale":0.5,
     "animations":[
       {
         "name":"walkDownAnimation,walkLeftAnimation,walkRightAnimation,walkUpAnimation,stopDownAnimation,stopLeftAnimation,stopRightAnimation,stopUpAnimation",

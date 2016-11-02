@@ -2,6 +2,7 @@ package com.guxuede.game.physics.box2d;
 
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
+import com.guxuede.game.StageWorld;
 import com.guxuede.game.actor.AnimationEntity;
 import com.guxuede.game.physics.PhysicsPlayer;
 
@@ -98,6 +99,6 @@ public class Box2DPhysicsPlayer implements PhysicsPlayer {
         //将模拟位置同步到actor上
         Vector2 v = this.getXY();
         //出于立体感效果，将碰撞设置到角色脚部
-        entity.setPosition(v.x - entity.getWidth()/2,v.y - entity.getHeight()/4);
+        entity.setPosition(v.x - entity.getWidth()/2,v.y - StageWorld.ACTOR_FOOT_OFFSET);
     }
 }

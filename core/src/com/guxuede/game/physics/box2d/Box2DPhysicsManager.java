@@ -1,6 +1,7 @@
 package com.guxuede.game.physics.box2d;
 
 
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.maps.MapLayer;
 import com.badlogic.gdx.maps.MapObject;
@@ -9,15 +10,13 @@ import com.badlogic.gdx.maps.objects.*;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapTile;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
+import com.badlogic.gdx.maps.tiled.objects.TiledMapTileMapObject;
 import com.badlogic.gdx.math.*;
 import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.IntArray;
 import com.guxuede.game.StageWorld;
-import com.guxuede.game.actor.AnimationActor;
-import com.guxuede.game.actor.AnimationDoor;
-import com.guxuede.game.actor.AnimationEntity;
-import com.guxuede.game.actor.AnimationProjection;
+import com.guxuede.game.actor.*;
 import com.guxuede.game.map.MapManager;
 import com.guxuede.game.physics.PhysicsPlayer;
 import com.guxuede.game.physics.PhysicsManager;
@@ -179,10 +178,9 @@ public class Box2DPhysicsManager implements PhysicsManager {
         }
     }
 
-    Array<Shape2D> collisionObject;
+    Array<Shape2D> collisionObject = new Array<Shape2D>();;
     public static final float PPM=1;
     public void createLayer(MapObjects objects, short bits, float tileSize, String layerName){
-        collisionObject = new Array<Shape2D>();
         Body body;
         BodyDef bdef=new BodyDef();
         FixtureDef fdef=new FixtureDef();
@@ -263,6 +261,15 @@ public class Box2DPhysicsManager implements PhysicsManager {
                 body.createFixture(fdef).setUserData(layerName);
                 shape.dispose();
                 collisionObject.add(elli);
+            }else if(object instanceof TiledMapTileMapObject){
+                TiledMapTileMapObject tiledMapTileMapObject = (TiledMapTileMapObject) object;
+                tiledMapTileMapObject.getTextureRegion();
+                TiledActor tiledActor = new TiledActor();
+                Sprite sprite = new Sprite(tiledMapTileMapObject.getTextureRegion());
+                sprite.setPosition(tiledMapTileMapObject.getX(),tiledMapTileMapObject.getY());
+                tiledActor.sprite = sprite;
+                tiledActor.setPosition(tiledMapTileMapObject.getX(),tiledMapTileMapObject.getY());
+                stageWorld.getStage().addActor(tiledActor);
             }
         }
     }

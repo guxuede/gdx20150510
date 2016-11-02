@@ -9,6 +9,7 @@ import com.badlogic.gdx.scenes.scene2d.actions.TemporalAction;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.Viewport;
+import com.guxuede.game.StageWorld;
 import com.guxuede.game.libgdx.GdxEffect;
 import com.guxuede.game.tools.TempObjects;
 
@@ -33,8 +34,28 @@ public abstract class LevelDrawActor extends Actor {
         return super.getY(Align.center);
     }
 
+    /**
+     * 返回角色中心点
+     * @return
+     */
+    public Vector2 getCenterPosition(){
+        return TempObjects.temp3Vector2.set(getX(Align.center),getY(Align.center));
+    }
+
+    /**
+     *
+     * @return
+     */
     public Vector2 getTopPosition(){
         return TempObjects.temp3Vector2.set(getX(Align.top),getY(Align.top));
+    }
+
+    /**
+     * 返回角色脚部点
+     * @return
+     */
+    public Vector2 getBottomPosition(){
+        return TempObjects.temp3Vector2.set(getX(Align.bottom),getY(Align.center)-getHeight()/2);
     }
 
     /**

@@ -49,7 +49,7 @@ public class ResourceManager {
     public static TextButtonStyle bs=new TextButtonStyle(up,down,null,font);
 
     public static TextureRegion humanShadow= getTextureRegion("180-Switch03",96,96,32,32);
-
+    public static Sprite shadow = new Sprite(getTextureRegion("180-Switch03",96,96,32,32));
     public static Texture getTexture(String name){
         Texture texture = null;
         texture = TEXTURE_MAP.get(name);
