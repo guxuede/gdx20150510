@@ -634,7 +634,7 @@
     "animations":[
       {
         "name":"walkDownAnimation,walkLeftAnimation,walkRightAnimation,walkUpAnimation,stopDownAnimation,stopLeftAnimation,stopRightAnimation,stopUpAnimation,deathAnimation",
-        "frameDuration":0.1,
+        "frameDuration":0.05,
         "frames":[0,1,2,3,4,5,6,7,8,9]
       }
     ]
@@ -956,6 +956,60 @@
         "name": "walkDownAnimation,walkLeftAnimation,walkRightAnimation,walkUpAnimation,stopDownAnimation,stopLeftAnimation,stopRightAnimation,stopUpAnimation,deathAnimation",
         "frameDuration": 0.1,
         "frames": [10,11,12]
+      }
+    ]
+  },
+  {
+    "name": "crack",
+    "width": 224,
+    "height": 256,
+    "scale": 0.5,
+    "texture": "tilesets/crack",
+    "animations": [
+      {
+        "name": "walkDownAnimation,walkLeftAnimation,walkRightAnimation,walkUpAnimation,stopDownAnimation,stopLeftAnimation,stopRightAnimation,stopUpAnimation,deathAnimation",
+        "frameDuration": 0.1,
+        "frames": [0]
+      }
+    ]
+  },
+  {
+    "name" : "dragon",
+    "width":96,
+    "height":96,
+    "texture":"dragon",
+    "animations":[
+      {
+        "name":"walkDownAnimation",
+        "frames":[0,1,2,3]
+      },
+      {
+        "name":"walkLeftAnimation",
+        "frames":[4,5,6,7]
+      },
+      {
+        "name":"walkRightAnimation",
+        "frames":[8,9,10,11]
+      },
+      {
+        "name":"walkUpAnimation",
+        "frames":[12,13,14,15]
+      },
+      {
+        "name":"stopDownAnimation",
+        "frames":[1,2]
+      },
+      {
+        "name":"stopLeftAnimation",
+        "frames":[5,6]
+      },
+      {
+        "name":"stopRightAnimation",
+        "frames":[9,10]
+      },
+      {
+        "name":"stopUpAnimation",
+        "frames":[13,14]
       }
     ]
   }

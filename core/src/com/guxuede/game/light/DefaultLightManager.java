@@ -2,7 +2,7 @@ package com.guxuede.game.light;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.*;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.GdxSpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.FrameBuffer;
 import com.badlogic.gdx.maps.tiled.TiledMap;
@@ -24,7 +24,7 @@ public class DefaultLightManager implements LightManager {
     private StageWorld world;
 
     private Stage stage;
-    private SpriteBatch batch;
+    private GdxSpriteBatch batch;
     private FrameBuffer lightBuffer;
 
     private TextureRegion lightBufferRegion;
@@ -100,7 +100,7 @@ public class DefaultLightManager implements LightManager {
         if(batch!=null){
             batch.dispose();
         }
-        batch = new SpriteBatch();
+        batch = new GdxSpriteBatch();
         lightBuffer = new FrameBuffer(Pixmap.Format.RGBA8888, width, height, false);
         lightBuffer.getColorBufferTexture().setFilter(Texture.TextureFilter.Nearest, Texture.TextureFilter.Nearest);
         lightBufferRegion = new TextureRegion(lightBuffer.getColorBufferTexture(), 0, 0, width, height);

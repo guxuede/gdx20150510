@@ -5,7 +5,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Batch;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.GdxSpriteBatch;
 import com.guxuede.game.libgdx.GdxSprite;
 import com.guxuede.game.resource.ResourceManager;
 
@@ -19,7 +19,7 @@ public class TestGame  implements ApplicationListener {
 
     @Override
     public void create() {
-        batch = new SpriteBatch();
+        batch = new GdxSpriteBatch();
         animation1= ResourceManager.getAnimationHolder("special10").getStopDownAnimation();
         animation2= ResourceManager.getAnimationHolder("Undead").getStopDownAnimation();
 

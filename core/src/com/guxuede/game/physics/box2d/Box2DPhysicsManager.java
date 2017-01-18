@@ -247,7 +247,7 @@ public class Box2DPhysicsManager implements PhysicsManager {
                 body=world.createBody(bdef);
                 body.createFixture(fdef).setUserData(layerName);
                 shape.dispose();
-                collisionObject.add(poly);
+                collisionObject.add(poly);//Polyline not support contain
             }else if(object instanceof EllipseMapObject){
                 //get ellipse shape and set position:
                 Ellipse elli=((EllipseMapObject) object).getEllipse();

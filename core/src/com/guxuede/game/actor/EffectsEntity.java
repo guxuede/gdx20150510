@@ -17,6 +17,8 @@ public class EffectsEntity extends AnimationEntity {
 
     public void init(){
         isSensor = true;
+        collisionSize = 0;
+        hasShadow = false;
     }
 
     @Override

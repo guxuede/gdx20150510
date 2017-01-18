@@ -5,6 +5,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.guxuede.game.MouseManager;
+import com.guxuede.game.actor.AnimationActor;
 import com.guxuede.game.actor.AnimationEntity;
 import com.guxuede.game.actor.ability.skill.Skill;
 
@@ -66,7 +67,7 @@ public class StandState extends ActorState {
             }
         }else if(event.getType() == InputEvent.Type.touchDown){
             Actor tactor = event.getTarget();
-            if(tactor!=null && tactor instanceof AnimationEntity && tactor!=entity){
+            if(tactor!=null && tactor instanceof AnimationActor && tactor!=entity){
                 if(!(this instanceof AttackState) ){
                     AttackState as = new AttackState(direction);
                     as.target = (AnimationEntity) tactor;

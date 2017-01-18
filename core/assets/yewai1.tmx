@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" orientation="orthogonal" renderorder="right-down" width="36" height="24" tilewidth="32" tileheight="32" nextobjectid="91">
+<map version="1.0" orientation="orthogonal" renderorder="right-down" width="36" height="24" tilewidth="32" tileheight="32" nextobjectid="93">
  <tileset firstgid="1" name="TileA4" tilewidth="32" tileheight="32" tilecount="240" columns="16">
   <image source="tilesets/TileA4.png" width="512" height="480"/>
   <terraintypes>
@@ -58,7 +58,7 @@
  </tileset>
  <tileset firstgid="688" name="trees" tilewidth="128" tileheight="256" tilecount="16" columns="8">
   <tileoffset x="-32" y="0"/>
-  <image source="C:/Users/guxuede/Desktop/tiled_examples-master/FLARE/grassland/grassland_trees.png" width="1024" height="512"/>
+     <image source="tilesets/crack.png" width="255" height="305"/>
  </tileset>
  <tileset firstgid="704" name="TileB_1" tilewidth="128" tileheight="128" tilecount="16" columns="4">
   <image source="tilesets/TileB.png" width="512" height="512"/>

@@ -47,12 +47,13 @@ public class MagicSkill extends Skill{
             ta.targetEntity = target;
             ta.targetPos = targetPos==null?null:targetPos.cpy();
             owner.addAction(ta);
-            if(targetPos!=null){
-                EffectsEntity effectsEntity = ActorFactory.createEffectsActor("wind2",owner.getWorld());
-                effectsEntity.setCenterPosition(targetPos.x,targetPos.y);
-                effectsEntity.addAction(ActionsFactory.delay(2f,ActionsFactory.actorDeathAnimation()));
-                owner.getWorld().getStage().addActor(effectsEntity);
-            }
+
+//            if(targetPos!=null){
+//                EffectsEntity effectsEntity = ActorFactory.createEffectsActor("wind2",owner.getWorld());
+//                effectsEntity.setCenterPosition(targetPos.x,targetPos.y);
+//                effectsEntity.addAction(ActionsFactory.delay(2f,ActionsFactory.actorDeathAnimation()));
+//                owner.getWorld().getStage().addActor(effectsEntity);
+//            }
             return true;
         }
         return false;

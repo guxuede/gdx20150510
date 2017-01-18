@@ -7,9 +7,8 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.GdxSpriteBatch;
 import com.badlogic.gdx.maps.tiled.TiledMap;
-import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.scenes.scene2d.*;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.guxuede.game.DefaultWorld;
@@ -50,12 +49,12 @@ public class TitleMapStage extends Stage implements GdxScreen {
                                 Gdx.graphics.getHeight(),
                                 new MovebleOrthographicCamera(Gdx.graphics.getWidth(), Gdx.graphics.getHeight())
                 )
-                , new SpriteBatch());
+                , new GdxSpriteBatch());
         this.setDebugAll(true);
         this.stageName = stageName;
         this.setDebugAll(StageWorld.isDebug);
 		this.world = new DefaultWorld(this,gdxGame);
-		TiledMap map = new TmxMapLoader().load(stageName);//"desert.tmx"
+		TiledMap map = new GdxTmxMapLoader().load(stageName);//"desert.tmx"
         this.tileMapRenderer = new MyOrthogonalTiledMapRenderer(map,this.getBatch());
         this.lightManager = new DefaultLightManager(world);
         this.lightManager.onMapLoad(map);
@@ -101,7 +100,7 @@ public class TitleMapStage extends Stage implements GdxScreen {
             }
         });
         this.addListener(inputListenerMultiplexer);
-        AnimationActor actor = ActorFactory.createActor("Undead",world);
+        AnimationActor actor = ActorFactory.createActor("dragon",world);
 		actor.setCenterPosition(200, 400);
         DoubleImageEffect doubleImageEffect = new DoubleImageEffect();
         doubleImageEffect.setDuration(50);
@@ -258,7 +257,7 @@ public class TitleMapStage extends Stage implements GdxScreen {
             tileMapRenderer.renderLayer3();
             //tileMapRenderer.render(new int[]{3});
             world.getPhysicsManager().render();
-            lightManager.render();
+            //lightManager.render();
             actorBloodRender.render(getActors(),getBatch());
             world.getMouseManager().render(getBatch(),delta);
             if(viewActor !=null){

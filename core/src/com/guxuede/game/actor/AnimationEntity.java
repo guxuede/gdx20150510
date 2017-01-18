@@ -54,11 +54,13 @@ public abstract class AnimationEntity extends LevelDrawActor implements Poolable
     public float visualRadius=100;
     public Color  primaryColor;
     public int lifeStatus = LIFE_STATUS_CREATE;
+    public boolean isEventAble = true;
     public boolean isSensor = false;
     public boolean isHover = false;
     public float collisionSize = 0;
     public float hitPoint = 100;
     public float currentHitPoint = 100;
+    public boolean hasShadow = true;
     public ActorAnimationPlayer animationPlayer;
     /******************bellow attribute not share with other stage *****************/
     public StageWorld stageWorld;
@@ -161,10 +163,12 @@ public abstract class AnimationEntity extends LevelDrawActor implements Poolable
     public float drawOffSetX,drawOffSetY;
 
     public void drawFoot(Batch batch, float parentAlpha){
-        Vector2 b = getBottomPosition();
-        ResourceManager.shadow.setCenter(b.x,b.y + StageWorld.ACTOR_FOOT_OFFSET);
-        ResourceManager.shadow.setScale(2- (drawOffSetY/ActorJumpAction.HEIGHT)*1);
-        ResourceManager.shadow.draw(batch,0.7f);
+        if(hasShadow){
+            Vector2 b = getBottomPosition();
+            ResourceManager.shadow.setCenter(b.x,b.y + StageWorld.ACTOR_FOOT_OFFSET);
+            ResourceManager.shadow.setScale(2- (drawOffSetY/ActorJumpAction.HEIGHT)*1);
+            ResourceManager.shadow.draw(batch,0.7f);
+        }
     }
 
     public void drawBody(Batch batch, float parentAlpha) {
@@ -301,7 +305,7 @@ public abstract class AnimationEntity extends LevelDrawActor implements Poolable
     /**************************************state control**************************************************/
     ActorState actorState = new StandState(0);
     public boolean handleInput(final InputEvent event){
-        if(actorState!=null){
+        if(isEventAble && actorState!=null){
             ActorState newState = actorState.handleInput(this,event);
             return goingToNewState(newState,event);
         }

@@ -10,6 +10,7 @@ import com.badlogic.gdx.graphics.g2d.*;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton.TextButtonStyle;
 import com.badlogic.gdx.scenes.scene2d.utils.NinePatchDrawable;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
+import com.guxuede.game.libgdx.GdxNormapTexture;
 import com.guxuede.game.libgdx.GdxSprite;
 import com.guxuede.game.libgdx.Skin;
 import com.guxuede.game.resource.ActorJsonParse;
@@ -59,7 +60,7 @@ public class ResourceManager {
             }
             FileHandle fileHandle = Gdx.files.internal(name+".PNG");
             if(fileHandle.exists()){
-                texture = new Texture(fileHandle);
+                texture = new GdxNormapTexture(fileHandle);
                 TEXTURE_MAP.put(name, texture);
                 TEXTURE_REGION_MAP.put(name, new TextureRegion(texture));
             }else{

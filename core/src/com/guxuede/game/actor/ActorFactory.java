@@ -3,6 +3,7 @@ package com.guxuede.game.actor;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.guxuede.game.StageWorld;
+import com.guxuede.game.action.ActionsFactory;
 import com.guxuede.game.resource.ResourceManager;
 import com.guxuede.game.resource.*;
 
@@ -21,6 +22,16 @@ public class ActorFactory {
         AnimationHolder animationHolder = ResourceManager.getAnimationHolder(name);
         ActorAnimationPlayer actorAnimationPlayer = new ActorAnimationPlayer(world,animationHolder);
         EffectsEntity animationActor = new EffectsEntity(actorAnimationPlayer,world);
+        return animationActor;
+    }
+    public static EffectsEntity createEffectsActor(String name, StageWorld world,Float duration) {
+        EffectsEntity animationActor = createEffectsActor(name,world);
+        AnimationHolder animationHolder = ResourceManager.getAnimationHolder(name);
+        duration = duration == null?animationHolder.getStopDownAnimation().getAnimationDuration():duration;
+        animationActor.addAction(
+                ActionsFactory.sequence(
+                        ActionsFactory.delay(duration)
+                        ,ActionsFactory.actorDeathAnimation()));
         return animationActor;
     }
     public static AnimationProjection createProjectionActor(String name, StageWorld world) {
