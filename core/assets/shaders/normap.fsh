@@ -58,10 +58,6 @@ void main() {
 
 	//Pre-multiply light color with intensity
 	//Then perform "N dot L" to determine our diffuse term
-//	float maxNL = 0.0;
-//	if(NormalMap.r == 0 && NormalMap.g == 0 && NormalMap.b == 0){
-//	    //maxNL = 1.1;
-//	}
 	vec3 Diffuse = (LightColor.rgb * LightColor.a) * max(dot(N, L), 0.0);
 
 	//pre-multiply ambient color with intensity
