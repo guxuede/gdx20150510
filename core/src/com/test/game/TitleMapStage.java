@@ -51,7 +51,7 @@ public class TitleMapStage extends Stage implements GdxScreen {
                                 Gdx.graphics.getHeight(),
                                 new MovebleOrthographicCamera(Gdx.graphics.getWidth(), Gdx.graphics.getHeight())
                 )
-                , new GdxSpriteBatch());
+                , new SpriteBatch());
         this.setDebugAll(true);
         this.stageName = stageName;
         this.setDebugAll(StageWorld.isDebug);
@@ -259,7 +259,7 @@ public class TitleMapStage extends Stage implements GdxScreen {
             tileMapRenderer.renderLayer3();
             //tileMapRenderer.render(new int[]{3});
             world.getPhysicsManager().render();
-            //lightManager.render();
+            lightManager.render();
             actorBloodRender.render(getActors(),getBatch());
             world.getMouseManager().render(getBatch(),delta);
             if(viewActor !=null){
