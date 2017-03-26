@@ -30,6 +30,8 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.NumberUtils;
+import com.guxuede.game.StageWorld;
+import com.guxuede.game.libgdx.GdxGame;
 import com.guxuede.game.libgdx.GdxNormapTexture;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.Display;
@@ -39,6 +41,9 @@ import org.lwjgl.opengl.Display;
  * @author mzechner
  * @author Nathan Sweet */
 public class GdxSpriteBatch implements Batch {
+
+    StageWorld stageWorld;
+
     //////////////////////////////////////////////////////
     //our constants...
     public static final float DEFAULT_LIGHT_Z = 0.075f;
@@ -145,14 +150,14 @@ public class GdxSpriteBatch implements Batch {
         mesh.setIndices(indices);
 
         if (defaultShader == null) {
-            shader = createNorShader();
+            shader = createDefaultShader();
             ownsShader = true;
         } else
             shader = defaultShader;
     }
 
 
-    private static ShaderProgram createNorShader(){
+    private static ShaderProgram createDefaultShader(){
         String vertexShader = Gdx.files.internal("shaders/normap.vsh").readString();
         String fragmentShader = Gdx.files.internal("shaders/normap.fsh").readString();;
         ShaderProgram norShader = new ShaderProgram(vertexShader, fragmentShader);
@@ -1071,6 +1076,8 @@ public class GdxSpriteBatch implements Batch {
             shader.setUniformf("LightPos", LIGHT_POS);
         }
     }
+
+    float[] setUniform3fv = new float[]{100,100,200,200,10,10};
 
     protected void switchTexture (Texture texture) {
         flush();
