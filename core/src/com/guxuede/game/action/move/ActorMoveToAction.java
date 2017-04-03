@@ -37,7 +37,7 @@ public abstract class ActorMoveToAction extends GdxAction {
             entity.turnDirection(degrees);
             entity.doMoveAnimation();
 //            entity.doMoveAnimation();
-//            Vector2 targetP = TempObjects.temp0Vector2.set(target);
+//            Vector2 targetP = TempObjects.temp0Vector2.set(targetEntry);
 //            Vector2 entityP = entity.getPhysicsPosition();
 //            Vector2 newP = targetP.sub(entityP)//得到实体到目标的向量
 //                    .nor()//归一化
@@ -45,7 +45,7 @@ public abstract class ActorMoveToAction extends GdxAction {
 //                    .add(entityP);//得到最终位置
 //            entity.setPhysicsPosition(newP.x,newP.y);
 //            //速度太快可能穿过，做一次检查
-//            if(MathUtils.isBetween(oldPoint,target,newP)){
+//            if(MathUtils.isBetween(oldPoint,targetEntry,newP)){
 //                return true;
 //            }
             return false;

@@ -1,5 +1,6 @@
 package com.guxuede.game.action;
 
+import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.scenes.scene2d.actions.TemporalAction;
 import com.guxuede.game.actor.AnimationEntity;
 
@@ -8,7 +9,34 @@ import com.guxuede.game.actor.AnimationEntity;
  */
 public class ActorFormulaTracksAction extends TemporalAction {
 
-    private TracksFormula tracksFormula = new TracksEllipseFormula();
+    private TracksFormula tracksFormula;
+
+    public ActorFormulaTracksAction(){
+        tracksFormula = new TracksEllipseFormula();
+    }
+
+    public ActorFormulaTracksAction(TracksFormula tracksFormula) {
+        this.tracksFormula = tracksFormula;
+    }
+
+    public ActorFormulaTracksAction(float duration, TracksFormula tracksFormula) {
+        super(duration);
+        this.tracksFormula = tracksFormula;
+    }
+
+    public ActorFormulaTracksAction(float duration, Interpolation interpolation, TracksFormula tracksFormula) {
+        super(duration, interpolation);
+        this.tracksFormula = tracksFormula;
+    }
+
+    public TracksFormula getTracksFormula() {
+        return tracksFormula;
+    }
+
+    public ActorFormulaTracksAction setTracksFormula(TracksFormula tracksFormula) {
+        this.tracksFormula = tracksFormula;
+        return this;
+    }
 
     @Override
     protected void update(float percent) {

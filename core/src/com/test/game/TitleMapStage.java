@@ -102,7 +102,7 @@ public class TitleMapStage extends Stage implements GdxScreen {
             }
         });
         this.addListener(inputListenerMultiplexer);
-        AnimationActor actor = ActorFactory.createActor("dragon",world);
+        AnimationActor actor = ActorFactory.createActor("Undead",world);
 		actor.setCenterPosition(200, 400);
         DoubleImageEffect doubleImageEffect = new DoubleImageEffect();
         doubleImageEffect.setDuration(50);
@@ -111,7 +111,7 @@ public class TitleMapStage extends Stage implements GdxScreen {
         PoisonBuffer poisonBuffer =  new PoisonBuffer();
         poisonBuffer.setDuration(13);
         actor.addAction(poisonBuffer);
-        actor.addAction(new AnimationEffect("poison2",13));
+        actor.addAction(new AnimationEffect("poison1",13));
         addActor(actor);
 
         AnimationActor actor1 = ActorFactory.createActor("Aquatic", world);

@@ -1,12 +1,15 @@
 package com.guxuede.game.actor;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.scenes.scene2d.Action;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.IntArray;
 import com.badlogic.gdx.utils.Pool.Poolable;
@@ -263,7 +266,8 @@ public abstract class AnimationEntity extends LevelDrawActor implements Poolable
         return found;
     }
 
-    public void turnDirection(float degrees){
+    public AnimationEntity turnDirection(float degrees){
+        int oldDirection = this.direction;
 		this.degrees = degrees;
 		if(degrees > 45 && degrees < 135){
 			direction = AnimationEntity.UP;
@@ -274,6 +278,14 @@ public abstract class AnimationEntity extends LevelDrawActor implements Poolable
 		}else if(degrees > 325 || degrees < 45){
 			direction = AnimationEntity.RIGHT;
 		}
+        if(oldDirection!=direction){
+            if(isMoving){
+                animationPlayer.doMoveAnimation(direction);
+            }else{
+                animationPlayer.doIdelAnimation(direction);
+            }
+        }
+        return this;
 	}
     public void doMoveAnimation(){
         animationPlayer.doMoveAnimation(this.direction);
@@ -367,4 +379,33 @@ public abstract class AnimationEntity extends LevelDrawActor implements Poolable
     public PhysicsPlayer getPhysicsPlayer() {
         return physicsPlayer;
     }
+
+
+
+
+
+
+
+
+
+    /***********************************************Util method start********************************************************************/
+    public AnimationEntity addAllAction(Action... actions) {
+        for(Action action: actions){
+            addAction(action);
+        }
+        return this;
+    }
+    public AnimationEntity addToStage(Stage stage){
+        stage.addActor(this);
+        return this;
+    }
+    public AnimationEntity addToStage(){
+        this.getWorld().getStage().addActor(this);
+        return this;
+    }
+    public AnimationEntity faceToTarget(AnimationEntity target) {
+        return turnDirection(com.guxuede.game.tools.MathUtils.getAngle(this.getCenterX(),this.getCenterY(), target.getCenterX(),target.getCenterY()));
+    }
+    /***********************************************Util method end********************************************************************/
+
 }

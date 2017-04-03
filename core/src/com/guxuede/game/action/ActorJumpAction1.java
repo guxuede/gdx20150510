@@ -35,7 +35,7 @@ public class ActorJumpAction1 extends TemporalAction {
 //        Vector2 endPoint = targetPoint;
 //        float duration = 2;//startPoint.dst(endPoint)/speed;
 //        this.setDuration(duration);
-//        target.addAction(ActionsFactory.sequence(ActionsFactory.scaleTo(2,2,duration*0.2f, Interpolation.exp10)
+//        targetEntry.addAction(ActionsFactory.sequence(ActionsFactory.scaleTo(2,2,duration*0.2f, Interpolation.exp10)
 //                ,ActionsFactory.delay(duration*0.6f)
 //        ,ActionsFactory.scaleTo(-2,-2,duration*0.2f, Interpolation.exp10)));
     }

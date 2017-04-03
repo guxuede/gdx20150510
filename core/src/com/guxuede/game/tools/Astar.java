@@ -29,7 +29,7 @@ public class Astar {
         return newPath;
     }
 
-    /** Returns x,y pairs that are the path from the target to the start. */
+    /** Returns x,y pairs that are the path from the targetEntry to the start. */
     public IntArray getPath (int startX, int startY, int targetX, int targetY) {
         this.targetX = targetX;
         this.targetY = targetY;

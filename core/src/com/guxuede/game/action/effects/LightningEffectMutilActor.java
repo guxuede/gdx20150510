@@ -49,7 +49,7 @@ public class LightningEffectMutilActor extends AnimationEffect{
         float drxa = source.x + com.badlogic.gdx.math.MathUtils.cosDeg(degrees) * (distance/2);
         float drya = source.y + com.badlogic.gdx.math.MathUtils.sinDeg(degrees) * (distance/2);
         sprite.setPosition(drxa , drya);
-        sprite.draw(batch, parentAlpha,degrees+90,1,distance/lightLen, Color.GREEN);
+        sprite.draw(batch, parentAlpha,degrees+90,1,distance/lightLen, Color.RED);
 
     }
 

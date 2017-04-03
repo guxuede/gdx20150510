@@ -49,11 +49,12 @@ public class StandState extends ActorState {
                         }
                         @Override
                         public void onActive(AnimationEntity animationEntity, Vector2 center, float r) {
-                            skill.target = animationEntity;
+                            skill.targetEntry = animationEntity;
                             skill.owner = entity;
                             skill.targetPos = center==null?null:center.cpy();
                             AttackState actorState = new AttackState(direction);
                             actorState.skill = skill;
+                            skill.enter();
                             entity.goingToNewState(actorState,null);
                         }
                     };

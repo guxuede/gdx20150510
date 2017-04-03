@@ -1012,5 +1012,37 @@
         "frames":[13,14]
       }
     ]
+  },
+  {
+    "name": "project1",
+    "width": 16,
+    "height": 16,
+    "texture": "bitDungeonII_image_00322",
+    "animations": [
+      {
+        "name": "walkDownAnimation,walkLeftAnimation,walkRightAnimation,walkUpAnimation,stopDownAnimation,stopLeftAnimation,stopRightAnimation,stopUpAnimation",
+        "frameDuration": 0.1,
+        "scaleY":-1,
+        "frames": [0]
+      },
+      {
+        "name":"deathAnimation",
+        "frameDuration": 2,
+        "frames": [1]
+      }
+    ]
+  },
+  {
+    "name": "project2",
+    "width": 16,
+    "height": 16,
+    "texture": "bitDungeonII_image_00322",
+    "animations": [
+      {
+        "name": "walkDownAnimation,walkLeftAnimation,walkRightAnimation,walkUpAnimation,stopDownAnimation,stopLeftAnimation,stopRightAnimation,stopUpAnimation,deathAnimation",
+        "frameDuration": 0.1,
+        "frames": [1]
+      }
+    ]
   }
 ]

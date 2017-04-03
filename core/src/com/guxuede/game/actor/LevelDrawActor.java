@@ -5,11 +5,14 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.Action;
 import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.actions.ParallelAction;
+import com.badlogic.gdx.scenes.scene2d.actions.SequenceAction;
 import com.badlogic.gdx.scenes.scene2d.actions.TemporalAction;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.guxuede.game.StageWorld;
+import com.guxuede.game.action.GdxParallelAction;
 import com.guxuede.game.libgdx.GdxEffect;
 import com.guxuede.game.tools.TempObjects;
 
@@ -76,13 +79,13 @@ public abstract class LevelDrawActor extends Actor {
         if(isInScreen && isVisible()){
             if(drawLevel == 0){
                 drawFoot(batch,parentAlpha);
-                drawFootEffect(batch,parentAlpha);
+                drawFootEffect(getActions(),batch,parentAlpha);
             }else if(drawLevel == 1){
                 drawBody(batch, parentAlpha);
-                drawBodyEffect(batch, parentAlpha);
+                drawBodyEffect(getActions(),batch, parentAlpha);
             }else{
                 drawHead(batch,parentAlpha);
-                drawHeadEffect(batch,parentAlpha);
+                drawHeadEffect(getActions(),batch,parentAlpha);
             }
         }
     }
@@ -115,35 +118,38 @@ public abstract class LevelDrawActor extends Actor {
      * @param batch
      * @param parentAlpha
      */
-    protected void drawFootEffect(Batch batch, float parentAlpha){
-        Array<Action> actions = this.getActions();
+    protected void drawFootEffect(Array<Action> actions,Batch batch, float parentAlpha){
         if (actions.size > 0) {
             for (int i = 0; i < actions.size; i++) {
                 Action action = actions.get(i);
                 if(action instanceof GdxEffect){
                     ((GdxEffect) action).drawFootEffect(batch, parentAlpha);
+                }else if(action instanceof GdxParallelAction){
+                        drawFootEffect(((GdxParallelAction) action).getCurrentAction(),batch,parentAlpha);
                 }
             }
         }
     }
-    protected void drawBodyEffect(Batch batch, float parentAlpha){
-        Array<Action> actions = this.getActions();
+    protected void drawBodyEffect(Array<Action> actions,Batch batch, float parentAlpha){
         if (actions.size > 0) {
             for (int i = 0; i < actions.size; i++) {
                 Action action = actions.get(i);
                 if(action instanceof GdxEffect){
                     ((GdxEffect) action).drawBodyEffect(batch, parentAlpha);
+                }else if(action instanceof GdxParallelAction){
+                    drawBodyEffect(((GdxParallelAction) action).getCurrentAction(),batch,parentAlpha);
                 }
             }
         }
     }
-    protected void drawHeadEffect(Batch batch, float parentAlpha){
-        Array<Action> actions = this.getActions();
+    protected void drawHeadEffect(Array<Action> actions,Batch batch, float parentAlpha){
         if (actions.size > 0) {
             for (int i = 0; i < actions.size; i++) {
                 Action action = actions.get(i);
                 if(action instanceof GdxEffect){
                     ((GdxEffect) action).drawHeadEffect(batch,parentAlpha);
+                }else if(action instanceof GdxParallelAction){
+                    drawHeadEffect(((GdxParallelAction) action).getCurrentAction(),batch,parentAlpha);
                 }
             }
         }

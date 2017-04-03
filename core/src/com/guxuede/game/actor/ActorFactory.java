@@ -40,6 +40,16 @@ public class ActorFactory {
         AnimationProjection animationActor = new AnimationProjection(actorAnimationPlayer,world);
         return animationActor;
     }
+    public static AnimationProjection createProjectionActor(String name, AnimationEntity owner) {
+        AnimationHolder animationHolder = ResourceManager.getAnimationHolder(name);
+        ActorAnimationPlayer actorAnimationPlayer = new ActorAnimationPlayer(owner.getWorld(),animationHolder);
+        AnimationProjection animationActor = new AnimationProjection(actorAnimationPlayer,owner.getWorld());
+        animationActor.sourceActor = owner;
+        animationActor.collisionSize = 0;
+        animationActor.setCenterPosition(owner.getCenterX(), owner.getCenterY());
+        return animationActor;
+    }
+
     public static LightningEntity createLightningEntity(String name, StageWorld world) {
         AnimationHolder animationHolder = ResourceManager.getAnimationHolder(name);
         ActorAnimationPlayer actorAnimationPlayer = new ActorAnimationPlayer(world,animationHolder);

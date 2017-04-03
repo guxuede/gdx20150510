@@ -14,12 +14,16 @@ import com.guxuede.game.action.effects.AnimationEffect;
 import com.guxuede.game.action.effects.LightningEffect;
 import com.guxuede.game.action.effects.LightningEffectMutilActor;
 import com.guxuede.game.action.effects.LightningEffectMutilPoint;
+import com.guxuede.game.actor.EffectsEntity;
 import com.guxuede.game.tools.MathUtils;
 import com.guxuede.game.tools.TempObjects;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+
+import static com.guxuede.game.action.ActionsFactory.*;
+import static com.guxuede.game.actor.ActorFactory.createProjectionActor;
 
 /**
  * Created by guxuede on 2016/6/15 .
@@ -33,7 +37,7 @@ public class ActorThrowProjectionAction extends Action {
     @Override
     public boolean act(float delta) {
         if(targetEntity!=null){
-            throwProjectionToTarget(targetEntity);
+            throwProjectionHackToTarget(targetEntity);
         }else if(targetPos != null){
             throwProjection(targetPos.x,targetPos.y);
         }else{
@@ -107,17 +111,17 @@ public class ActorThrowProjectionAction extends Action {
      */
     public void throwProjection(float fx,float fy,float dx,float dy){
         AnimationEntity animationEntity = (AnimationEntity) getActor();
-        AnimationProjection projection = ActorFactory.createProjectionActor("bullet1", animationEntity.getWorld());
+        AnimationProjection projection = createProjectionActor("bullet1", animationEntity.getWorld());
         projection.sourceActor = animationEntity;
         projection.setCenterPosition(fx, fy);
         //projection.turnDirection(animationEntity.degrees);
         //ActorMoveToAction actorMoveToAction = new ActorMoveToMutilPointAction(Arrays.asList(new Vector2(dx,dy)));
         ActorPathMoveAction actorJumpAction1 = new ActorPathMoveAction(dx,dy);
         projection.addAction(
-                ActionsFactory.sequence(ActionsFactory.scaleBy(5, 5, 0.1f),
-                        ActionsFactory.scaleBy(-5, -5, 0.1f),
+                sequence(scaleBy(5, 5, 0.1f),
+                        scaleBy(-5, -5, 0.1f),
                         actorJumpAction1
-                        , ActionsFactory.actorDeathAnimation()
+                        , actorDeathAnimation()
                 ));
         //projection.moveToPoint(dx,dy);
 
@@ -133,14 +137,14 @@ public class ActorThrowProjectionAction extends Action {
         AnimationEntity owner = (AnimationEntity) getActor();
         float degree = MathUtils.getAngle(owner.getCenterX(),owner.getCenterY(),target.getCenterX(),target.getCenterY());
         owner.turnDirection(degree);
-        final AnimationProjection projection = ActorFactory.createProjectionActor("bullet1", owner.getWorld());
+        final AnimationProjection projection = createProjectionActor("bullet1", owner.getWorld());
         projection.collisionSize = 0;
         projection.sourceActor = owner;
         projection.setCenterPosition(owner.getCenterX(), owner.getCenterY());
         ActorMoveToActorAction actorMoveToAction = new ActorMoveToActorAction(target);
-        projection.addAction(ActionsFactory.sequence(
+        projection.addAction(sequence(
                 actorMoveToAction,
-                ActionsFactory.actorDeathAnimation()));
+                actorDeathAnimation()));
         actorMoveToAction.actorMoveListener = new ActorMoveToAction.ActorMoveListener() {
             @Override
             public void onArrived(Vector2 target, Actor actor) {
@@ -160,17 +164,17 @@ public class ActorThrowProjectionAction extends Action {
      */
     public void throwProjection1(float fx,float fy,float dx,float dy){
         AnimationEntity animationEntity = (AnimationEntity) getActor();
-        AnimationProjection projection = ActorFactory.createProjectionActor("bullet1", animationEntity.getWorld());
+        AnimationProjection projection = createProjectionActor("bullet1", animationEntity.getWorld());
         projection.sourceActor = animationEntity;
         projection.setCenterPosition(fx, fy);
         //projection.turnDirection(animationEntity.degrees);
         ActorMoveToAction actorMoveToAction = //new ActorMoveToActorAction(animationEntity.findClosestEntry()); new ActorMoveToMutilPointAction(Arrays.asList(new Vector2(100,100),new Vector2(200,200),new Vector2(500,200)));
                 new ActorMoveToMutilActorRandomAction(5);
         projection.addAction(
-                ActionsFactory.sequence(ActionsFactory.scaleBy(5, 5, 0.1f),
-                        ActionsFactory.scaleBy(-5, -5, 0.1f),
+                sequence(scaleBy(5, 5, 0.1f),
+                        scaleBy(-5, -5, 0.1f),
                         actorMoveToAction
-                        , ActionsFactory.actorDeathAnimation()
+                        , actorDeathAnimation()
                 ));
         //projection.moveToPoint(dx,dy);
 
@@ -178,6 +182,35 @@ public class ActorThrowProjectionAction extends Action {
         animationEntity.getStage().addActor(projection);
     }
 
+    /**
+     * 发射抛射物到目标单位，有追踪效果
+     * @param target
+     */
+    public void throwProjectionHackToTarget(AnimationEntity target) {
+        createProjectionActor("project1", (AnimationEntity) getActor())
+                .faceToTarget(target)
+                .addAllAction(
+                        sequence(
+                            scaleBy(5, 5, 0.2f),
+                            parallel(
+                                    scaleBy(-2, -2, 0.1f),
+                                    sequence(
+                                            new ActorMoveToActorAction(target),
+                                            parallel(
+                                                    scaleBy(5, 5, 0.2f),
+                                                    fadeOut(2),
+                                                    actorDeathAnimation()
+                                            )
+                                    )
+                            )
+                        )
+                )
+                .addToStage();
+    }
+
+    /**
+     * 发射闪电
+     */
     public void throwLightProjection(){
         AnimationEntity animationEntity = (AnimationEntity) getActor();
         AnimationEntity targetEntity = animationEntity.findClosestEntry(null);

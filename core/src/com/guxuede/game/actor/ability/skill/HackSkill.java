@@ -30,12 +30,12 @@ public class HackSkill extends Skill {
 
     @Override
     public boolean update(float delta) {
-        if(target == null)return true;
+        if(targetEntry == null)return true;
 
         stateTime += delta;
         if(stateTime > 0 && step == 0){
             step ++;
-            float degree = MathUtils.getAngle(owner.getCenterX(),owner.getCenterY(),target.getCenterX(),target.getCenterY());
+            float degree = MathUtils.getAngle(owner.getCenterX(),owner.getCenterY(), targetEntry.getCenterX(), targetEntry.getCenterY());
             owner.turnDirection(degree);
         }else if(stateTime >= 2 && step == 1){
             step ++;
@@ -47,14 +47,14 @@ public class HackSkill extends Skill {
     }
 
     public void throwHackingProjection(){
-            float degree = MathUtils.getAngle(owner.getCenterX(),owner.getCenterY(),target.getCenterX(),target.getCenterY());
+            float degree = MathUtils.getAngle(owner.getCenterX(),owner.getCenterY(), targetEntry.getCenterX(), targetEntry.getCenterY());
             owner.turnDirection(degree);
             final AnimationProjection projection = ActorFactory.createProjectionActor("BLANK", owner.getWorld());
             projection.collisionSize = 0;
             projection.sourceActor = owner;
             projection.setVisible(false);
             projection.setCenterPosition(owner.getCenterX(), owner.getCenterY());
-            ActorMoveToActorAction actorMoveToAction = new ActorMoveToActorAction(target);
+            ActorMoveToActorAction actorMoveToAction = new ActorMoveToActorAction(targetEntry);
             projection.addAction(ActionsFactory.sequence(
                     actorMoveToAction,
                     ActionsFactory.actorDeathAnimation()));

@@ -28,11 +28,12 @@ public class AnimationProjection extends AnimationEntity {
 	}
 
 	@Override
-	public void turnDirection(float degrees) {
+	public AnimationEntity turnDirection(float degrees) {
 		super.turnDirection(degrees);
         if(trunDirectionWhenMove){
             this.setRotation(degrees+90);
         }
+        return this;
 	}
 
     /**
