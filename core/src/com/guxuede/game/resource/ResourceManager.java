@@ -10,6 +10,7 @@ import com.badlogic.gdx.graphics.g2d.*;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton.TextButtonStyle;
 import com.badlogic.gdx.scenes.scene2d.utils.NinePatchDrawable;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
+import com.guxuede.game.actor.ability.skill.Skill;
 import com.guxuede.game.libgdx.GdxNormapTexture;
 import com.guxuede.game.libgdx.GdxSprite;
 import com.guxuede.game.libgdx.Skin;
@@ -27,6 +28,7 @@ public class ResourceManager {
     public static final TextureAtlas TEXTURE_ATLAS_PACK =new TextureAtlas(Gdx.files.internal("pack"));
     public static final Map<String,Sound> soundMap = new HashMap<String, Sound>();
     public static final List<AnimationHolder> ANIMATION_HOLDER_LIST = ActorJsonParse.parse("actor.json");
+    public static final Map<String, Skill> SKILLS =ActorSkillParse.parseSkill("skill.html");
 
     //一些资源初始化
 	public static Skin skin=new Skin(Gdx.files.internal("uiskin.json"));
@@ -120,5 +122,17 @@ public class ResourceManager {
             soundMap.put(soundFile,sound);
         }
         return soundMap.get(soundFile);
+    }
+
+    public static Skill getSkillById(String id){
+        return SKILLS.get(id);
+    }
+
+    public static List<Skill> getSkillByIds(String... ids){
+        List<Skill> skills = new ArrayList<Skill>();
+        for(String id:ids){
+            skills.add(SKILLS.get(id));
+        }
+        return skills;
     }
 }

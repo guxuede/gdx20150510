@@ -13,6 +13,8 @@ import com.guxuede.game.actor.AnimationProjection;
 import com.guxuede.game.tools.MathUtils;
 import com.guxuede.game.tools.TempObjects;
 
+import static com.guxuede.game.actor.ability.skill.SkillTargetTypeEnum.TARGET_TYPE_TARGET;
+
 /**
  * Created by guxuede on 2016/9/27 .
  */
@@ -24,7 +26,7 @@ public class HackSkill extends Skill {
         return Input.Keys.A;
     }
 
-    public int getTargetType(){
+    public SkillTargetTypeEnum getTargetType(){
         return TARGET_TYPE_TARGET;
     }
 

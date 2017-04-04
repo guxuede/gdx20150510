@@ -6,6 +6,7 @@ import com.badlogic.gdx.utils.Array;
 import com.guxuede.game.actor.AnimationEntity;
 import com.guxuede.game.actor.AnimationProjection;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class MathUtils {
@@ -109,6 +110,12 @@ public class MathUtils {
             findedList.add(finded);
             findClosestEntry(actorList,findedList,This);
         }
+    }
+
+    public static List<AnimationEntity> findClosestEntry(AnimationEntity This){
+        List<AnimationEntity> findedList = new ArrayList<AnimationEntity>();
+        findClosestEntry(This.getStage().getActors(),findedList,This);
+        return findedList;
     }
 
     public static final float EPSILON = 0.1f;

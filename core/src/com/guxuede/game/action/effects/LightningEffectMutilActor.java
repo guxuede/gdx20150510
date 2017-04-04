@@ -15,6 +15,10 @@ import java.util.List;
 public class LightningEffectMutilActor extends AnimationEffect{
     public List<AnimationEntity> targetEntries;
 
+    public LightningEffectMutilActor(){
+
+    }
+
     public LightningEffectMutilActor(String animationName, List<AnimationEntity> targetEntries) {
         super(animationName);
         this.targetEntries = targetEntries;
@@ -53,5 +57,7 @@ public class LightningEffectMutilActor extends AnimationEffect{
 
     }
 
-
+    public void setTargetEntries(List<AnimationEntity> targetEntries) {
+        this.targetEntries = targetEntries;
+    }
 }

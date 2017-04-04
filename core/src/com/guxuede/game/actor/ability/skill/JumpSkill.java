@@ -1,8 +1,9 @@
 package com.guxuede.game.actor.ability.skill;
 
 import com.badlogic.gdx.Input;
-import com.guxuede.game.action.ActionsFactory;
 import com.guxuede.game.action.ActorJumpAction1;
+
+import static com.guxuede.game.actor.ability.skill.SkillTargetTypeEnum.TARGET_TYPE_AREA;
 
 /**
  * Created by guxuede on 2016/10/7 .
@@ -14,8 +15,8 @@ public class JumpSkill extends Skill {
         return Input.Keys.Q;
     }
 
-    public int getTargetType(){
-        return TARGET_TYPE_TARGET;
+    public SkillTargetTypeEnum getTargetType(){
+        return TARGET_TYPE_AREA;
     }
 
 

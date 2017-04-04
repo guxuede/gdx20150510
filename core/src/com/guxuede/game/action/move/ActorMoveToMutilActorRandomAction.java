@@ -14,6 +14,10 @@ public class ActorMoveToMutilActorRandomAction extends ActorMoveToMutilAction{
     int currentTime;
     AnimationEntity currentEntity;
 
+    public ActorMoveToMutilActorRandomAction(){
+
+    }
+
     public ActorMoveToMutilActorRandomAction(int times) {
         this.times = times;
     }
@@ -54,5 +58,17 @@ public class ActorMoveToMutilActorRandomAction extends ActorMoveToMutilAction{
     @Override
     public Vector2 getCurrentTarget() {
         return currentEntity==null?null:new Vector2(currentEntity.getCenterX(),currentEntity.getCenterY());
+    }
+
+    public void setTimes(int times) {
+        this.times = times;
+    }
+
+    @Override
+    public void reset() {
+        super.reset();
+        times = 0;
+        currentTime = 0;
+        currentEntity = null;
     }
 }

@@ -2,10 +2,6 @@ package com.guxuede.game.actor.state;
 
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.guxuede.game.actor.AnimationEntity;
-import com.guxuede.game.action.ActorThrowProjectionAction;
-import com.guxuede.game.action.effects.AnimationEffect;
-import com.guxuede.game.actor.ability.skill.HackSkill;
-import com.guxuede.game.actor.ability.skill.MagicSkill;
 import com.guxuede.game.actor.ability.skill.Skill;
 
 /**

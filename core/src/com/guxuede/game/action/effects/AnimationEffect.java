@@ -88,6 +88,12 @@ public class AnimationEffect extends GdxEffect {
         return super.act(delta);
     }
 
+    public void setEffectAnimation(String animationName){
+        this.animationName = animationName;
+        AnimationHolder animationHolder = ResourceManager.getAnimationHolder(animationName);
+        Animation effectAnimation = animationHolder.getStopDownAnimation();
+        setEffectAnimation(effectAnimation);
+    }
 
     public void setEffectAnimation(Animation effectAnimation) {
         this.effectAnimation = effectAnimation;
@@ -98,9 +104,12 @@ public class AnimationEffect extends GdxEffect {
     public void reset() {
         super.reset();
         effectAnimation = null;
+        animationName = null;
         if(sound!=null){
             sound.stop();
-            ((AnimationEntity)target).getWorld().getSoundManager().unRegisterSound(sound);
+            if(target!=null){
+                ((AnimationEntity)target).getWorld().getSoundManager().unRegisterSound(sound);
+            }
             sound = null;
         }
     }

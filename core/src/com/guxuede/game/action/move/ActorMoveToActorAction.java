@@ -10,6 +10,10 @@ public class ActorMoveToActorAction extends ActorMoveToAction {
 
     protected AnimationEntity targetActor;
 
+    public ActorMoveToActorAction(){
+
+    }
+
     public ActorMoveToActorAction(AnimationEntity targetActor) {
         this.targetActor = targetActor;
     }
@@ -33,5 +37,9 @@ public class ActorMoveToActorAction extends ActorMoveToAction {
     @Override
     public Vector2 getTargetPoint() {
         return targetActor==null?null:new Vector2(targetActor.getCenterX(),targetActor.getCenterY());
+    }
+
+    public void setTargetActor(AnimationEntity targetActor) {
+        this.targetActor = targetActor;
     }
 }

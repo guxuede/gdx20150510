@@ -80,4 +80,11 @@ public abstract class ActorMoveToAction extends GdxAction {
     public static interface ActorMoveListener{
         void onArrived(Vector2 target,Actor actor);
     }
+
+    @Override
+    public void reset() {
+        super.reset();
+        actorMoveListener = null;
+        oldPoint.set(0,0);
+    }
 }

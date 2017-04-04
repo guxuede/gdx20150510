@@ -16,10 +16,7 @@ import com.badlogic.gdx.utils.Pool.Poolable;
 import com.guxuede.game.StageWorld;
 import com.guxuede.game.action.ActorJumpAction;
 import com.guxuede.game.action.move.ActorMoveToPathAction;
-import com.guxuede.game.actor.ability.skill.HackSkill;
-import com.guxuede.game.actor.ability.skill.JumpSkill;
-import com.guxuede.game.actor.ability.skill.MagicSkill;
-import com.guxuede.game.actor.ability.skill.Skill;
+import com.guxuede.game.actor.ability.skill.*;
 import com.guxuede.game.actor.state.ActorState;
 import com.guxuede.game.actor.state.StandState;
 import com.guxuede.game.action.ActionsFactory;
@@ -87,9 +84,7 @@ public abstract class AnimationEntity extends LevelDrawActor implements Poolable
         this.primaryColor = new Color(MathUtils.random(), MathUtils.random(), MathUtils.random(), 1);
         this.physicsPlayer = world.getPhysicsManager().createPositionPlayer();
         this.stageWorld = world;
-        skills.add(new HackSkill());
-        skills.add(new MagicSkill());
-        skills.add(new JumpSkill());
+        skills.addAll(ResourceManager.getSkillByIds("jump","hack","lightingShoot","tanshe","redBolts"));
     }
 
     //=============================================Position Control========================================================================
@@ -405,6 +400,9 @@ public abstract class AnimationEntity extends LevelDrawActor implements Poolable
     }
     public AnimationEntity faceToTarget(AnimationEntity target) {
         return turnDirection(com.guxuede.game.tools.MathUtils.getAngle(this.getCenterX(),this.getCenterY(), target.getCenterX(),target.getCenterY()));
+    }
+    public AnimationEntity faceToTarget(Vector2 target) {
+        return turnDirection(com.guxuede.game.tools.MathUtils.getAngle(this.getCenterX(),this.getCenterY(), target.x,target.y));
     }
     /***********************************************Util method end********************************************************************/
 

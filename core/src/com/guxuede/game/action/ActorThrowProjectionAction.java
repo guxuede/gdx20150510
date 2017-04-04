@@ -37,7 +37,7 @@ public class ActorThrowProjectionAction extends Action {
     @Override
     public boolean act(float delta) {
         if(targetEntity!=null){
-            throwProjectionHackToTarget(targetEntity);
+           // throwProjectionHackToTarget(targetEntity);
         }else if(targetPos != null){
             throwProjection(targetPos.x,targetPos.y);
         }else{

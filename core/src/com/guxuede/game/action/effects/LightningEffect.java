@@ -9,14 +9,15 @@ import com.guxuede.game.tools.MathUtils;
  * Created by guxuede on 2016/7/17 .
  */
 public class LightningEffect extends AnimationEffect{
-    public AnimationEntity targetEntity;
+    public AnimationEntity lightingTargetEntity;
 
-    float lenAnima;
-    float lenAnimaTime;
+    public LightningEffect(){
 
-    public LightningEffect(String animationName, AnimationEntity targetEntity) {
+    }
+
+    public LightningEffect(String animationName, AnimationEntity lightingTargetEntity) {
         super(animationName);
-        this.targetEntity = targetEntity;
+        this.lightingTargetEntity = lightingTargetEntity;
         setDuration(0.5f);
     }
 
@@ -31,7 +32,7 @@ public class LightningEffect extends AnimationEffect{
             AnimationEntity animationActor = getAnimationEntity();
             GdxSprite sprite = (GdxSprite) effectAnimation.getKeyFrame(animationActor.stateTime, true);
             AnimationEntity source = this.getAnimationEntity();
-            AnimationEntity target = this.targetEntity;
+            AnimationEntity target = this.lightingTargetEntity;
             float degrees = MathUtils.getAngle(source.getCenterX(),source.getCenterY(),target.getCenterX(),target.getCenterY());
             sprite.setRotation(degrees+90);
             float distance = (float) MathUtils.distance(source.getCenterX(),source.getCenterY(),target.getCenterX(),target.getCenterY());//2单位之间的距离
@@ -63,21 +64,13 @@ public class LightningEffect extends AnimationEffect{
         }
     }
 
-
-    float getlenAnima(float totalLen,float stateTime){
-        if(stateTime - lenAnimaTime > 0.05){
-            lenAnima ++ ;
-            lenAnimaTime = stateTime;
-        }
-        if(lenAnima > totalLen){
-            lenAnima = totalLen;
-        }
-        return lenAnima;
+    @Override
+    public void reset() {
+        super.reset();
+        lightingTargetEntity = null;
     }
 
-    public static void main(String[] args) {
-
-        //System.out.println(Vector2.dst2(320,324 , 172,143));
+    public void setLightingTargetEntity(AnimationEntity lightingTargetEntity) {
+        this.lightingTargetEntity = lightingTargetEntity;
     }
-
 }

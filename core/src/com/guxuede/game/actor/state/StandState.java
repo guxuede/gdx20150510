@@ -9,6 +9,8 @@ import com.guxuede.game.actor.AnimationActor;
 import com.guxuede.game.actor.AnimationEntity;
 import com.guxuede.game.actor.ability.skill.Skill;
 
+import static com.guxuede.game.actor.ability.skill.SkillTargetTypeEnum.TARGET_TYPE_AREA;
+
 /**
  * Created by guxuede on 2016/6/15 .
  */
@@ -27,7 +29,7 @@ public class StandState extends ActorState {
     }
 
     @Override
-    public ActorState handleInput(final AnimationEntity entity, InputEvent event) {
+    public ActorState handleInput(final AnimationEntity entity, final InputEvent event) {
         if(InputEvent.Type.keyDown == event.getType()){
             if (Input.Keys.RIGHT == event.getKeyCode()){
                 return new MoveState(AnimationEntity.RIGHT);
@@ -49,16 +51,18 @@ public class StandState extends ActorState {
                         }
                         @Override
                         public void onActive(AnimationEntity animationEntity, Vector2 center, float r) {
-                            skill.targetEntry = animationEntity;
-                            skill.owner = entity;
-                            skill.targetPos = center==null?null:center.cpy();
-                            AttackState actorState = new AttackState(direction);
-                            actorState.skill = skill;
-                            skill.enter();
-                            entity.goingToNewState(actorState,null);
+                            if(skill.verifyTarget(animationEntity,center,r)){
+                                skill.targetEntry = animationEntity;
+                                skill.owner = entity;
+                                skill.targetPos = center==null?null:center.cpy();
+                                AttackState actorState = new AttackState(direction);
+                                actorState.skill = skill;
+                                skill.enter();
+                                entity.goingToNewState(actorState,null);
+                            }
                         }
                     };
-                    if (skill.getTargetType() == Skill.TARGET_TYPE_AREA) {
+                    if (skill.getTargetType() == TARGET_TYPE_AREA) {
                         entity.getWorld().getMouseManager().enterToAreaChoiceStatus(100, listener);
                     } else {
                         entity.getWorld().getMouseManager().enterToTargetChoiceStatus(listener);

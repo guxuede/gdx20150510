@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!--suppress ALL -->
+<skills>
+    <skill id="lightingShoot" name="Lighting Shoot" hotKey="L" targetType="TARGET_TYPE_ALL_TARGET">
+        <description>
+            发射闪电到指定单位
+        </description>
+        <script>
+            var af = Java.type('com.guxuede.game.action.ActionsFactory');
+            var ac = Java.type('com.badlogic.gdx.scenes.scene2d.actions.Actions');
+            owner.faceToTarget(targetEntry);
+            af.gdxSequence(
+                    af.gdxSequence(af.magicShake()),
+                    af.gdxSequence(af.animationEffect("lightningSpell")),
+                    af.lightningEffect("lightningLine",targetEntry),
+                    af.actorAction(targetEntry,af.animationEffect("lightningAttacked"))
+            );
+        </script>
+    </skill>
+    <skill id="hack" name="Hack" hotKey="A" targetType="TARGET_TYPE_ALL_TARGET">
+        <description>
+            劈砍攻击
+        </description>
+        <script>
+            var af = Java.type('com.guxuede.game.action.ActionsFactory');
+            var ac = Java.type('com.badlogic.gdx.scenes.scene2d.actions.Actions');
+            owner.faceToTarget(targetEntry);
+            af.gdxSequence(
+                    af.gdxSequence(af.magicShake()),
+                    af.gdxSequence(af.animationEffect("lightningSpell")),
+                    af.newProjectionAction("project1",targetEntry,
+                            ac.sequence(
+                                    ac.scaleBy(5, 5, 0.2),
+                                    ac.parallel(
+                                            ac.scaleBy(-2, -2, 0.1),
+                                            ac.sequence(
+                                                    af.actorMoveToActorAction(targetEntry),
+                                                    ac.parallel(
+                                                            ac.scaleBy(5, 5, 0.2),
+                                                            ac.fadeOut(2),
+                                                            af.actorDeathAnimation()
+                                                    )
+                                            )
+                                    )
+                            )
+                    )
+            );
+        </script>
+    </skill>
+    <skill id="jump" name="Jump" hotKey="J" targetType="TARGET_TYPE_AREA">
+        <description>
+            跳跃到指定位置上
+        </description>
+        <script>
+            var af = Java.type('com.guxuede.game.action.ActionsFactory');
+            var ac = Java.type('com.badlogic.gdx.scenes.scene2d.actions.Actions');
+            owner.faceToTarget(targetPos);
+            af.gdxSequence(af.actorJumpAction1(owner,targetPos));
+        </script>
+    </skill>
+    <skill id="tanshe" name="Tan She" hotKey="T" targetType="TARGET_TYPE_AREA">
+        <description>
+            发射一个火焰随机攻击附近5个单位
+        </description>
+        <script>
+            var af = Java.type('com.guxuede.game.action.ActionsFactory');
+            var ac = Java.type('com.badlogic.gdx.scenes.scene2d.actions.Actions');
+            owner.faceToTarget(targetPos);
+            af.gdxSequence(af.newProjectionAction("bullet1", targetPos, ac.sequence(ac.scaleBy(5, 5, 0.1), ac.scaleBy(-5, -5, 0.1), af.actorMoveToMutilActorRandomAction(5), af.actorDeathAnimation())));
+        </script>
+    </skill>
+    <skill id="redBolts" name="Red Bolts" hotKey="R" targetType="TARGET_TYPE_AREA">
+        <description>
+            发射一个红色闪电，附近的单位都会被闪电吸引
+        </description>
+        <script>
+            var af = Java.type('com.guxuede.game.action.ActionsFactory');
+            var ac = Java.type('com.badlogic.gdx.scenes.scene2d.actions.Actions');
+            var MathUtils = Java.type('com.guxuede.game.tools.MathUtils');
+            owner.faceToTarget(targetPos);
+            af.gdxSequence(af.lightningEffectMutilActor("lightningLine1",MathUtils.findClosestEntry(owner)));
+        </script>
+    </skill>
+</skills>

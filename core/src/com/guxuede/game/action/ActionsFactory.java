@@ -1,10 +1,21 @@
 package com.guxuede.game.action;
 
 import com.badlogic.gdx.math.Interpolation;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Action;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.actions.ParallelAction;
 import com.badlogic.gdx.scenes.scene2d.actions.SequenceAction;
+import com.guxuede.game.action.effects.AnimationEffect;
+import com.guxuede.game.action.effects.LightningEffect;
+import com.guxuede.game.action.effects.LightningEffectMutilActor;
+import com.guxuede.game.action.move.ActorMoveToActorAction;
+import com.guxuede.game.action.move.ActorMoveToMutilActorRandomAction;
+import com.guxuede.game.actor.AnimationEntity;
+
+import java.util.List;
+
+import static com.guxuede.game.actor.ActorFactory.createProjectionActor;
 
 public class ActionsFactory extends Actions{
 //
@@ -68,6 +79,14 @@ public class ActionsFactory extends Actions{
 		return action;
 	}
 
+    static public Action actorJumpAction1(AnimationEntity owner,Vector2 targetPos){
+        if(owner.getWorld().getPhysicsManager().pointIsClear(targetPos)){
+            return new ActorJumpAction1(targetPos);
+        }else{
+            return sequence();
+        }
+    }
+
 	//
 	static public ActorJumpAction actorJumpAction (float x,float y){
 		return actorJumpAction(x,y, null);
@@ -106,12 +125,117 @@ public class ActionsFactory extends Actions{
 						
 		);
 	}
+
+    static public LightningEffectMutilActor lightningEffectMutilActor(String effectName,List<AnimationEntity> targetEntries){
+        LightningEffectMutilActor action = action(LightningEffectMutilActor.class);
+        action.setDuration(10);
+        action.setEffectAnimation(effectName);
+        action.setTargetEntries(targetEntries);
+        return action;
+    }
+
+    /**
+     * 发射闪电到指定单位。
+     * @param effectName
+     * @param target
+     * @return
+     */
+    static public LightningEffect lightningEffect(String effectName,AnimationEntity target){
+        LightningEffect action =action(LightningEffect.class);
+        action.setDuration(0.5f);
+        action.setEffectAnimation(effectName);
+        action.setLightingTargetEntity(target);
+        return action;
+    }
+
+    /**
+     * 移动到指定单位
+     * @param target
+     * @return
+     */
+    static public ActorMoveToActorAction actorMoveToActorAction(AnimationEntity target){
+        ActorMoveToActorAction action = action(ActorMoveToActorAction.class);
+        action.setTargetActor(target);
+        return action;
+    }
+
+    /**
+     * 在单位身上显示动画特效
+     * @param effectName
+     * @return
+     */
+    static public AnimationEffect animationEffect(String effectName){
+        AnimationEffect action = action(AnimationEffect.class);
+        action.setEffectAnimation(effectName);
+        return action;
+    }
+
+    /**
+     * 创建一个新抛射物，并且赋予actions
+     * @param entityName
+     * @param actions
+     * @return
+     */
+    static public Action newProjectionAction(final String entityName, final AnimationEntity targetEntry, final Action actions) {
+        Action newActorAction = new Action() {
+            @Override
+            public boolean act(float delta) {
+                createProjectionActor(entityName, (AnimationEntity) target).faceToTarget(targetEntry)
+                .addAllAction(actions).addToStage();
+                return true;
+            }
+        };
+        return newActorAction;
+    }
+
+    /**
+     * 创建一个新抛射物，并且赋予actions
+     * @param entityName
+     * @param actions
+     * @return
+     */
+    static public Action newProjectionAction(final String entityName, final Vector2 pos, final Action actions) {
+        Action newActorAction = new Action() {
+            @Override
+            public boolean act(float delta) {
+                createProjectionActor(entityName, (AnimationEntity) target).faceToTarget(pos)
+                        .addAllAction(actions).addToStage();
+                return true;
+            }
+        };
+        return newActorAction;
+    }
+
+    /**
+     * 给指定单位添加Action
+     * @param targetEntry
+     * @param actions
+     * @return
+     */
+    static public Action actorAction (final AnimationEntity targetEntry, final Action actions) {
+        Action newActorAction = new Action() {
+            @Override
+            public boolean act(float delta) {
+                targetEntry.addAllAction(actions);
+                return true;
+            }
+        };
+        return newActorAction;
+    }
+
+    static public ActorMoveToMutilActorRandomAction actorMoveToMutilActorRandomAction(final int times) {
+        ActorMoveToMutilActorRandomAction action = action(ActorMoveToMutilActorRandomAction.class);
+        action.setTimes(times);
+        return action;
+    }
+
     
     static public GdxSequenceAction gdxSequence (Action action1) {
         GdxSequenceAction action = action(GdxSequenceAction.class);
         action.addAction(action1);
         return action;
     }
+
 
     static public GdxSequenceAction gdxSequence (Action action1, Action action2) {
         GdxSequenceAction action = action(GdxSequenceAction.class);

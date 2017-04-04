@@ -130,8 +130,8 @@ public class TitleMapStage extends Stage implements GdxScreen {
         addActor(actor1);
 
 
-        //ActorFactory.createRandomActor(world,this,focusListener);
-        //ActorFactory.createRandomDoor(world,this);
+        ActorFactory.createRandomActor(world,this);
+//        ActorFactory.createRandomDoor(world,this);
     }
 
     private Texture bg = ResourceManager.getTexture("World");
