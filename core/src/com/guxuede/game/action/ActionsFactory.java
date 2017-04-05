@@ -4,21 +4,25 @@ import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Action;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
-import com.badlogic.gdx.scenes.scene2d.actions.ParallelAction;
 import com.badlogic.gdx.scenes.scene2d.actions.SequenceAction;
+import com.guxuede.game.action.damage.ActorDeathAnimationAction;
+import com.guxuede.game.action.damage.ActorDeathMonitorAction;
+import com.guxuede.game.action.damage.DamageAction;
 import com.guxuede.game.action.effects.AnimationEffect;
 import com.guxuede.game.action.effects.LightningEffect;
 import com.guxuede.game.action.effects.LightningEffectMutilActor;
 import com.guxuede.game.action.move.ActorMoveToActorAction;
 import com.guxuede.game.action.move.ActorMoveToMutilActorRandomAction;
 import com.guxuede.game.actor.AnimationEntity;
+import com.guxuede.game.tools.TempObjects;
 
 import java.util.List;
 
 import static com.guxuede.game.actor.ActorFactory.createProjectionActor;
 
 public class ActionsFactory extends Actions{
-//
+
+    //////////////////////////////////////////////////////////////移动 START///////////////////////////////////////////////////////////////////////
 	static public ActorMoveDirectiveAction actorMoveDirective (int direction) {
 		return actorMoveDirective(direction, 0, null);
 	}
@@ -51,22 +55,6 @@ public class ActionsFactory extends Actions{
 		action.setInterpolation(interpolation);
 		return action;
 	}
-
-	//
-	static public ActorDeathAnimationAction actorDeathAnimation () {
-		return actorDeathAnimation(0, null);
-	}
-
-	static public ActorDeathAnimationAction actorDeathAnimation (float duration) {
-		return actorDeathAnimation(duration, null);
-	}
-
-	static public ActorDeathAnimationAction actorDeathAnimation (float duration, Interpolation interpolation) {
-		ActorDeathAnimationAction action = action(ActorDeathAnimationAction.class);
-		action.setInterpolation(interpolation);
-		return action;
-	}
-	
 	//
 	static public ActorMoveAction actorMoveAction (float x,float y){
 		return actorMoveAction(x,y, null);
@@ -78,6 +66,26 @@ public class ActionsFactory extends Actions{
 		action.setInterpolation(interpolation);
 		return action;
 	}
+
+    /**
+     * 移动到指定单位
+     * @param target
+     * @return
+     */
+    static public ActorMoveToActorAction actorMoveToActorAction(AnimationEntity target){
+        ActorMoveToActorAction action = action(ActorMoveToActorAction.class);
+        action.setTargetActor(target);
+        return action;
+    }
+
+    /**
+     * 单位一直移动
+     * @return
+     */
+    public static ActorAlwayMoveAction actorAlwayMoveAction(){
+        ActorAlwayMoveAction action = action(ActorAlwayMoveAction.class);
+        return action;
+    }
 
     static public Action actorJumpAction1(AnimationEntity owner,Vector2 targetPos){
         if(owner.getWorld().getPhysicsManager().pointIsClear(targetPos)){
@@ -105,6 +113,18 @@ public class ActionsFactory extends Actions{
     static public Action magicShake(){
         return parallel(sequence(scaleBy(0,0.1f,0.5f),scaleBy(0,-0.1f)),new ActorUDShakeAction(1));
     }
+
+    static public Action jumpAction(float x,float y){
+        return parallel(
+                actorJumpAction(x,y)
+                //actorMoveAction(x, y)
+                //actorMoveAnimation(null, 0.5f),
+                //sequence(scaleBy(0.2f, 0.2f, 0.25f),
+                // scaleBy(-0.2f, -0.2f, 0.25f))
+
+        );
+    }
+
 //	static public Action jumpAction(float length){
 //		
 //		return parallel(
@@ -115,17 +135,80 @@ public class ActionsFactory extends Actions{
 //						
 //		);
 //	}
-	static public Action jumpAction(float x,float y){
-		return parallel(
-				actorJumpAction(x,y)
-				//actorMoveAction(x, y)
-				//actorMoveAnimation(null, 0.5f),
-				//sequence(scaleBy(0.2f, 0.2f, 0.25f),
-						// scaleBy(-0.2f, -0.2f, 0.25f))
-						
-		);
-	}
+    //////////////////////////////////////////////////////////////移动 END///////////////////////////////////////////////////////////////////////
 
+    /**
+     * 创建单位的action
+     * @param actorName
+     * @param pos
+     * @return
+     */
+    public  static EffectsActorAction effectsActorAction(String actorName, Vector2 pos, Action... actions){
+        EffectsActorAction action = action(EffectsActorAction.class);
+        action.setPos(pos);
+        action.setActorName(actorName);
+        action.setActions(actions);
+        return action;
+    }
+    //////////////////////////////////////////////////////////////特效/效果/Effect START///////////////////////////////////////////////////////////////////////
+    /**
+     * 在一条线上创建特效
+     * @param owner             特效施放者
+     * @param pos               释放位置
+     * @param effectName       特效名字
+     * @param intervalTime      间隔多久产生特效
+     * @param intervalDistance 间隔多远产生单位
+     * @param unit              产生多少个
+     * @return
+     */
+    public static Action createLineEffectEntriesAction(AnimationEntity owner,Vector2 pos,String effectName,float intervalTime,float intervalDistance,int unit){
+        SequenceAction sequenceAction = sequence();
+        Vector2 ownerPos = owner.getPhysicsPosition();
+        Vector2 directionNor = TempObjects.temp1Vector2.set(pos).sub(owner.getPhysicsPosition()).nor();
+        for (int i = 0; i < 5; i++) {
+            sequenceAction.addAction(delay(intervalTime));
+            Vector2 effectPoint = TempObjects.temp2Vector2.set(directionNor).scl(i*intervalDistance).add(ownerPos);
+            sequenceAction.addAction(parallel(effectsActorAction(effectName,effectPoint),damageAction(effectPoint,intervalDistance,5)));
+        }
+        return sequenceAction;
+    }
+    /**
+     * 在一条线上创建特效
+     * @param owner             特效施放者
+     * @param pos               释放位置
+     * @param effectName       特效名字
+     * @param intervalTime      间隔多久产生特效
+     * @param intervalDistance 间隔多远产生单位
+     * @param unit              产生多少个
+     * @param hurtPoint         伤害多少
+     * @param hurtIntervalTime  间隔多久伤害一次
+     * @param hurtTimes           伤害多少次
+     * @return
+     */
+    public static Action createLineEffectEntriesAction(AnimationEntity owner,Vector2 pos,String effectName,float intervalTime,float intervalDistance,int unit, float hurtPoint,float hurtIntervalTime, int hurtTimes){
+        SequenceAction sequenceAction = sequence();
+        Vector2 ownerPos = owner.getPhysicsPosition();
+        Vector2 directionNor = TempObjects.temp1Vector2.set(pos).sub(owner.getPhysicsPosition()).nor();
+        for (int i = 0; i < unit; i++) {
+            Vector2 effectPoint = TempObjects.temp2Vector2.set(directionNor).scl(i*intervalDistance).add(ownerPos);
+            sequenceAction.addAction(
+                    delay(intervalTime,
+                            parallel(
+                                    effectsActorAction(effectName, effectPoint,
+                                            damageAction(effectPoint, intervalDistance, hurtPoint, hurtIntervalTime, hurtTimes)
+                                    )
+                            )
+                    )
+            );
+        }
+        return sequenceAction;
+    }
+    /**
+     * 在多个单位上链接一个闪电
+     * @param effectName
+     * @param targetEntries
+     * @return
+     */
     static public LightningEffectMutilActor lightningEffectMutilActor(String effectName,List<AnimationEntity> targetEntries){
         LightningEffectMutilActor action = action(LightningEffectMutilActor.class);
         action.setDuration(10);
@@ -148,16 +231,6 @@ public class ActionsFactory extends Actions{
         return action;
     }
 
-    /**
-     * 移动到指定单位
-     * @param target
-     * @return
-     */
-    static public ActorMoveToActorAction actorMoveToActorAction(AnimationEntity target){
-        ActorMoveToActorAction action = action(ActorMoveToActorAction.class);
-        action.setTargetActor(target);
-        return action;
-    }
 
     /**
      * 在单位身上显示动画特效
@@ -169,6 +242,10 @@ public class ActionsFactory extends Actions{
         action.setEffectAnimation(effectName);
         return action;
     }
+    //////////////////////////////////////////////////////////////特效/效果/Effect END///////////////////////////////////////////////////////////////////////
+
+
+    //////////////////////////////////////////////////////////////抛射/投弹 START///////////////////////////////////////////////////////////////////////
 
     /**
      * 创建一个新抛射物，并且赋予actions
@@ -228,8 +305,9 @@ public class ActionsFactory extends Actions{
         action.setTimes(times);
         return action;
     }
+    //////////////////////////////////////////////////////////////抛射/投弹 END///////////////////////////////////////////////////////////////////////
 
-    
+    //////////////////////////////////////////////////////////////工具类 START///////////////////////////////////////////////////////////////////////
     static public GdxSequenceAction gdxSequence (Action action1) {
         GdxSequenceAction action = action(GdxSequenceAction.class);
         action.addAction(action1);
@@ -332,5 +410,62 @@ public class ActionsFactory extends Actions{
     static public GdxParallelAction gdxParallel () {
         return action(GdxParallelAction.class);
     }
+    //////////////////////////////////////////////////////////////工具类 END///////////////////////////////////////////////////////////////////////
+
+
+
+    //////////////////////////////////////////////////////////////伤害 START///////////////////////////////////////////////////////////////////////
+    static public ActorDeathAnimationAction actorDeathAnimation () {
+        return actorDeathAnimation(0, null);
+    }
+
+    static public ActorDeathAnimationAction actorDeathAnimation (float duration) {
+        return actorDeathAnimation(duration, null);
+    }
+
+    static public ActorDeathAnimationAction actorDeathAnimation (float duration, Interpolation interpolation) {
+        ActorDeathAnimationAction action = action(ActorDeathAnimationAction.class);
+        action.setInterpolation(interpolation);
+        action.setDuration(duration);
+        return action;
+    }
+
+
+    /**
+     * 在指定地点范围内造成伤害
+     * @param point
+     * @param radio
+     * @param hurtPoint
+     * @return
+     */
+    private static DamageAction damageAction(Vector2 point,float radio,float hurtPoint){
+        DamageAction action = action(DamageAction.class);
+        action.setPoint(point).setRadius(radio).setHurtPoint(hurtPoint);
+        return action;
+    }
+
+
+    /**
+     * 重复 次数和间隔时间 地 在指定地点范围内造成伤害
+     * @param point
+     * @param radio
+     * @param hurtPoint
+     * @param intervalTime
+     * @param times
+     * @return
+     */
+    private static Action damageAction(Vector2 point,float radio,float hurtPoint,float intervalTime, int times){
+        return repeat(times,sequence(delay(intervalTime),action(DamageAction.class).setPoint(point).setRadius(radio).setHurtPoint(hurtPoint)));
+    }
+
+    /**
+     * 一直运行在单位身上的action，监听单位HP是否低于0，如果低于0，则判定单位死亡
+     * @return
+     */
+    public static ActorDeathMonitorAction actorDeathMonitorAction(){
+        ActorDeathMonitorAction action = action(ActorDeathMonitorAction.class);
+        return action;
+    }
+    //////////////////////////////////////////////////////////////伤害 START///////////////////////////////////////////////////////////////////////
 
 }

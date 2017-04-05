@@ -79,12 +79,12 @@ public abstract class AnimationEntity extends LevelDrawActor implements Poolable
         this.setOrigin(Align.center);
         this.setVisible(true);
         this.lifeStatus = LIFE_STATUS_CREATE;
-        this.addAction(new ActorAlwayMoveAction());
+        this.addAllAction(ActionsFactory.actorAlwayMoveAction(),ActionsFactory.actorDeathMonitorAction());
         this.visualRadius = actorWidth * 4;
         this.primaryColor = new Color(MathUtils.random(), MathUtils.random(), MathUtils.random(), 1);
         this.physicsPlayer = world.getPhysicsManager().createPositionPlayer();
         this.stageWorld = world;
-        skills.addAll(ResourceManager.getSkillByIds("jump","hack","lightingShoot","tanshe","redBolts"));
+        skills.addAll(ResourceManager.getSkillByIds("jump","hack","lightingShoot","tanshe","redBolts","burstFire","fireTornado"));
     }
 
     //=============================================Position Control========================================================================
@@ -133,8 +133,10 @@ public abstract class AnimationEntity extends LevelDrawActor implements Poolable
     }
 
     /**仅建议在初始化对象时调用一次*/
-    public void setCenterPosition(float x, float y) {
+    @SuppressWarnings("deprecation")
+    public AnimationEntity setCenterPosition(float x, float y) {
         this.setPosition(x, y, Align.center);
+        return this;
     }
 
 //====================================================================================================================
@@ -385,8 +387,10 @@ public abstract class AnimationEntity extends LevelDrawActor implements Poolable
 
     /***********************************************Util method start********************************************************************/
     public AnimationEntity addAllAction(Action... actions) {
-        for(Action action: actions){
-            addAction(action);
+        if(actions!=null){
+            for(Action action: actions){
+                addAction(action);
+            }
         }
         return this;
     }

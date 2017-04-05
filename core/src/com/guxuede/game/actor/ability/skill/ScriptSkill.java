@@ -1,9 +1,9 @@
 package com.guxuede.game.actor.ability.skill;
 
 import com.guxuede.game.action.GdxSequenceAction;
+import com.guxuede.game.resource.ResourceManager;
 
 import javax.script.ScriptEngine;
-import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
 import javax.script.SimpleBindings;
 
@@ -28,8 +28,7 @@ public class ScriptSkill extends Skill {
 
     @Override
     public void enter() {
-        ScriptEngineManager scriptEngineManager = new ScriptEngineManager();
-        ScriptEngine scriptEngine = scriptEngineManager.getEngineByName("nashorn");
+        ScriptEngine scriptEngine = ResourceManager.getScriptEngine();
         SimpleBindings simpleBindings = new SimpleBindings();
         simpleBindings.put("targetEntry",targetEntry);
         simpleBindings.put("targetPos",targetPos);

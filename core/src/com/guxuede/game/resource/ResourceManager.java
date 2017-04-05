@@ -17,12 +17,15 @@ import com.guxuede.game.libgdx.Skin;
 import com.guxuede.game.resource.ActorJsonParse;
 import com.guxuede.game.resource.AnimationHolder;
 
+import javax.script.ScriptEngine;
+import javax.script.ScriptEngineManager;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 public class ResourceManager {
+    private static ScriptEngine scriptEngine = new ScriptEngineManager().getEngineByName("nashorn");
     private static final Map<String,Texture> TEXTURE_MAP = new HashMap<String, Texture>();
     private static final Map<String,TextureRegion> TEXTURE_REGION_MAP =  new HashMap<String, TextureRegion>();
     public static final TextureAtlas TEXTURE_ATLAS_PACK =new TextureAtlas(Gdx.files.internal("pack"));
@@ -134,5 +137,9 @@ public class ResourceManager {
             skills.add(SKILLS.get(id));
         }
         return skills;
+    }
+
+    public static ScriptEngine getScriptEngine() {
+        return scriptEngine;
     }
 }

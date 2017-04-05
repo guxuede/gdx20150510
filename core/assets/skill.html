@@ -81,4 +81,28 @@
             af.gdxSequence(af.lightningEffectMutilActor("lightningLine1",MathUtils.findClosestEntry(owner)));
         </script>
     </skill>
+
+    <skill id="burstFire" name="Burst Fire" hotKey="B" targetType="TARGET_TYPE_AREA">
+        <description>
+            在你前面产生一拍爆裂雷
+        </description>
+        <script>
+            var af = Java.type('com.guxuede.game.action.ActionsFactory');
+            var ac = Java.type('com.badlogic.gdx.scenes.scene2d.actions.Actions');
+            owner.faceToTarget(targetPos);
+            af.gdxSequence(af.createLineEffectEntriesAction(owner,targetPos,"special14",0.05,100,5));
+        </script>
+    </skill>
+
+    <skill id="fireTornado" name="Fire Tornado" hotKey="E" targetType="TARGET_TYPE_AREA">
+        <description>
+            施法产生可怕的火龙卷
+        </description>
+        <script>
+            var af = Java.type('com.guxuede.game.action.ActionsFactory');
+            var ac = Java.type('com.badlogic.gdx.scenes.scene2d.actions.Actions');
+            owner.faceToTarget(targetPos);
+            af.gdxSequence(af.createLineEffectEntriesAction(owner,targetPos,"special12",0.03,100,5,5.5,0.2,10));
+        </script>
+    </skill>
 </skills>

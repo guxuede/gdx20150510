@@ -84,39 +84,81 @@ public class MathUtils {
 
 
     /**
-     * 找到最近This的单位
+     * 找到所有最近This的单位
      * @param actorList
      * @param findedList
      * @param This
      */
     public static void findClosestEntry(Array<Actor> actorList, List<AnimationEntity> findedList, AnimationEntity This){
+        findClosestEntry(actorList,findedList,Float.MAX_VALUE,This);
+    }
+
+    /**
+     *找到所有最近This的单位
+     * @param This
+     * @return
+     */
+    public static List<AnimationEntity> findClosestEntry(AnimationEntity This){
+        List<AnimationEntity> findedList = new ArrayList<AnimationEntity>();
+        findClosestEntry(This.getStage().getActors(),findedList,This);
+        return findedList;
+    }
+
+    /**
+     * 找出指定单位指定范围内的单位，如果找到，则继续寻找下一个指定范围内的单位，直到找不到为止
+     * o
+     *  o o o
+     *   o
+     *     o o  o  o
+     *           o
+     * @param actorList
+     * @param findedList
+     * @param radius
+     * @param owner
+     */
+    public static void findClosestEntry(Array<Actor> actorList, List<AnimationEntity> findedList,float radius, AnimationEntity owner){
         AnimationEntity finded = null;
-        float distance = Float.MAX_VALUE;
         for(Actor actor : actorList){
             if(actor instanceof AnimationEntity
                     && !(actor instanceof AnimationProjection)
-                    && actor != This
+                    && actor != owner
                     && (findedList == null || !findedList.contains(actor))
                     ){
                 AnimationEntity entity = (AnimationEntity) actor;
-                float d = Vector2.dst(entity.getCenterX(),entity.getCenterY(),This.getCenterX(),This.getCenterY());
-                if(d < distance){
-                    distance = d;
+                float d = Vector2.dst(entity.getCenterX(),entity.getCenterY(),owner.getCenterX(),owner.getCenterY());
+                if(d < radius){
+                    radius = d;
                     finded = entity;
                 }
             }
         }
         if(finded!=null){
             findedList.add(finded);
-            findClosestEntry(actorList,findedList,This);
+            findClosestEntry(actorList,findedList,radius,owner);
         }
     }
 
-    public static List<AnimationEntity> findClosestEntry(AnimationEntity This){
-        List<AnimationEntity> findedList = new ArrayList<AnimationEntity>();
-        findClosestEntry(This.getStage().getActors(),findedList,This);
-        return findedList;
+    /**
+     * 找到指定地点指定范围内的所有单位
+     * @param sourceActorList
+     * @param point
+     * @param radius
+     * @return
+     */
+    public static final Array<AnimationEntity> findClosestPointEntry(Array<Actor> sourceActorList,Vector2 point,float radius){
+        Array<AnimationEntity> foundList = new Array<AnimationEntity>(false,4);
+        for(Actor actor : sourceActorList){
+            if(actor instanceof AnimationEntity && !(actor instanceof AnimationProjection)){
+                AnimationEntity entity = (AnimationEntity) actor;
+                float d = Vector2.dst(entity.getCenterX(),entity.getCenterY(),point.x,point.y);
+                if(d < radius){
+                    foundList.add(entity);
+                }
+            }
+        }
+        return foundList;
     }
+
 
     public static final float EPSILON = 0.1f;
     public static boolean isBetween11(Vector2 a,Vector2 b,Vector2 c){

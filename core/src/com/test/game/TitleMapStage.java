@@ -20,10 +20,7 @@ import com.guxuede.game.action.ActorChangeAppearanceAction;
 import com.guxuede.game.action.ActorFormulaTracksAction;
 import com.guxuede.game.action.effects.AnimationEffect;
 import com.guxuede.game.action.effects.DoubleImageEffect;
-import com.guxuede.game.actor.ActorFactory;
-import com.guxuede.game.actor.AnimationActor;
-import com.guxuede.game.actor.AnimationEntity;
-import com.guxuede.game.actor.LevelDrawActor;
+import com.guxuede.game.actor.*;
 import com.guxuede.game.actor.ability.buffer.PoisonBuffer;
 import com.guxuede.game.libgdx.*;
 import com.guxuede.game.light.DefaultLightManager;
@@ -129,8 +126,9 @@ public class TitleMapStage extends Stage implements GdxScreen {
         actor1.addAction(effect);
         addActor(actor1);
 
-
-        ActorFactory.createRandomActor(world,this);
+//        EffectsEntity effectsEntity = ActorFactory.createEffectsActor("special14",world,null);
+//        effectsEntity.addToStage();
+        //ActorFactory.createRandomActor(world,this);
 //        ActorFactory.createRandomDoor(world,this);
     }
 
@@ -265,6 +263,9 @@ public class TitleMapStage extends Stage implements GdxScreen {
             if(viewActor !=null){
                 camera.position.x= viewActor.getCenterX();
                 camera.position.y= viewActor.getCenterY();
+                if(viewActor.LS(AnimationEntity.LIFE_STATUS_DESTROY)){
+                    viewActor = null;
+                }
             }
 
         }
