@@ -137,20 +137,35 @@ public class ActionsFactory extends Actions{
 //	}
     //////////////////////////////////////////////////////////////移动 END///////////////////////////////////////////////////////////////////////
 
+    //////////////////////////////////////////////////////////////特效/效果/Effect START///////////////////////////////////////////////////////////////////////
     /**
      * 创建单位的action
-     * @param actorName
+     * @param effectName
      * @param pos
      * @return
      */
-    public  static EffectsActorAction effectsActorAction(String actorName, Vector2 pos, Action... actions){
+    public  static EffectsActorAction effectsActorAction(String effectName, Vector2 pos, Action... actions){
         EffectsActorAction action = action(EffectsActorAction.class);
         action.setPos(pos);
-        action.setActorName(actorName);
+        action.setActorName(effectName);
         action.setActions(actions);
         return action;
     }
-    //////////////////////////////////////////////////////////////特效/效果/Effect START///////////////////////////////////////////////////////////////////////
+
+    /**
+     * 创建单位的action
+     * @param effectName
+     * @param pos
+     * @return
+     */
+    public  static EffectsActorAction effectsActorActionWithDeathAction(String effectName, Vector2 pos, Action actions, Action deathAction){
+        EffectsActorAction action = action(EffectsActorAction.class);
+        action.setPos(pos);
+        action.setActorName(effectName);
+        action.setActions(actions);
+
+        return action;
+    }
     /**
      * 在一条线上创建特效
      * @param owner             特效施放者
@@ -165,7 +180,7 @@ public class ActionsFactory extends Actions{
         SequenceAction sequenceAction = sequence();
         Vector2 ownerPos = owner.getPhysicsPosition();
         Vector2 directionNor = TempObjects.temp1Vector2.set(pos).sub(owner.getPhysicsPosition()).nor();
-        for (int i = 0; i < 5; i++) {
+        for (int i = 0; i < unit; i++) {
             sequenceAction.addAction(delay(intervalTime));
             Vector2 effectPoint = TempObjects.temp2Vector2.set(directionNor).scl(i*intervalDistance).add(ownerPos);
             sequenceAction.addAction(parallel(effectsActorAction(effectName,effectPoint),damageAction(effectPoint,intervalDistance,5)));
@@ -307,6 +322,61 @@ public class ActionsFactory extends Actions{
     }
     //////////////////////////////////////////////////////////////抛射/投弹 END///////////////////////////////////////////////////////////////////////
 
+
+    //////////////////////////////////////////////////////////////伤害 START///////////////////////////////////////////////////////////////////////
+    static public ActorDeathAnimationAction actorDeathAnimation () {
+        return actorDeathAnimation(0, null);
+    }
+
+    static public ActorDeathAnimationAction actorDeathAnimation (float duration) {
+        return actorDeathAnimation(duration, null);
+    }
+
+    static public ActorDeathAnimationAction actorDeathAnimation (float duration, Interpolation interpolation) {
+        ActorDeathAnimationAction action = action(ActorDeathAnimationAction.class);
+        action.setInterpolation(interpolation);
+        action.setDuration(duration);
+        return action;
+    }
+
+
+    /**
+     * 在指定地点范围内造成伤害
+     * @param point
+     * @param radio
+     * @param hurtPoint
+     * @return
+     */
+    public static DamageAction damageAction(Vector2 point,float radio,float hurtPoint){
+        DamageAction action = action(DamageAction.class);
+        action.setPoint(point).setRadius(radio).setHurtPoint(hurtPoint);
+        return action;
+    }
+
+
+    /**
+     * 重复 次数和间隔时间 地 在指定地点范围内造成伤害
+     * @param point
+     * @param radio
+     * @param hurtPoint
+     * @param intervalTime
+     * @param times
+     * @return
+     */
+    public static Action damageAction(Vector2 point,float radio,float hurtPoint,float intervalTime, int times){
+        return repeat(times,sequence(delay(intervalTime,action(DamageAction.class).setPoint(point).setRadius(radio).setHurtPoint(hurtPoint))));
+    }
+
+    /**
+     * 一直运行在单位身上的action，监听单位HP是否低于0，如果低于0，则判定单位死亡
+     * @return
+     */
+    public static ActorDeathMonitorAction actorDeathMonitorAction(){
+        ActorDeathMonitorAction action = action(ActorDeathMonitorAction.class);
+        return action;
+    }
+    //////////////////////////////////////////////////////////////伤害 END///////////////////////////////////////////////////////////////////////
+
     //////////////////////////////////////////////////////////////工具类 START///////////////////////////////////////////////////////////////////////
     static public GdxSequenceAction gdxSequence (Action action1) {
         GdxSequenceAction action = action(GdxSequenceAction.class);
@@ -412,60 +482,5 @@ public class ActionsFactory extends Actions{
     }
     //////////////////////////////////////////////////////////////工具类 END///////////////////////////////////////////////////////////////////////
 
-
-
-    //////////////////////////////////////////////////////////////伤害 START///////////////////////////////////////////////////////////////////////
-    static public ActorDeathAnimationAction actorDeathAnimation () {
-        return actorDeathAnimation(0, null);
-    }
-
-    static public ActorDeathAnimationAction actorDeathAnimation (float duration) {
-        return actorDeathAnimation(duration, null);
-    }
-
-    static public ActorDeathAnimationAction actorDeathAnimation (float duration, Interpolation interpolation) {
-        ActorDeathAnimationAction action = action(ActorDeathAnimationAction.class);
-        action.setInterpolation(interpolation);
-        action.setDuration(duration);
-        return action;
-    }
-
-
-    /**
-     * 在指定地点范围内造成伤害
-     * @param point
-     * @param radio
-     * @param hurtPoint
-     * @return
-     */
-    private static DamageAction damageAction(Vector2 point,float radio,float hurtPoint){
-        DamageAction action = action(DamageAction.class);
-        action.setPoint(point).setRadius(radio).setHurtPoint(hurtPoint);
-        return action;
-    }
-
-
-    /**
-     * 重复 次数和间隔时间 地 在指定地点范围内造成伤害
-     * @param point
-     * @param radio
-     * @param hurtPoint
-     * @param intervalTime
-     * @param times
-     * @return
-     */
-    private static Action damageAction(Vector2 point,float radio,float hurtPoint,float intervalTime, int times){
-        return repeat(times,sequence(delay(intervalTime),action(DamageAction.class).setPoint(point).setRadius(radio).setHurtPoint(hurtPoint)));
-    }
-
-    /**
-     * 一直运行在单位身上的action，监听单位HP是否低于0，如果低于0，则判定单位死亡
-     * @return
-     */
-    public static ActorDeathMonitorAction actorDeathMonitorAction(){
-        ActorDeathMonitorAction action = action(ActorDeathMonitorAction.class);
-        return action;
-    }
-    //////////////////////////////////////////////////////////////伤害 START///////////////////////////////////////////////////////////////////////
 
 }

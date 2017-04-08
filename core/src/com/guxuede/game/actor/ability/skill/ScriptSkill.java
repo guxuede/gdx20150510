@@ -36,7 +36,7 @@ public class ScriptSkill extends Skill {
         try {
             action = (GdxSequenceAction) scriptEngine.eval(script,simpleBindings);
         } catch (ScriptException e) {
-            e.printStackTrace();
+            throw new RuntimeException("Skill error",e);
         }
         owner.addAction(action);
     }

@@ -142,7 +142,11 @@ public class ActorJsonParse {
             }else if(frameJ.isArray()){
                 frames[i]=parseSingleArraySprite(localParseContext,frameJ);
             }else{
-                frames[i]=parseMultiSprite(localParseContext,frameJ);
+                if(frameJ.has("frame")){
+                    frames[i]=parseSingleStyleSprite(localParseContext,frameJ);
+                }else{
+                    frames[i]=parseMultiSprite(localParseContext,frameJ);
+                }
             }
         }
 
@@ -191,16 +195,37 @@ public class ActorJsonParse {
        return sprite;
     }
 
+    /**
+     * 解析：frames 里面有样式动画的，比如
+     *   "frames":[
+                {
+                    "scale":1.5,
+                    "y":1,
+                    "frame":1
+                },
+                {
+                     "scale":1.5,
+                     "y":1,
+                     "frame":2
+                },
+         ]
+     * @param parentParseContext
+     * @param frameJ
+     * @return
+     */
+    private static GdxSprite parseSingleStyleSprite(ParseContext parentParseContext,JsonValue frameJ){
+        ParseContext localParseContext = extendParentParseContext(parentParseContext, frameJ);
+        return parseSingleArraySprite(localParseContext,frameJ.get("frame"));
+    }
+
 
     /**
      * 解析：frames 里面有多层动画的，比如
      * "frames":[
              {
-                 "index":1,
                  "frameElements":[。。。]
             },
              {
-             "index":2,
              "frameElements":[。。。]
              },
         ]
@@ -209,7 +234,6 @@ public class ActorJsonParse {
      * @return
      */
     private static GdxSprite parseMultiSprite(ParseContext parentParseContext,JsonValue frameJ){
-        int index = frameJ.getInt("index", 0);
         JsonValue frameElementsJ = frameJ.get("frameElements");
         JsonValue.JsonIterator it = frameElementsJ.iterator();
 
@@ -218,7 +242,6 @@ public class ActorJsonParse {
             /**
              * frameElements 支持一下格式：
              *             "frameElements":[
-             *                  1,                          //位置描述
                              {
                                  "y":20,                    //详细的位置描述
                                  "scale":1.5,

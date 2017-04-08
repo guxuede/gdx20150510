@@ -78,8 +78,8 @@ public abstract class LevelDrawActor extends Actor {
         isInScreen = isInScreen();
         if(isInScreen && isVisible()){
             if(drawLevel == 0){
-                drawFoot(batch,parentAlpha);
                 drawFootEffect(getActions(),batch,parentAlpha);
+                drawFoot(batch,parentAlpha);
             }else if(drawLevel == 1){
                 drawBody(batch, parentAlpha);
                 drawBodyEffect(getActions(),batch, parentAlpha);

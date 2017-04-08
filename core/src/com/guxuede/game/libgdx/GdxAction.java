@@ -44,7 +44,14 @@ abstract public class GdxAction extends Action {
         super.reset();
         began = false;
         complete = false;
+        time = 0;
     }
 
-
+    @Override
+    public void restart() {
+        super.restart();
+        began = false;
+        complete = false;
+        time = 0;
+    }
 }

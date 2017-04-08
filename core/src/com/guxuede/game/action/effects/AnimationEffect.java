@@ -19,6 +19,7 @@ public class AnimationEffect extends GdxEffect {
     public float drawOffSetX,drawOffSetY;
     public TracksFormula tracksFormula;
 
+    private int drawLevel = 0;
     public String animationName;
     public Animation effectAnimation;
     public SoundHolder sound;
@@ -41,7 +42,27 @@ public class AnimationEffect extends GdxEffect {
     }
 
     @Override
+    public void drawHeadEffect(Batch batch, float parentAlpha) {
+        if(drawLevel==0){
+            draw(batch,parentAlpha);
+        }
+    }
+
+    @Override
     public void drawBodyEffect(Batch batch, float parentAlpha){
+        if(drawLevel==1){
+            draw(batch,parentAlpha);
+        }
+    }
+
+    @Override
+    public void drawFootEffect(Batch batch, float parentAlpha) {
+        if(drawLevel==2){
+            draw(batch,parentAlpha);
+        }
+    }
+
+    public void draw(Batch batch, float parentAlpha){
         if(effectAnimation!=null){
             AnimationEntity animationActor = getAnimationEntity();
             GdxSprite sprite = (GdxSprite) effectAnimation.getKeyFrame(animationActor.stateTime, true);
@@ -100,9 +121,19 @@ public class AnimationEffect extends GdxEffect {
         this.setDuration(effectAnimation.getAnimationDuration());
     }
 
+    public AnimationEffect setAnimationDuration(float duration) {
+        this.setDuration(duration);
+        return this;
+    }
+    public AnimationEffect setDrawLevel(int drawLevel){
+        this.drawLevel = drawLevel;
+        return this;
+    }
+
     @Override
     public void reset() {
         super.reset();
+        drawLevel = 0;
         effectAnimation = null;
         animationName = null;
         if(sound!=null){

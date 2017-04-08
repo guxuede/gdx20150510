@@ -625,6 +625,51 @@
     ]
   },
   {
+    "name" : "fire1",
+    "width":192,
+    "height":192,
+    "texture":"animations/Fire4",
+    "animations":[
+      {
+        "name":"walkDownAnimation,walkLeftAnimation,walkRightAnimation,walkUpAnimation,stopDownAnimation,stopLeftAnimation,stopRightAnimation,stopUpAnimation",
+        "frameDuration":0.1,
+        "frames":[
+          {
+            "y":200,"x":100,"rotation":-30,
+            "frame":14
+          },
+          {
+            "y":150,"x":80,"rotation":-24,
+            "frame":15
+          },
+          {
+            "y":100,"x":60,"rotation":-18,
+            "frame":14
+          },
+          {
+            "y":50,"x":40,"rotation":-12,
+            "frame":14
+          }
+        ]
+      },
+      {
+        "name":"deathAnimation",
+        "frameDuration":0.1,
+        "frames":[
+          {
+            "y":25,"x":20,"rotation":-6,
+            "frame":15
+          },
+          {
+            "y":0,"x":0,"rotation":-0,
+            "frame":14
+          },
+          1,2,3,4
+        ]
+      }
+    ]
+  },
+  {
     "name" : "special14",
     "width":192,
     "height":192,
@@ -660,6 +705,34 @@
         "name":"walkDownAnimation,walkLeftAnimation,walkRightAnimation,walkUpAnimation,stopDownAnimation,stopLeftAnimation,stopRightAnimation,stopUpAnimation,deathAnimation",
         "frameDuration":0.1,
         "frames":[10,11,12,13,14,15,16,17,18,19,20]
+      }
+    ]
+  },
+  {
+    "name" : "state5",
+    "width":192,
+    "height":192,
+    "texture":"animations/State5",
+    "scale":0.5,
+    "animations":[
+      {
+        "name":"walkDownAnimation,walkLeftAnimation,walkRightAnimation,walkUpAnimation,stopDownAnimation,stopLeftAnimation,stopRightAnimation,stopUpAnimation,deathAnimation",
+        "frameDuration":0.1,
+        "frames":[1,2,3,4,5,6,7]
+      }
+    ]
+  },
+  {
+    "name" : "lightEffect",
+    "width":192,
+    "height":192,
+    "y":-30,
+    "texture":"animations/Light2",
+    "animations":[
+      {
+        "name":"walkDownAnimation,walkLeftAnimation,walkRightAnimation,walkUpAnimation,stopDownAnimation,stopLeftAnimation,stopRightAnimation,stopUpAnimation,deathAnimation",
+        "frameDuration":0.1,
+        "frames":[20,21,22,23,24,23,22,21]
       }
     ]
   },

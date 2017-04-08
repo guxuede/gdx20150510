@@ -84,7 +84,7 @@ public abstract class AnimationEntity extends LevelDrawActor implements Poolable
         this.primaryColor = new Color(MathUtils.random(), MathUtils.random(), MathUtils.random(), 1);
         this.physicsPlayer = world.getPhysicsManager().createPositionPlayer();
         this.stageWorld = world;
-        skills.addAll(ResourceManager.getSkillByIds("jump","hack","lightingShoot","tanshe","redBolts","burstFire","fireTornado"));
+        skills.addAll(ResourceManager.getSkillByIds("jump","hack","lightingShoot","tanshe","redBolts","burstFire","fireTornado","meteorite"));
     }
 
     //=============================================Position Control========================================================================

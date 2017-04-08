@@ -93,7 +93,6 @@
             af.gdxSequence(af.createLineEffectEntriesAction(owner,targetPos,"special14",0.05,100,5));
         </script>
     </skill>
-
     <skill id="fireTornado" name="Fire Tornado" hotKey="E" targetType="TARGET_TYPE_AREA">
         <description>
             施法产生可怕的火龙卷
@@ -102,7 +101,18 @@
             var af = Java.type('com.guxuede.game.action.ActionsFactory');
             var ac = Java.type('com.badlogic.gdx.scenes.scene2d.actions.Actions');
             owner.faceToTarget(targetPos);
-            af.gdxSequence(af.createLineEffectEntriesAction(owner,targetPos,"special12",0.03,100,5,5.5,0.2,10));
+            af.gdxSequence(af.createLineEffectEntriesAction(owner,targetPos,"special12",0.03,100,5,0.1,0.01,1000));
+        </script>
+    </skill>
+    <skill id="meteorite" name="Meteorite" hotKey="M" targetType="TARGET_TYPE_AREA">
+        <description>
+            从天而降的陨石，造成大量伤害，并且击晕
+        </description>
+        <script>
+            var af = Java.type('com.guxuede.game.action.ActionsFactory');
+            var ac = Java.type('com.badlogic.gdx.scenes.scene2d.actions.Actions');
+            owner.faceToTarget(targetPos);
+            af.gdxSequence(af.effectsActorAction("fire1", targetPos),ac.delay(1),af.damageAction(targetPos,100,25),af.animationEffect("lightEffect").setAnimationDuration(10).setDrawLevel(2));
         </script>
     </skill>
 </skills>
