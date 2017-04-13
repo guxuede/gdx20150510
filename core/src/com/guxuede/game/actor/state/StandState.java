@@ -43,7 +43,7 @@ public class StandState extends ActorState {
                 return new AttackState(direction);
             }
             for (final Skill skill : entity.skills) {
-                if (skill.getHotKey() == event.getKeyCode()) {
+                if (skill.getHotKey() == event.getKeyCode() && skill.isAvailable) {
                     MouseManager.MouseIndicatorListener listener = new MouseManager.MouseIndicatorListener() {
                         @Override
                         public boolean onHoner(AnimationEntity animationEntity, Vector2 center, float r) {
@@ -58,6 +58,7 @@ public class StandState extends ActorState {
                                 AttackState actorState = new AttackState(direction);
                                 actorState.skill = skill;
                                 skill.enter();
+                                skill.isAvailable = false;
                                 entity.goingToNewState(actorState,null);
                             }
                         }

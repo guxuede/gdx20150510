@@ -12,6 +12,8 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.scenes.scene2d.*;
+import com.badlogic.gdx.scenes.scene2d.ui.*;
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.guxuede.game.DefaultWorld;
 import com.guxuede.game.StageWorld;
@@ -22,6 +24,8 @@ import com.guxuede.game.action.effects.AnimationEffect;
 import com.guxuede.game.action.effects.DoubleImageEffect;
 import com.guxuede.game.actor.*;
 import com.guxuede.game.actor.ability.buffer.PoisonBuffer;
+import com.guxuede.game.actor.ability.skill.ScriptSkill;
+import com.guxuede.game.actor.ability.skill.Skill;
 import com.guxuede.game.libgdx.*;
 import com.guxuede.game.light.DefaultLightManager;
 import com.guxuede.game.light.LightManager;
@@ -68,6 +72,7 @@ public class TitleMapStage extends Stage implements GdxScreen {
                 Actor actor = event.getTarget();
                 if(actor !=null && actor instanceof  AnimationActor && actor != viewActor && Gdx.input.isKeyPressed(Input.Keys.SHIFT_LEFT)){
                     viewActor = (AnimationEntity) actor;
+                    onActorChange(viewActor);
                     return true;
                 }
                 return false;
@@ -130,6 +135,7 @@ public class TitleMapStage extends Stage implements GdxScreen {
 //        effectsEntity.addToStage();
         //ActorFactory.createRandomActor(world,this);
 //        ActorFactory.createRandomDoor(world,this);
+        initWindowUi();
     }
 
     private Texture bg = ResourceManager.getTexture("World");
@@ -272,6 +278,9 @@ public class TitleMapStage extends Stage implements GdxScreen {
         if(StageWorld.isDebug){
             super.draw();
         }
+
+        uiStage.act(delta);
+        uiStage.draw();
     }
 
     @Override
@@ -302,5 +311,42 @@ public class TitleMapStage extends Stage implements GdxScreen {
     @Override
     public void hide() {
         this.world.hide();
+    }
+
+
+    /////////////////////////////skill/////////////////////////////////////
+
+    private SpriteBatch spriteBatch;
+    public Stage uiStage;
+    private Table skillBar;
+    public void initWindowUi(){
+        spriteBatch = new SpriteBatch();
+        skillBar = new Table();
+        //skillBar.setDebug(true);
+        skillBar.setHeight(32);
+        skillBar.setWidth(100);
+        skillBar.padLeft(50);
+        //window.setKeepWithinStage(false);
+        this.uiStage = new Stage(new FitViewport(Gdx.graphics.getWidth(),Gdx.graphics.getHeight()),spriteBatch);
+        uiStage.addActor(skillBar);
+    }
+    public void onActorChange(AnimationEntity animationEntity){
+        skillBar.clear();
+        for(Skill skill :animationEntity.skills){
+            if(skill instanceof ScriptSkill){
+                ScriptSkill scriptSkill = (ScriptSkill) skill;
+                Table skillHold = new Table();
+//            skillHold.setDebug(true);
+                skillHold.setClip(true);
+                skillHold.setWidth(24);
+                skillHold.setHeight(24);
+                Button.ButtonStyle skillStyle = new Button.ButtonStyle(scriptSkill.getIcon(), new MiniatureTextureRegionDrawable(scriptSkill.getIcon()), null);
+                SkillCoolingHolder skillCoolingImager = new SkillCoolingHolder(skillStyle,scriptSkill);
+                skillCoolingImager.setWidth(24);
+                skillCoolingImager.setHeight(24);
+                skillHold.add(skillCoolingImager);
+                skillBar.add(skillHold);
+            }
+        }
     }
 }

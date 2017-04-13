@@ -1,5 +1,7 @@
 package com.guxuede.game.actor.ability.skill;
 
+import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.guxuede.game.action.GdxSequenceAction;
 import com.guxuede.game.resource.ResourceManager;
 
@@ -17,6 +19,9 @@ public class ScriptSkill extends Skill {
     private String name;
     private SkillTargetTypeEnum targetType;
     private int hotKey;
+    private float skillCooldownTime = 60;
+    private float skillCooldownCounter = 0;
+    private Drawable icon;
 
     public int getHotKey() {
         return hotKey;
@@ -55,6 +60,13 @@ public class ScriptSkill extends Skill {
         }
     }
 
+    @Override
+    public void reset() {
+        super.reset();
+        action = null;
+        skillCooldownCounter = 0;
+    }
+
     public void setHotKey(int hotKey) {
         this.hotKey = hotKey;
     }
@@ -69,5 +81,42 @@ public class ScriptSkill extends Skill {
 
     public void setTargetType(SkillTargetTypeEnum targetType) {
         this.targetType = targetType;
+    }
+
+    public float getSkillCooldownTime() {
+        return skillCooldownTime;
+    }
+
+    public void setSkillCooldownTime(float skillCooldownTime) {
+        this.skillCooldownTime = skillCooldownTime;
+    }
+
+    public float getSkillCooldownCounter() {
+        return skillCooldownCounter;
+    }
+
+    public void setSkillCooldownCounter(float skillCooldownCounter) {
+        this.skillCooldownCounter = skillCooldownCounter;
+    }
+
+    public Drawable getIcon() {
+        return icon;
+    }
+
+    public void setIcon(Drawable icon) {
+        this.icon = icon;
+    }
+
+    public ScriptSkill clone(){
+        ScriptSkill scriptSkill = new ScriptSkill();
+        scriptSkill.setSkillCooldownTime(skillCooldownTime);
+        scriptSkill.setSkillCooldownCounter(0);
+        scriptSkill.setIcon(icon);
+        scriptSkill.setHotKey(hotKey);
+        scriptSkill.setName(name);
+        scriptSkill.setTargetType(targetType);
+        scriptSkill.setScript(script);
+        scriptSkill.isAvailable = true;
+        return scriptSkill;
     }
 }

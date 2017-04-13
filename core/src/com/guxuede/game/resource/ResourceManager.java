@@ -10,6 +10,7 @@ import com.badlogic.gdx.graphics.g2d.*;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton.TextButtonStyle;
 import com.badlogic.gdx.scenes.scene2d.utils.NinePatchDrawable;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
+import com.guxuede.game.actor.ability.skill.ScriptSkill;
 import com.guxuede.game.actor.ability.skill.Skill;
 import com.guxuede.game.libgdx.GdxNormapTexture;
 import com.guxuede.game.libgdx.GdxSprite;
@@ -29,6 +30,7 @@ public class ResourceManager {
     private static final Map<String,Texture> TEXTURE_MAP = new HashMap<String, Texture>();
     private static final Map<String,TextureRegion> TEXTURE_REGION_MAP =  new HashMap<String, TextureRegion>();
     public static final TextureAtlas TEXTURE_ATLAS_PACK =new TextureAtlas(Gdx.files.internal("pack"));
+    public static final TextureAtlas TEXTURE_ATLAS_REQUIMENT =new TextureAtlas(Gdx.files.internal("enqiments.atlas"));
     public static final Map<String,Sound> soundMap = new HashMap<String, Sound>();
     public static final List<AnimationHolder> ANIMATION_HOLDER_LIST = ActorJsonParse.parse("actor.json");
     public static final Map<String, Skill> SKILLS =ActorSkillParse.parseSkill("skill.html");
@@ -95,6 +97,9 @@ public class ResourceManager {
             textureRegion = TEXTURE_ATLAS_PACK.findRegion(name);
         }
         if(textureRegion==null){
+            textureRegion = TEXTURE_ATLAS_REQUIMENT.findRegion(name);
+        }
+        if(textureRegion==null){
             Texture texture = getTexture(name);
             if(texture !=null){
                 textureRegion = TEXTURE_REGION_MAP.get(name);
@@ -134,7 +139,7 @@ public class ResourceManager {
     public static List<Skill> getSkillByIds(String... ids){
         List<Skill> skills = new ArrayList<Skill>();
         for(String id:ids){
-            skills.add(SKILLS.get(id));
+            skills.add(((ScriptSkill)SKILLS.get(id)).clone());
         }
         return skills;
     }

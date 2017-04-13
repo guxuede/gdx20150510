@@ -1,4 +1,4 @@
-package com.guxuede.game.actor;
+package com.badlogic.gdx.scenes.scene2d.ui;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;

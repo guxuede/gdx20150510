@@ -3,6 +3,7 @@ package com.guxuede.game.actor;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.scenes.scene2d.ui.BarrageTip;
 import com.guxuede.game.StageWorld;
 import com.guxuede.game.action.ActionsFactory;
 import com.guxuede.game.action.effects.AnimationEffect;

@@ -1,6 +1,7 @@
 package com.guxuede.game.resource;
 
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.guxuede.game.actor.ability.skill.ScriptSkill;
 import com.guxuede.game.actor.ability.skill.Skill;
 import com.guxuede.game.actor.ability.skill.SkillTargetTypeEnum;
@@ -29,6 +30,8 @@ public class ActorSkillParse {
                 Element node = elementListIterator.next();
                 String skillId = node.attr("id");
                 String name = node.attr("name");
+                String icon = node.attr("icon");
+                float skillCooldownTime = Float.parseFloat(node.attr("skillCooldownTime"));
                 int hotKey = Input.Keys.valueOf(node.attr("hotKey"));
                 SkillTargetTypeEnum targetType = SkillTargetTypeEnum.valueOf(node.attr("targetType"));
                 String script = node.getElementsByTag("script").html();
@@ -37,6 +40,8 @@ public class ActorSkillParse {
                 skill.setHotKey(hotKey);
                 skill.setScript(script);
                 skill.setTargetType(targetType);
+                skill.setSkillCooldownTime(skillCooldownTime);
+                skill.setIcon(new TextureRegionDrawable(ResourceManager.getTextureRegion(icon)));
                 skills.put(skillId,skill);
             }
         } catch (IOException e) {

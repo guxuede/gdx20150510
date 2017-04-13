@@ -12,10 +12,11 @@ import static com.guxuede.game.actor.ability.skill.SkillTargetTypeEnum.TARGET_TY
 /**
  * Created by guxuede on 2016/9/27 .
  */
-public abstract class Skill implements Pool.Poolable{
+public abstract class Skill implements Pool.Poolable,Cloneable{
 
     public AnimationEntity targetEntry;
     public Vector2 targetPos;
+    public boolean isAvailable = true;
 
     public int getHotKey(){
         return Input.Keys.A;

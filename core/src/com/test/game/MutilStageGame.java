@@ -36,6 +36,9 @@ public class MutilStageGame extends GdxGame {
     public void setScreen(Screen screen) {
         super.setScreen(screen);
         inputMultiplexer.clear();
+        if(screen instanceof TitleMapStage){
+            inputMultiplexer.addProcessor(((TitleMapStage) screen).uiStage);
+        }
         inputMultiplexer.addProcessor((Stage)screen);
     }
 
